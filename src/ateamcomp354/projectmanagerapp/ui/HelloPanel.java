@@ -12,8 +12,10 @@ public class HelloPanel {
 	/**
 	 * Create the panel.
 	 */
-	public HelloPanel() {
+	public HelloPanel( String text ) {
+
 		helloPanelGen = new HelloPanelGen();
+		helloPanelGen.getHelloLbl().setText( text );
 	}
 	
 	public JComponent getComponent() {

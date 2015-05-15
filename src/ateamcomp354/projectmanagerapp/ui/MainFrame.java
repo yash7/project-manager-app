@@ -1,14 +1,51 @@
 package ateamcomp354.projectmanagerapp.ui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-	private HelloPanel helloPanel;
+	private static final String VIEW_1 = "VIEW_1";
+	private static final String VIEW_2 = "VIEW_2";
+
+	private CardLayout cardLayout;
+
+	private HelloPanel helloPanel1;
+	private HelloPanel helloPanel2;
 	
 	public MainFrame() {
-		
-		helloPanel = new HelloPanel();
-		add( helloPanel.getComponent() );
+
+		cardLayout = new CardLayout();
+		setLayout( cardLayout );
+
+		helloPanel1 = new HelloPanel( "Hello View 1");
+		helloPanel2 = new HelloPanel( "Hello View 2");
+
+		buildMenuBar();
+
+		add(helloPanel1.getComponent(), VIEW_1);
+		add(helloPanel2.getComponent(), VIEW_2);
+	}
+
+	private void buildMenuBar() {
+
+		JMenuItem view1Itm = new JMenuItem( "View 1" );
+		view1Itm.addActionListener( __ -> showView( VIEW_1 ) );
+
+		JMenuItem view2Itm = new JMenuItem( "View 2" );
+		view2Itm.addActionListener( __ -> showView( VIEW_2 ) );
+
+		JMenu viewMenu = new JMenu( "View" );
+		viewMenu.add( view1Itm );
+		viewMenu.add( view2Itm );
+
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add( viewMenu );
+
+		setJMenuBar( menuBar );
+	}
+
+	private void showView( String name ) {
+		cardLayout.show( getContentPane(), name);
 	}
 }
