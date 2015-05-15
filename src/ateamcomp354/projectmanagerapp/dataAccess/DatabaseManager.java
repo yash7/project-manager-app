@@ -7,10 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -71,11 +68,8 @@ public class DatabaseManager {
 			// create users table
 			resultSet = data.getTables(null, null, "users", null);
 			if (!resultSet.next()) {
-				statement
-						.execute("CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, "
-								+ "first_name TEXT, "
-								+ "last_name TEXT, "
-								+ "username TEXT UNIQUE);");
+				String sql = readFile( "ddl/users.sql" );
+				statement.execute(sql);
 			}
 
 
@@ -89,5 +83,17 @@ public class DatabaseManager {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private String readFile( String name ) {
+
+		StringJoiner str = new StringJoiner("\n");
+
+		Scanner in = new Scanner( getClass().getResourceAsStream(name) );
+		while( in.hasNextLine() ) {
+			str.add(in.nextLine());
+		}
+
+		return str.toString();
 	}
 }
