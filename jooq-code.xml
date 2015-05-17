@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+  <!-- Configure the database connection here -->
+  <jdbc>
+    <driver>org.sqlite.JDBC</driver>
+    <url>jdbc:sqlite:database.db</url>
+    <!-- 
+    <user></user>
+    <password></password>
+    -->
+  </jdbc>
+
+  <generator>
+    <database>
+      <!-- The database dialect from jooq-meta. -->
+      <name>org.jooq.util.sqlite.SQLiteDatabase</name>
+
+      <!-- All elements that are generated from your schema -->
+      <includes>.*</includes>
+    </database>
+
+	<generate>
+	  <!-- Generate POJOs in addition to Record classes for usage of the
+	       ResultQuery.fetchInto(Class) API -->
+	  <pojos>true</pojos>
+	
+	  <!-- Generate immutable POJOs for usage of the ResultQuery.fetchInto(Class) API
+	       This overrides any value set in <pojos/>
+	       Defaults to false -->
+	  <immutablePojos>false</immutablePojos>
+	
+	  <!-- Generate interfaces that will be implemented by records and/or pojos.
+	       You can also use these interfaces in Record.into(Class<?>) and similar
+	       methods, to let jOOQ return proxy objects for them.
+	       Defaults to false -->
+	  <interfaces>false</interfaces>
+	
+	  <!-- Generate DAOs in addition to POJO classes
+	       Defaults to false -->
+	  <daos>true</daos>
+	</generate>
+
+    <target>
+      <!-- The destination package of your generated classes (within the
+           destination directory) -->
+      <packageName>org.jooq.ateamcomp354.projectmanagerapp</packageName>
+
+      <!-- The destination directory of your generated classes -->
+      <directory>src</directory>
+    </target>
+  </generator>
+</configuration>
