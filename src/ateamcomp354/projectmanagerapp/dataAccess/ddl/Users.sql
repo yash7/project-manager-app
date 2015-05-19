@@ -1,6 +1,11 @@
-CREATE TABLE users(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name TEXT,
-    last_name TEXT,
-    username TEXT UNIQUE
+CREATE TABLE users (
+
+	id INTEGER PRIMARY KEY,
+   
+	first_name TEXT,
+    
+	last_name TEXT,
+    
+	username TEXT UNIQUE
+
 );

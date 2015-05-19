@@ -64,8 +64,6 @@ public class DatabaseManager {
 	private void createTables() {
 		try {
 			openConnection();
-			
-			// checking if tables are created
 			DatabaseMetaData data = connection.getMetaData();
 			statement = connection.createStatement();
 
@@ -75,7 +73,105 @@ public class DatabaseManager {
 				String sql = readFile( "ddl/users.sql" );
 				statement.execute(sql);
 			}
+			
+			// create project table
+			resultSet = data.getTables(null, null, "project", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/project.sql" );
+				statement.execute(sql);
+			}
+			
+			// create activity table
+			resultSet = data.getTables(null, null, "activity", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/activity.sql" );
+				statement.execute(sql);
+			}
+			
+			// create project activities table
+			resultSet = data.getTables(null, null, "projectActivities", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/projectActivities.sql" );
+				statement.execute(sql);
+			}
 
+			// create member list table
+			resultSet = data.getTables(null, null, "memberList", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/memberList.sql" );
+				statement.execute(sql);
+			}
+			
+			// create user projects table
+			resultSet = data.getTables(null, null, "userProjects", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/userProjects.sql" );
+				statement.execute(sql);
+			}
+			
+			// create user activities table
+			resultSet = data.getTables(null, null, "userActivities", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/userActivities.sql" );
+				statement.execute(sql);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection();
+			try {
+				statement.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Drop all tables
+	 */
+	public void dropTables() {
+		try {
+			openConnection();
+			DatabaseMetaData data = connection.getMetaData();
+			statement = connection.createStatement();
+
+			// create users table
+			resultSet = data.getTables(null, null, "users", null);
+			if (resultSet.next()) {
+				statement.execute("DROP TABLE users;");
+			}
+			
+			// create activity table
+			resultSet = data.getTables(null, null, "activity", null);
+			if (!resultSet.next()) {
+				statement.execute("DROP TABLE activity;");
+			}
+			
+			// create project table
+			resultSet = data.getTables(null, null, "project", null);
+			if (!resultSet.next()) {
+				statement.execute("DROP TABLE project;");
+			}
+			
+			// create project activities table
+			resultSet = data.getTables(null, null, "projectActivities", null);
+			if (!resultSet.next()) {
+				statement.execute("DROP TABLE projectActivities");
+			}
+
+			// create member list table
+			resultSet = data.getTables(null, null, "memberList", null);
+			if (!resultSet.next()) {
+				statement.execute("DROP TABLE memberList");
+			}
+			
+			// create user projects
+			resultSet = data.getTables(null, null, "userProjects", null);
+			if (!resultSet.next()) {
+				statement.execute("DROP TABLE userProjects");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
