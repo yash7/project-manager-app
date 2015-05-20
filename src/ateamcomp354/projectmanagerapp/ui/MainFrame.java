@@ -1,5 +1,7 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,12 +13,16 @@ public class MainFrame extends JFrame {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 800;
 
+	private final ApplicationContext appCtx;
+
 	private CardLayout cardLayout;
 
 	private HelloPanel helloPanel1;
 	private HelloPanel helloPanel2;
 	
-	public MainFrame() {
+	public MainFrame( ApplicationContext appCtx ) {
+
+		this.appCtx = appCtx;
 
 		init();
 
@@ -35,8 +41,8 @@ public class MainFrame extends JFrame {
 	private void init() {
 
 		setSize( WIDTH, HEIGHT );
-		setLocationRelativeTo( null );
-		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible( true );
 	}
 
