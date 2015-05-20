@@ -92,8 +92,8 @@ public class JooqExamples {
 
 		// we assume we are at some point in the program were we have a list of users.
 		// for this example lets create that list.
-		UsersRecord user1 = new UsersRecord( null, "Smart", "Clark", "sclark" );
-		UsersRecord user2 = new UsersRecord( null, "SmartyPants", "Debra", "spants-debra" );
+		UsersRecord user1 = new UsersRecord( null, "Smart", "Clark", "sclark", "pazzword", 0 );
+		UsersRecord user2 = new UsersRecord( null, "SmartyPants", "Debra", "spants-debra", "pazzword", 0 );
 		List<UsersRecord> users = Arrays.asList( user1, user2 );
 
 		for ( UsersRecord user : users ) {
@@ -139,8 +139,8 @@ public class JooqExamples {
 
 		// we assume we are at some point in the program were we have a list of users.
 		// for this example lets create that list.
-		Users user1 = new Users( null, "Dao", "John", "djhon" );
-		Users user2 = new Users( null, "DaoDao", "Smith", "dsmith" );
+		Users user1 = new Users( null, "Dao", "John", "djhon", "pazzword", 0 );
+		Users user2 = new Users( null, "DaoDao", "Smith", "dsmith", "pazzword", 0 );
 		List<Users> users = Arrays.asList( user1, user2 );
 
 		System.out.println( "We are inserting users into the db..." );
