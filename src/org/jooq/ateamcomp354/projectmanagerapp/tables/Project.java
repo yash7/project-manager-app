@@ -33,7 +33,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Project extends TableImpl<ProjectRecord> {
 
-	private static final long serialVersionUID = 482067173;
+	private static final long serialVersionUID = -1375938268;
 
 	/**
 	 * The reference instance of <code>project</code>
@@ -64,14 +64,9 @@ public class Project extends TableImpl<ProjectRecord> {
 	public final TableField<ProjectRecord, Integer> PROJECT_MANAGER_ID = createField("project_manager_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
-	 * The column <code>project.member_list_id</code>.
+	 * The column <code>project.description</code>.
 	 */
-	public final TableField<ProjectRecord, Integer> MEMBER_LIST_ID = createField("member_list_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
-
-	/**
-	 * The column <code>project.project_activities_id</code>.
-	 */
-	public final TableField<ProjectRecord, Integer> PROJECT_ACTIVITIES_ID = createField("project_activities_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
+	public final TableField<ProjectRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.CLOB, this, "");
 
 	/**
 	 * Create a <code>project</code> table reference

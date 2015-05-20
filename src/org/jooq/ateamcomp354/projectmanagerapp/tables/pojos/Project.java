@@ -22,13 +22,12 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Project implements Serializable {
 
-	private static final long serialVersionUID = -673649129;
+	private static final long serialVersionUID = -1842446426;
 
 	private Integer id;
 	private String  projectName;
 	private Integer projectManagerId;
-	private Integer memberListId;
-	private Integer projectActivitiesId;
+	private String  description;
 
 	public Project() {}
 
@@ -36,22 +35,19 @@ public class Project implements Serializable {
 		this.id = value.id;
 		this.projectName = value.projectName;
 		this.projectManagerId = value.projectManagerId;
-		this.memberListId = value.memberListId;
-		this.projectActivitiesId = value.projectActivitiesId;
+		this.description = value.description;
 	}
 
 	public Project(
 		Integer id,
 		String  projectName,
 		Integer projectManagerId,
-		Integer memberListId,
-		Integer projectActivitiesId
+		String  description
 	) {
 		this.id = id;
 		this.projectName = projectName;
 		this.projectManagerId = projectManagerId;
-		this.memberListId = memberListId;
-		this.projectActivitiesId = projectActivitiesId;
+		this.description = description;
 	}
 
 	public Integer getId() {
@@ -78,19 +74,11 @@ public class Project implements Serializable {
 		this.projectManagerId = projectManagerId;
 	}
 
-	public Integer getMemberListId() {
-		return this.memberListId;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setMemberListId(Integer memberListId) {
-		this.memberListId = memberListId;
-	}
-
-	public Integer getProjectActivitiesId() {
-		return this.projectActivitiesId;
-	}
-
-	public void setProjectActivitiesId(Integer projectActivitiesId) {
-		this.projectActivitiesId = projectActivitiesId;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

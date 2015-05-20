@@ -22,7 +22,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity implements Serializable {
 
-	private static final long serialVersionUID = -256898937;
+	private static final long serialVersionUID = 1106183844;
 
 	private Integer id;
 	private Integer projectId;
@@ -33,6 +33,7 @@ public class Activity implements Serializable {
 	private Integer latestFinish;
 	private Integer duration;
 	private Integer maxDuration;
+	private String  description;
 
 	public Activity() {}
 
@@ -46,6 +47,7 @@ public class Activity implements Serializable {
 		this.latestFinish = value.latestFinish;
 		this.duration = value.duration;
 		this.maxDuration = value.maxDuration;
+		this.description = value.description;
 	}
 
 	public Activity(
@@ -57,7 +59,8 @@ public class Activity implements Serializable {
 		Integer latestStart,
 		Integer latestFinish,
 		Integer duration,
-		Integer maxDuration
+		Integer maxDuration,
+		String  description
 	) {
 		this.id = id;
 		this.projectId = projectId;
@@ -68,6 +71,7 @@ public class Activity implements Serializable {
 		this.latestFinish = latestFinish;
 		this.duration = duration;
 		this.maxDuration = maxDuration;
+		this.description = description;
 	}
 
 	public Integer getId() {
@@ -140,5 +144,13 @@ public class Activity implements Serializable {
 
 	public void setMaxDuration(Integer maxDuration) {
 		this.maxDuration = maxDuration;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

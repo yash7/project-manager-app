@@ -78,16 +78,9 @@ public class ProjectDao extends DAOImpl<ProjectRecord, org.jooq.ateamcomp354.pro
 	}
 
 	/**
-	 * Fetch records that have <code>member_list_id IN (values)</code>
+	 * Fetch records that have <code>description IN (values)</code>
 	 */
-	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project> fetchByMemberListId(Integer... values) {
-		return fetch(Project.PROJECT.MEMBER_LIST_ID, values);
-	}
-
-	/**
-	 * Fetch records that have <code>project_activities_id IN (values)</code>
-	 */
-	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project> fetchByProjectActivitiesId(Integer... values) {
-		return fetch(Project.PROJECT.PROJECT_ACTIVITIES_ID, values);
+	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project> fetchByDescription(String... values) {
+		return fetch(Project.PROJECT.DESCRIPTION, values);
 	}
 }

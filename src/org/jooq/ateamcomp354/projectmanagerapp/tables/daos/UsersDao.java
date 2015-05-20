@@ -83,4 +83,18 @@ public class UsersDao extends DAOImpl<UsersRecord, org.jooq.ateamcomp354.project
 	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users> fetchByUsername(String... values) {
 		return fetch(Users.USERS.USERNAME, values);
 	}
+
+	/**
+	 * Fetch records that have <code>password IN (values)</code>
+	 */
+	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users> fetchByPassword(String... values) {
+		return fetch(Users.USERS.PASSWORD, values);
+	}
+
+	/**
+	 * Fetch records that have <code>manager_role IN (values)</code>
+	 */
+	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users> fetchByManagerRole(Integer... values) {
+		return fetch(Users.USERS.MANAGER_ROLE, values);
+	}
 }

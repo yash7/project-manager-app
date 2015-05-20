@@ -1,4 +1,4 @@
 CREATE TABLE userActivities (
-	id INTEGER PRIMARY KEY,
+	activity_id INTEGER REFERENCES activity (id),
 	user_id INTEGER REFERENCES users (id)
 );

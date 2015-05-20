@@ -7,11 +7,8 @@ package org.jooq.ateamcomp354.projectmanagerapp;
 import javax.annotation.Generated;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Activity;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Memberlist;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Project;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Projectactivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Userprojects;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Users;
 
 
@@ -34,29 +31,14 @@ public class Tables {
 	public static final Activity ACTIVITY = org.jooq.ateamcomp354.projectmanagerapp.tables.Activity.ACTIVITY;
 
 	/**
-	 * The table memberList
-	 */
-	public static final Memberlist MEMBERLIST = org.jooq.ateamcomp354.projectmanagerapp.tables.Memberlist.MEMBERLIST;
-
-	/**
 	 * The table project
 	 */
 	public static final Project PROJECT = org.jooq.ateamcomp354.projectmanagerapp.tables.Project.PROJECT;
 
 	/**
-	 * The table projectActivities
-	 */
-	public static final Projectactivities PROJECTACTIVITIES = org.jooq.ateamcomp354.projectmanagerapp.tables.Projectactivities.PROJECTACTIVITIES;
-
-	/**
 	 * The table userActivities
 	 */
 	public static final Useractivities USERACTIVITIES = org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities.USERACTIVITIES;
-
-	/**
-	 * The table userProjects
-	 */
-	public static final Userprojects USERPROJECTS = org.jooq.ateamcomp354.projectmanagerapp.tables.Userprojects.USERPROJECTS;
 
 	/**
 	 * The table users

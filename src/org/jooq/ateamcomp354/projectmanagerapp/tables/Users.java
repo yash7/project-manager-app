@@ -32,7 +32,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-	private static final long serialVersionUID = 1848279442;
+	private static final long serialVersionUID = 119618457;
 
 	/**
 	 * The reference instance of <code>users</code>
@@ -55,17 +55,27 @@ public class Users extends TableImpl<UsersRecord> {
 	/**
 	 * The column <code>users.first_name</code>.
 	 */
-	public final TableField<UsersRecord, String> FIRST_NAME = createField("first_name", org.jooq.impl.SQLDataType.CLOB, this, "");
+	public final TableField<UsersRecord, String> FIRST_NAME = createField("first_name", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
 
 	/**
 	 * The column <code>users.last_name</code>.
 	 */
-	public final TableField<UsersRecord, String> LAST_NAME = createField("last_name", org.jooq.impl.SQLDataType.CLOB, this, "");
+	public final TableField<UsersRecord, String> LAST_NAME = createField("last_name", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
 
 	/**
 	 * The column <code>users.username</code>.
 	 */
-	public final TableField<UsersRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.CLOB, this, "");
+	public final TableField<UsersRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+	/**
+	 * The column <code>users.password</code>.
+	 */
+	public final TableField<UsersRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+	/**
+	 * The column <code>users.manager_role</code>.
+	 */
+	public final TableField<UsersRecord, Integer> MANAGER_ROLE = createField("manager_role", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
 
 	/**
 	 * Create a <code>users</code> table reference

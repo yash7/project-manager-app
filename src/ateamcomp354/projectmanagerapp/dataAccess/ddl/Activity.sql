@@ -7,5 +7,6 @@ CREATE TABLE activity (
 	latest_start INTEGER,
 	latest_finish INTEGER,
 	duration INTEGER,
-	max_duration INTEGER
+	max_duration INTEGER,
+	description TEXT
 );

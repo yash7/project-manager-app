@@ -13,7 +13,6 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Table;
 import org.jooq.TableField;
-import org.jooq.UniqueKey;
 import org.jooq.ateamcomp354.projectmanagerapp.DefaultSchema;
 import org.jooq.ateamcomp354.projectmanagerapp.Keys;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.records.UseractivitiesRecord;
@@ -33,7 +32,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Useractivities extends TableImpl<UseractivitiesRecord> {
 
-	private static final long serialVersionUID = 1076658964;
+	private static final long serialVersionUID = 2072674578;
 
 	/**
 	 * The reference instance of <code>userActivities</code>
@@ -49,9 +48,9 @@ public class Useractivities extends TableImpl<UseractivitiesRecord> {
 	}
 
 	/**
-	 * The column <code>userActivities.id</code>.
+	 * The column <code>userActivities.activity_id</code>.
 	 */
-	public final TableField<UseractivitiesRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER, this, "");
+	public final TableField<UseractivitiesRecord, Integer> ACTIVITY_ID = createField("activity_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
 	 * The column <code>userActivities.user_id</code>.
@@ -84,24 +83,8 @@ public class Useractivities extends TableImpl<UseractivitiesRecord> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public UniqueKey<UseractivitiesRecord> getPrimaryKey() {
-		return Keys.PK_USERACTIVITIES;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<UniqueKey<UseractivitiesRecord>> getKeys() {
-		return Arrays.<UniqueKey<UseractivitiesRecord>>asList(Keys.PK_USERACTIVITIES);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public List<ForeignKey<UseractivitiesRecord, ?>> getReferences() {
-		return Arrays.<ForeignKey<UseractivitiesRecord, ?>>asList(Keys.FK_USERACTIVITIES_USERS_1);
+		return Arrays.<ForeignKey<UseractivitiesRecord, ?>>asList(Keys.FK_USERACTIVITIES_ACTIVITY_1, Keys.FK_USERACTIVITIES_USERS_1);
 	}
 
 	/**

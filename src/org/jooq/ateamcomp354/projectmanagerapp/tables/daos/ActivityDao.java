@@ -118,4 +118,11 @@ public class ActivityDao extends DAOImpl<ActivityRecord, org.jooq.ateamcomp354.p
 	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity> fetchByMaxDuration(Integer... values) {
 		return fetch(Activity.ACTIVITY.MAX_DURATION, values);
 	}
+
+	/**
+	 * Fetch records that have <code>description IN (values)</code>
+	 */
+	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity> fetchByDescription(String... values) {
+		return fetch(Activity.ACTIVITY.DESCRIPTION, values);
+	}
 }

@@ -22,32 +22,32 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Useractivities implements Serializable {
 
-	private static final long serialVersionUID = -462640769;
+	private static final long serialVersionUID = -596192511;
 
-	private Integer id;
+	private Integer activityId;
 	private Integer userId;
 
 	public Useractivities() {}
 
 	public Useractivities(Useractivities value) {
-		this.id = value.id;
+		this.activityId = value.activityId;
 		this.userId = value.userId;
 	}
 
 	public Useractivities(
-		Integer id,
+		Integer activityId,
 		Integer userId
 	) {
-		this.id = id;
+		this.activityId = activityId;
 		this.userId = userId;
 	}
 
-	public Integer getId() {
-		return this.id;
+	public Integer getActivityId() {
+		return this.activityId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setActivityId(Integer activityId) {
+		this.activityId = activityId;
 	}
 
 	public Integer getUserId() {

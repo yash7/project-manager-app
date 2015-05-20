@@ -33,7 +33,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity extends TableImpl<ActivityRecord> {
 
-	private static final long serialVersionUID = -72609644;
+	private static final long serialVersionUID = -1456384047;
 
 	/**
 	 * The reference instance of <code>activity</code>
@@ -92,6 +92,11 @@ public class Activity extends TableImpl<ActivityRecord> {
 	 * The column <code>activity.max_duration</code>.
 	 */
 	public final TableField<ActivityRecord, Integer> MAX_DURATION = createField("max_duration", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>activity.description</code>.
+	 */
+	public final TableField<ActivityRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.CLOB, this, "");
 
 	/**
 	 * Create a <code>activity</code> table reference
