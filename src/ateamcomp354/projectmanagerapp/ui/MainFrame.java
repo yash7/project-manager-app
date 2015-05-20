@@ -8,12 +8,17 @@ public class MainFrame extends JFrame {
 	private static final String VIEW_1 = "VIEW_1";
 	private static final String VIEW_2 = "VIEW_2";
 
+	private static final int WIDTH = 600;
+	private static final int HEIGHT = 800;
+
 	private CardLayout cardLayout;
 
 	private HelloPanel helloPanel1;
 	private HelloPanel helloPanel2;
 	
 	public MainFrame() {
+
+		init();
 
 		cardLayout = new CardLayout();
 		setLayout( cardLayout );
@@ -25,6 +30,14 @@ public class MainFrame extends JFrame {
 
 		add(helloPanel1.getComponent(), VIEW_1);
 		add(helloPanel2.getComponent(), VIEW_2);
+	}
+
+	private void init() {
+
+		setSize( WIDTH, HEIGHT );
+		setLocationRelativeTo( null );
+		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+		setVisible( true );
 	}
 
 	private void buildMenuBar() {
