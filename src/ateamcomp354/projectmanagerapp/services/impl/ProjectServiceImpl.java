@@ -25,12 +25,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public int getProjectCompletion(int id) {
+        return 0;
+    }
+
+    @Override
     public void addProject(Project project) {
 
     }
 
     @Override
-    public void deleteProject(Project project) {
+    public void deleteProject(int projectId) {
 
     }
 

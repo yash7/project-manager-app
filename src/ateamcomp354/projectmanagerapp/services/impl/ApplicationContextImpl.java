@@ -29,12 +29,12 @@ public class ApplicationContextImpl implements ApplicationContext {
     }
 
     @Override
-    public ActivityService getActivityService(Project project) {
-        return new ActivityServiceImpl( create, project.getId() );
+    public ActivityService getActivityService(int projectId) {
+        return new ActivityServiceImpl( create, projectId );
     }
 
     @Override
-    public ProjectMemberService getProjectMemberService(Users user) {
+    public ProjectMemberService getProjectMemberService(int userId) {
         throw new UnsupportedOperationException("This is a proposition for user story 4. It may or may not be implemented later on.");
     }
 }

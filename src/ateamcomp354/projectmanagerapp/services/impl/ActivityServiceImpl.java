@@ -30,6 +30,11 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public List<Activity> getActivities(List<Integer> ids) {
+        return null;
+    }
+
+    @Override
     public Activity getActivity(int id) {
         return null;
     }
@@ -40,7 +45,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void deleteActivity(Activity activity) {
+    public void deleteActivity(int activityId) {
 
     }
 
@@ -50,12 +55,12 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void addUserToActivity(Activity activity, Users user) {
+    public void addUserToActivity(int activityId, Users user) {
         throw new UnsupportedOperationException("This is a proposition for user story 3. It may or may not be implemented later on.");
     }
 
     @Override
-    public void deleteUserFromActivity(Activity activity, Users user) {
+    public void deleteUserFromActivity(int activityId, Users user) {
         throw new UnsupportedOperationException("This is a proposition for user story 3. It may or may not be implemented later on.");
     }
 }

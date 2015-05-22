@@ -22,6 +22,11 @@ public interface ActivityService {
     List<Activity> getActivities();
 
     /**
+     * @return activities that have their id in the parameter ids.
+     */
+    List<Activity> getActivities( List<Integer> ids );
+
+    /**
      * A convenience method to obtain an activity by id.
      *
      * @param id The activity id.
@@ -40,9 +45,9 @@ public interface ActivityService {
     /**
      * Delete an activity from the project. The id property cannot be null.
      *
-     * @param activity The activity to murder.
+     * @param activityId The id of activity to murder.
      */
-    void deleteActivity( Activity activity );
+    void deleteActivity( int activityId );
 
     /**
      * Update changes made on an activity. The id property cannot be null
@@ -53,8 +58,8 @@ public interface ActivityService {
     void updateActivity( Activity activity );
 
     // User story 3 proposition
-    void addUserToActivity( Activity activity, Users user );
+    void addUserToActivity( int activityId, Users user );
 
     // User story 3 proposition
-    void deleteUserFromActivity( Activity activity, Users user );
+    void deleteUserFromActivity( int activityId, Users user );
 }

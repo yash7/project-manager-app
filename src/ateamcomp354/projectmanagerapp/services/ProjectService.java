@@ -23,6 +23,12 @@ public interface ProjectService {
     Project getProject( int id );
 
     /**
+     * @param id The id of the project to determine completion.
+     * @return A percentage from 0 to 100.
+     */
+    int getProjectCompletion( int id );
+
+    /**
      * Add a new project. The id property must be null. Other properties
      * may or may not be null.
      *
@@ -33,9 +39,9 @@ public interface ProjectService {
     /**
      * Delete a project from existence! The id property cannot be null.
      *
-     * @param project The project to murder.
+     * @param projectId The id of the project to murder.
      */
-    void deleteProject( Project project );
+    void deleteProject( int projectId );
 
     /**
      * Update changes made on a project. The id property cannot be null

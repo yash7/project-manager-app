@@ -19,11 +19,11 @@ public interface ApplicationContext {
     ProjectService getProjectService();
 
     /**
-     * @param project The project for the activity operations to refer to.
+     * @param projectId The id of the project for the activity operations to refer to.
      * @return A service responsible for CRUD operations on activities in the specified project.
      */
-    ActivityService getActivityService( Project project );
+    ActivityService getActivityService( int projectId );
 
     // // User story 4 proposition
-    ProjectMemberService getProjectMemberService( Users user );
+    ProjectMemberService getProjectMemberService( int userId );
 }
