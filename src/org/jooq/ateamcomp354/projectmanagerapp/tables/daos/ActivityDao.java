@@ -71,6 +71,13 @@ public class ActivityDao extends DAOImpl<ActivityRecord, org.jooq.ateamcomp354.p
 	}
 
 	/**
+	 * Fetch records that have <code>status IN (values)</code>
+	 */
+	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity> fetchByStatus(Integer... values) {
+		return fetch(Activity.ACTIVITY.STATUS, values);
+	}
+
+	/**
 	 * Fetch records that have <code>earliest_start IN (values)</code>
 	 */
 	public List<org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity> fetchByEarliestStart(Integer... values) {

@@ -1,6 +1,7 @@
 CREATE TABLE activity (
 	id INTEGER PRIMARY KEY,
 	project_id INTEGER REFERENCES project (id),
+	status INTEGER,
 	earliest_start INTEGER,
 	earliest_finish INTEGER,
 	label TEXT,
