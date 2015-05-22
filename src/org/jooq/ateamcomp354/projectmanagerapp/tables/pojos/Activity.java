@@ -22,10 +22,11 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity implements Serializable {
 
-	private static final long serialVersionUID = 1106183844;
+	private static final long serialVersionUID = -212359003;
 
 	private Integer id;
 	private Integer projectId;
+	private Integer status;
 	private Integer earliestStart;
 	private Integer earliestFinish;
 	private String  label;
@@ -40,6 +41,7 @@ public class Activity implements Serializable {
 	public Activity(Activity value) {
 		this.id = value.id;
 		this.projectId = value.projectId;
+		this.status = value.status;
 		this.earliestStart = value.earliestStart;
 		this.earliestFinish = value.earliestFinish;
 		this.label = value.label;
@@ -53,6 +55,7 @@ public class Activity implements Serializable {
 	public Activity(
 		Integer id,
 		Integer projectId,
+		Integer status,
 		Integer earliestStart,
 		Integer earliestFinish,
 		String  label,
@@ -64,6 +67,7 @@ public class Activity implements Serializable {
 	) {
 		this.id = id;
 		this.projectId = projectId;
+		this.status = status;
 		this.earliestStart = earliestStart;
 		this.earliestFinish = earliestFinish;
 		this.label = label;
@@ -88,6 +92,14 @@ public class Activity implements Serializable {
 
 	public void setProjectId(Integer projectId) {
 		this.projectId = projectId;
+	}
+
+	public Integer getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public Integer getEarliestStart() {
