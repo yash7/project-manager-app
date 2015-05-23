@@ -10,7 +10,7 @@ public class MainFrame extends JFrame {
 	private static final String VIEW_1 = "VIEW_1";
 	private static final String VIEW_2 = "VIEW_2";
 
-	private static final int WIDTH = 600;
+	private static final int WIDTH = 800;
 	private static final int HEIGHT = 800;
 
 	private final ApplicationContext appCtx;
@@ -19,6 +19,8 @@ public class MainFrame extends JFrame {
 
 	private HelloPanel helloPanel1;
 	private HelloPanel helloPanel2;
+	private LoginPanel loginPanel;
+	private SplitPane1 splitPane1;
 	
 	public MainFrame( ApplicationContext appCtx ) {
 
@@ -31,11 +33,16 @@ public class MainFrame extends JFrame {
 
 		helloPanel1 = new HelloPanel( "Hello View 1");
 		helloPanel2 = new HelloPanel( "Hello View 2");
+		loginPanel = new LoginPanel();
+		splitPane1 = new SplitPane1();
+		
 
 		buildMenuBar();
 
-		add(helloPanel1.getComponent(), VIEW_1);
-		add(helloPanel2.getComponent(), VIEW_2);
+		// add(helloPanel1.getComponent(), VIEW_1);
+		add(loginPanel.getComponent(), VIEW_1);
+		// add(helloPanel2.getComponent(), VIEW_2);
+		add(splitPane1.getComponent(), VIEW_2);
 	}
 
 	private void init() {
