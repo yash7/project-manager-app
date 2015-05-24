@@ -72,6 +72,8 @@ public class DatabaseManager {
 			if (!resultSet.next()) {
 				String sql = readFile( "ddl/users.sql" );
 				statement.execute(sql);
+				sql = readFile( "ddl/default-user.sql" );
+				statement.execute( sql );
 			}
 			
 			// create project table if doesn't exist already
