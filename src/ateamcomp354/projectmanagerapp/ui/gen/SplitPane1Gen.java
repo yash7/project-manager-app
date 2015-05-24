@@ -2,27 +2,38 @@ package ateamcomp354.projectmanagerapp.ui.gen;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridLayout;
+
 import javax.swing.SwingConstants;
+
 import java.awt.geom.Dimension2D;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.BoxLayout;
+
 import java.awt.Component;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
+
 import javax.swing.JButton;
+
 import java.awt.Font;
+
 import javax.swing.JScrollPane;
+
 import java.awt.Color;
+
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+
+import ateamcomp354.projectmanagerapp.ui.MainFrame;
 
 public class SplitPane1Gen extends JPanel {
 	private JButton logoutButton;
@@ -32,7 +43,6 @@ public class SplitPane1Gen extends JPanel {
 	private JButton deleteButton;
 	private JButton currentButton;
 	private JButton archivedButton;
-	private JButton manageTeamButton;
 	private JButton manageActivitiesButton;
 	private JLabel activityNameLabel;
 
@@ -67,7 +77,7 @@ public class SplitPane1Gen extends JPanel {
 	 */
 	public SplitPane1Gen() {
 		
-		setSize(appWidth, appHeight);
+		setSize(MainFrame.getAppWidth(), MainFrame.getAppHeight());
 		setLayout(null);
 		
 		JSplitPane splitPane = new JSplitPane();
@@ -114,14 +124,10 @@ public class SplitPane1Gen extends JPanel {
 		archivedButton.setBounds(7, 142, 75, 25);
 		LeftPanel.add(archivedButton);
 		
-		manageTeamButton = new JButton("Manage Team");
-		manageTeamButton.setBounds(30, 329, 115, 25);
-		LeftPanel.add(manageTeamButton);
-		
 		manageActivitiesButton = new JButton("Manage Activities");
-		manageActivitiesButton.setBounds(157, 329, 115, 25);
+		manageActivitiesButton.setBounds(124, 329, 148, 25);
 		LeftPanel.add(manageActivitiesButton);
-		
+
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
 		
@@ -222,7 +228,6 @@ public class SplitPane1Gen extends JPanel {
 		saveActivityButton.setBounds(68, 637, 116, 25);
 		RightPanel.add(saveActivityButton);
 		
-		
 	}
 
 	// LeftPanel
@@ -246,9 +251,6 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JButton getArchivedButton() {
 		return archivedButton;
-	}
-	public JButton getManageTeamButton() {
-		return manageTeamButton;
 	}
 	public JButton getManageActivitiesButton() {
 		return manageActivitiesButton;

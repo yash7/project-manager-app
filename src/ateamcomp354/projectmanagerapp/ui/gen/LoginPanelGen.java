@@ -38,10 +38,6 @@ public class LoginPanelGen extends JPanel {
 		oKButton = new JButton("OK");
 		oKButton.setBounds(140, 206, 90, 25);
 		add(oKButton);
-		
-		cancelButton = new JButton("Cancel");
-		cancelButton.setBounds(250, 206, 90, 25);
-		add(cancelButton);
 
 	}
 	public JTextField getUsernameField() {
@@ -53,7 +49,5 @@ public class LoginPanelGen extends JPanel {
 	public JButton getOKButton() {
 		return oKButton;
 	}
-	public JButton getCancelButton() {
-		return cancelButton;
-	}
+
 }
