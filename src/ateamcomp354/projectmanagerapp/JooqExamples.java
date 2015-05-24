@@ -44,8 +44,8 @@ public class JooqExamples {
 
 		// we assume we are at some point in the program were we have a list of users.
 		// for this example lets create that list.
-		DumbUser user1 = new DumbUser( null, "Dumb", "John" );
-		DumbUser user2 = new DumbUser( null, "DumbDumb", "Smith" );
+		DumbUser user1 = new DumbUser( null, "Dumb", "John", "dj" );
+		DumbUser user2 = new DumbUser( null, "DumbDumb", "Smith", "ds" );
 		List<DumbUser> users = Arrays.asList( user1, user2 );
 
 		System.out.println( "We are inserting users into the db..." );
@@ -55,8 +55,8 @@ public class JooqExamples {
 			System.out.println( "INSERTING: " + user );
 
 			create.insertInto(USERS)
-					.columns(USERS.FIRST_NAME, USERS.LAST_NAME)
-					.values(user.getFirstName(), user.getLastName())
+					.columns(USERS.FIRST_NAME, USERS.LAST_NAME, USERS.USERNAME, USERS.PASSWORD)
+					.values(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword())
 					.execute(); // run the insert stmt, user is now in the db!
 		}
 
@@ -217,11 +217,13 @@ public class JooqExamples {
 		private Integer id;
 		private String firstName;
 		private String lastName;
+		private String username;
 
-		public DumbUser( Integer id, String firstName, String lastName) {
+		public DumbUser( Integer id, String firstName, String lastName, String username) {
 			this.id = id;
 			this.firstName = firstName;
 			this.lastName = lastName;
+			this.username = username;
 		}
 
 		public Integer getId() {
@@ -247,6 +249,16 @@ public class JooqExamples {
 		public void setLastName(String lastName) {
 			this.lastName = lastName;
 		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getPassword() { return "password"; }
 
 		@Override
 		public String toString() {
