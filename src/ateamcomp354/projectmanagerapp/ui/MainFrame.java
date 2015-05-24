@@ -7,18 +7,18 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-	private static final String VIEW_1 = "VIEW_1";
-	private static final String VIEW_2 = "VIEW_2";
+	private static final String LOGIN_PANEL = "LOGIN_PANEL";
+	private static final String SPLIT_PANE_1 = "SPLIT_PANE_1";
 
-	private static final int WIDTH = 600;
+	private static final int WIDTH = 800;
 	private static final int HEIGHT = 800;
 
 	private final ApplicationContext appCtx;
 
 	private CardLayout cardLayout;
 
-	private HelloPanel helloPanel1;
-	private HelloPanel helloPanel2;
+	private LoginPanel loginPanel;
+	private SplitPane1 splitPane1;
 	
 	public MainFrame( ApplicationContext appCtx ) {
 
@@ -29,13 +29,13 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		setLayout( cardLayout );
 
-		helloPanel1 = new HelloPanel( "Hello View 1");
-		helloPanel2 = new HelloPanel( "Hello View 2");
-
+		loginPanel = new LoginPanel();
+		splitPane1 = new SplitPane1();
+		
 		buildMenuBar();
 
-		add(helloPanel1.getComponent(), VIEW_1);
-		add(helloPanel2.getComponent(), VIEW_2);
+		add(loginPanel.getComponent(), LOGIN_PANEL);
+		add(splitPane1.getComponent(), SPLIT_PANE_1);
 	}
 
 	private void init() {
@@ -48,11 +48,11 @@ public class MainFrame extends JFrame {
 
 	private void buildMenuBar() {
 
-		JMenuItem view1Itm = new JMenuItem( "View 1" );
-		view1Itm.addActionListener( __ -> showView( VIEW_1 ) );
+		JMenuItem view1Itm = new JMenuItem( "Login Panel" );
+		view1Itm.addActionListener( __ -> showView( LOGIN_PANEL ) );
 
-		JMenuItem view2Itm = new JMenuItem( "View 2" );
-		view2Itm.addActionListener( __ -> showView( VIEW_2 ) );
+		JMenuItem view2Itm = new JMenuItem( "Split Pane 1" );
+		view2Itm.addActionListener( __ -> showView( SPLIT_PANE_1 ) );
 
 		JMenu viewMenu = new JMenu( "View" );
 		viewMenu.add( view1Itm );
@@ -66,5 +66,15 @@ public class MainFrame extends JFrame {
 
 	private void showView( String name ) {
 		cardLayout.show( getContentPane(), name);
+	}
+	
+	public static int getAppWidth()
+	{
+		return WIDTH;
+	}
+	
+	public static int getAppHeight()
+	{
+		return HEIGHT;
 	}
 }
