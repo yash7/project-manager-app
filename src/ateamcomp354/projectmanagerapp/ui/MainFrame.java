@@ -8,7 +8,8 @@ import java.awt.*;
 public class MainFrame extends JFrame {
 
 	private static final String LOGIN_PANEL = "LOGIN_PANEL";
-	private static final String SPLIT_PANE_1 = "SPLIT_PANE_1";
+	private static final String PROJECTS_PANEL = "PROJECTS_PANEL";
+	private static final String ACTIVITIES_PANEL = "ACTIVITIES_PANEL";
 
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 800;
@@ -18,7 +19,8 @@ public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 
 	private LoginPanel loginPanel;
-	private SplitPane1 splitPane1;
+	private ProjectsPanel projectsPanel;
+	private ActivitiesPanel activitiesPanel;
 	
 	public MainFrame( ApplicationContext appCtx ) {
 
@@ -29,13 +31,15 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		setLayout( cardLayout );
 
-		loginPanel = new LoginPanel();
-		splitPane1 = new SplitPane1();
+		loginPanel = new LoginPanel( appCtx );
+		projectsPanel = new ProjectsPanel( appCtx );
+		activitiesPanel = new ActivitiesPanel( appCtx );
 		
 		buildMenuBar();
 
 		add(loginPanel.getComponent(), LOGIN_PANEL);
-		add(splitPane1.getComponent(), SPLIT_PANE_1);
+		add(projectsPanel.getComponent(), PROJECTS_PANEL);
+		add(activitiesPanel.getComponent(), ACTIVITIES_PANEL);
 	}
 
 	private void init() {
@@ -48,15 +52,19 @@ public class MainFrame extends JFrame {
 
 	private void buildMenuBar() {
 
-		JMenuItem view1Itm = new JMenuItem( "Login Panel" );
-		view1Itm.addActionListener( __ -> showView( LOGIN_PANEL ) );
+		JMenuItem loginItm = new JMenuItem( "Login Panel" );
+		loginItm.addActionListener(__ -> showView(LOGIN_PANEL));
 
-		JMenuItem view2Itm = new JMenuItem( "Split Pane 1" );
-		view2Itm.addActionListener( __ -> showView( SPLIT_PANE_1 ) );
+		JMenuItem projectsItm = new JMenuItem( "Projects Panel" );
+		projectsItm.addActionListener(__ -> showView(PROJECTS_PANEL));
+
+		JMenuItem activitiesItm = new JMenuItem( "Activities Panel" );
+		activitiesItm.addActionListener( __ -> showView( ACTIVITIES_PANEL ) );
 
 		JMenu viewMenu = new JMenu( "View" );
-		viewMenu.add( view1Itm );
-		viewMenu.add( view2Itm );
+		viewMenu.add( loginItm );
+		viewMenu.add( projectsItm );
+		viewMenu.add( activitiesItm );
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add( viewMenu );

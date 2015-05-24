@@ -71,6 +71,7 @@ public class SplitPane1Gen extends JPanel {
 	private JLabel assigneesLabel;
 	private JComboBox assigneesComboBox;
 	private JButton saveActivityButton;
+	private JSplitPane splitPane;
 	
 	/**
 	 * Create the panel.
@@ -80,7 +81,7 @@ public class SplitPane1Gen extends JPanel {
 		setSize(MainFrame.getAppWidth(), MainFrame.getAppHeight());
 		setLayout(null);
 		
-		JSplitPane splitPane = new JSplitPane();
+		splitPane = new JSplitPane();
 		splitPane.setBounds(0, 0, appWidth, appHeight);
 		splitPane.setDividerLocation(appWidth/2);
 		add(splitPane);
@@ -292,5 +293,8 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JButton getSaveActivityButton() {
 		return saveActivityButton;
+	}
+	public JSplitPane getSplitPane() {
+		return splitPane;
 	}
 }
