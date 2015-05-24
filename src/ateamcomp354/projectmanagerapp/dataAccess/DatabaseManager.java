@@ -37,15 +37,15 @@ public class DatabaseManager {
 	
 	public Connection getOpenConnection() throws Exception {	
 		Class.forName("org.sqlite.JDBC");
-		return DriverManager.getConnection("jdbc:sqlite:" + dbName);
+		Connection c = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+		c.createStatement().execute("PRAGMA foreign_keys = ON");
+		return c;
 	}
 	
 	// opens connection with sqlite
 	private void openConnection() {
 		try {
 			connection = getOpenConnection();
-			statement = connection.createStatement();
-			statement.execute("PRAGMA foreign_keys = ON");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
