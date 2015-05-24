@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 
 import org.jooq.Table;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Activity;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.Activitylinks;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Users;
@@ -31,7 +32,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-	private static final long serialVersionUID = 747416931;
+	private static final long serialVersionUID = 678141362;
 
 	/**
 	 * The reference instance of <code></code>
@@ -55,6 +56,7 @@ public class DefaultSchema extends SchemaImpl {
 	private final List<Table<?>> getTables0() {
 		return Arrays.<Table<?>>asList(
 			Activity.ACTIVITY,
+			Activitylinks.ACTIVITYLINKS,
 			Project.PROJECT,
 			Useractivities.USERACTIVITIES,
 			Users.USERS);

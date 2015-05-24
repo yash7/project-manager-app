@@ -95,6 +95,12 @@ public class DatabaseManager {
 				statement.execute(sql);
 			}
 
+			// create activity links table if doesn't exist already
+			resultSet = data.getTables(null, null, "activityLinks", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/activityLinks.sql" );
+				statement.execute(sql);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
