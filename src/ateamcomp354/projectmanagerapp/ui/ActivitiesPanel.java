@@ -13,6 +13,8 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class ActivitiesPanel {
@@ -47,8 +49,31 @@ public class ActivitiesPanel {
 				{
 					activityNames[i] = activities.get(i).getLabel();
 				}
-				splitPane1Gen.getListScrollPane().setViewportView(new JList<String>(activityNames));
+				JList<String> activityList = new JList<String>(activityNames);
+				splitPane1Gen.getListScrollPane().setViewportView(activityList);
 				splitPane1Gen.getListScrollPane().validate();
+				
+				activityList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						int index = activityList.locationToIndex(e.getPoint());
+						System.out.println(index);
+						if (index >= 0)
+						{
+							Activity activity = activityService.getActivity(index + 1);
+							splitPane1Gen.getActivityNameLabel().setText(activity.getLabel());
+							// TODO:  combo box indexing  splitPane1Gen.getStatusComboBox().setSelectedIndex(0);
+							splitPane1Gen.getEarliestStartField().setText(Integer.toString(activity.getEarliestStart()));
+							splitPane1Gen.getLatestStartField().setText(Integer.toString(activity.getLatestStart()));
+							splitPane1Gen.getEarliestFinishField().setText(Integer.toString(activity.getEarliestFinish()));
+							splitPane1Gen.getLatestFinishField().setText(Integer.toString(activity.getLatestFinish()));
+							splitPane1Gen.getMaxDurationField().setText(Integer.toString(activity.getMaxDuration()));
+							splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
+							splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
+							//TODO: dependencies and assignees
+						}
+					}
+				});
 			}
 		});
 	}
