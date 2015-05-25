@@ -41,7 +41,6 @@ public class ActivitiesPanel {
 
 		this.appCtx = appCtx;
 		this.swap = swap;
-
 		splitPane1Gen = new SplitPane1Gen();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
@@ -126,6 +125,26 @@ public class ActivitiesPanel {
 		});
 		
 		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
+		splitPane1Gen.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				activityService = appCtx.getActivityService(projectId);
+				activities = activityService.getActivities();
+				project = activityService.getProject();
+				
+				splitPane1Gen.getTopLabel().setText(project.getProjectName());
+				JLabel projectLabel = new JLabel(project.getProjectName()); 
+				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
+				
+				String activityNames[] = new String[activities.size()];
+				for (int i = 0; i < activities.size(); i++)
+				{
+					activityNames[i] = activities.get(i).getLabel();
+				}
+				splitPane1Gen.getListScrollPane().setViewportView(new JList<String>(activityNames));
+				splitPane1Gen.getListScrollPane().validate();
+			}
+		});
 	}
 	
 	public JComponent getComponent()
