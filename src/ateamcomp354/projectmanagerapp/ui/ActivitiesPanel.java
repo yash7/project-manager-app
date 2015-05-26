@@ -41,7 +41,8 @@ public class ActivitiesPanel {
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
 			@Override
-			public void componentShown(ComponentEvent e) {	
+			public void componentShown(ComponentEvent e) {
+				activityId = 0;
 				clear();
 				activityService = appCtx.getActivityService(projectId);
 				activities = activityService.getActivities();
@@ -67,8 +68,8 @@ public class ActivitiesPanel {
 		splitPane1Gen.getAddButton().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (!clear()) return;
 				activityId = -1;
-				clear();
 				splitPane1Gen.getActivityNameField().setText("New Activity");
 			}
 		});
@@ -84,17 +85,29 @@ public class ActivitiesPanel {
 		projectId = id;
 	}
 	
-	private void clear()
+	private boolean clear()
 	{
-		splitPane1Gen.getActivityNameField().setText("");
-		splitPane1Gen.getStatusComboBox().setSelectedIndex(0);
-		splitPane1Gen.getEarliestStartField().setText("0");
-		splitPane1Gen.getLatestStartField().setText("0");
-		splitPane1Gen.getEarliestFinishField().setText("0");
-		splitPane1Gen.getLatestFinishField().setText("0");
-		splitPane1Gen.getMaxDurationField().setText("0");
-		splitPane1Gen.getDurationField().setText("0");
-		splitPane1Gen.getDescriptionArea().setText("");
+		int dialogResult = 1;
+		if (isDirty())
+		{
+			int dialogButton = JOptionPane.YES_NO_CANCEL_OPTION;
+			dialogResult = JOptionPane.showConfirmDialog(splitPane1Gen, "Would you like to save first?", "You forgot to save", dialogButton);	
+		}
+		if (dialogResult != 2)
+		{
+			if (dialogResult == 0) saveActivity();
+			splitPane1Gen.getActivityNameField().setText("");
+			splitPane1Gen.getStatusComboBox().setSelectedIndex(0);
+			splitPane1Gen.getEarliestStartField().setText("0");
+			splitPane1Gen.getLatestStartField().setText("0");
+			splitPane1Gen.getEarliestFinishField().setText("0");
+			splitPane1Gen.getLatestFinishField().setText("0");
+			splitPane1Gen.getMaxDurationField().setText("0");
+			splitPane1Gen.getDurationField().setText("0");
+			splitPane1Gen.getDescriptionArea().setText("");
+			return true;
+		}
+		return false;
 	}
 	
 	private void saveActivity()
@@ -134,6 +147,7 @@ public class ActivitiesPanel {
 	
 	private void selectActivity(int id)
 	{
+		if (!clear()) return;
 		Activity activity = activityService.getActivity(id);
 		activityId = id;
 		splitPane1Gen.getActivityNameField().setText(activity.getLabel());
@@ -172,5 +186,27 @@ public class ActivitiesPanel {
 				}
 			}
 		});
+	}
+	
+	private boolean isDirty()
+	{
+		//if this is a new activity, it is dirty
+		if (activityId == -1) return true;
+		
+		//if the view was just opened, there is no activity to be dirty
+		if (activityId == 0) return false;
+		
+		Activity a = activityService.getActivity(activityId);
+		
+		//if this is not a new activity, but has been changed, it is dirty
+		return (!a.getLabel().equals(splitPane1Gen.getActivityNameField().getText())
+				|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
+				|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
+				|| a.getStatus() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
+				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
+				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
+				|| !a.getDescription().equals(splitPane1Gen.getDescriptionArea().getText()));
 	}
 }
