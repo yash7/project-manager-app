@@ -72,6 +72,7 @@ public class SplitPane1Gen extends JPanel {
 	private JComboBox assigneesComboBox;
 	private JButton saveActivityButton;
 	private JSplitPane splitPane;
+	private JTextField textField;
 	
 	/**
 	 * Create the panel.
@@ -132,8 +133,8 @@ public class SplitPane1Gen extends JPanel {
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
 		
-		activityNameLabel = new JLabel("Activity Name");
-		activityNameLabel.setBounds(68, 35, 151, 16);
+		activityNameLabel = new JLabel("Name:");
+		activityNameLabel.setBounds(12, 51, 39, 16);
 		RightPanel.add(activityNameLabel);
 		
 		statusLabel = new JLabel("Status:");
@@ -229,6 +230,11 @@ public class SplitPane1Gen extends JPanel {
 		saveActivityButton.setBounds(68, 637, 116, 25);
 		RightPanel.add(saveActivityButton);
 		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(103, 49, 116, 22);
+		RightPanel.add(textField);
+		
 	}
 
 	// LeftPanel
@@ -258,9 +264,6 @@ public class SplitPane1Gen extends JPanel {
 	}
 	
 	// RightPanel
-	public JLabel getActivityNameLabel() {
-		return activityNameLabel;
-	}
 	public JComboBox getStatusComboBox() {
 		return statusComboBox;
 	}
@@ -296,5 +299,8 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JSplitPane getSplitPane() {
 		return splitPane;
+	}
+	public JTextField getActivityNameField() {
+		return textField;
 	}
 }
