@@ -125,9 +125,16 @@ public class ActivitiesPanel {
 		});
 		
 		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
+
+		splitPane1Gen.getStatusComboBox().addItem("Open");
+		splitPane1Gen.getStatusComboBox().addItem("In Progress");
+		splitPane1Gen.getStatusComboBox().addItem("Resolved");
+		
+		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
 			@Override
-			public void componentShown(ComponentEvent e) {
+			public void componentShown(ComponentEvent e) {	
+				clear();
 				activityService = appCtx.getActivityService(projectId);
 				activities = activityService.getActivities();
 				project = activityService.getProject();
@@ -136,13 +143,25 @@ public class ActivitiesPanel {
 				JLabel projectLabel = new JLabel(project.getProjectName()); 
 				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
 				
-				String activityNames[] = new String[activities.size()];
-				for (int i = 0; i < activities.size(); i++)
-				{
-					activityNames[i] = activities.get(i).getLabel();
-				}
-				splitPane1Gen.getListScrollPane().setViewportView(new JList<String>(activityNames));
-				splitPane1Gen.getListScrollPane().validate();
+				fillActivitiesList();
+			}
+		});
+		
+		//Saving the activity from the edited fields
+		splitPane1Gen.getSaveActivityButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				saveActivity();
+			}
+		});
+		
+		//adds a new activity. only finalized on save
+		splitPane1Gen.getAddButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				activityId = -1;
+				clear();
+				splitPane1Gen.getActivityNameField().setText("New Activity");
 			}
 		});
 	}
