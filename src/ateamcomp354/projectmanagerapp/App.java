@@ -67,19 +67,19 @@ public class App {
 		ProjectDao projectDao = new ProjectDao( create.configuration() );
 
 		if ( usersDao.fetchByUsername( "jdoe"  ).isEmpty() ) {
-			usersDao.insert( new Users( null, "John", "Doe", "jdoe", "top!secret", 1 ) );
+			usersDao.insert( new Users( null, "John", "Doe", "jdoe", "top!secret", true ) );
 		}
 
 		Users jdoe = usersDao.fetchByUsername( "jdoe"  ).get( 0 );
 
 		if ( usersDao.fetchByUsername( "ssmith"  ).isEmpty() ) {
-			usersDao.insert( new Users( null, "Sarah", "Smith", "ssmith", "super_secret", 0 ) );
+			usersDao.insert( new Users( null, "Sarah", "Smith", "ssmith", "super_secret", false ) );
 		}
 
 		Users ssmith = usersDao.fetchByUsername( "ssmith"  ).get( 0 );
 
 		if ( projectDao.fetchByProjectName( "The Awesome Project" ).isEmpty() ) {
-			projectDao.insert( new Project( null, "The Awesome Project", jdoe.getId(), "This project is awesome." ) );
+			projectDao.insert( new Project( null, "The Awesome Project", jdoe.getId(), "This project is awesome.", false ) );
 		}
 
 		Project project = projectDao.fetchByProjectName( "The Awesome Project" ).get( 0 );
@@ -88,8 +88,8 @@ public class App {
 
 		if ( activityService.getActivities().isEmpty() ) {
 
-			Activity a1 = new Activity( null, project.getId(), Status.NEW.ordinal(), 0, 0, "The cool activity", 0, 0, 0, 0, "This activity is for cool people to do." );
-			Activity a2 = new Activity( null, project.getId(), Status.NEW.ordinal(), 0, 0, "The ugly activity", 0, 0, 0, 0, "This activity that no one wants to do." );
+			Activity a1 = new Activity( null, project.getId(), Status.NEW, 0, 0, "The cool activity", 0, 0, 0, 0, "This activity is for cool people to do." );
+			Activity a2 = new Activity( null, project.getId(), Status.NEW, 0, 0, "The ugly activity", 0, 0, 0, 0, "This activity that no one wants to do." );
 
 			activityService.addActivity( a1 );
 			activityService.addActivity( a2 );

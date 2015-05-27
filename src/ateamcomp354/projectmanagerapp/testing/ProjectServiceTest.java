@@ -47,7 +47,7 @@ public class ProjectServiceTest {
         Activity a2 = new Activity();
         a2.setProjectId( projectId );
         a2.setLabel( "a2" );
-        a2.setStatus( Status.RESOLVED.ordinal() );
+        a2.setStatus( Status.RESOLVED );
 
         activityService.addActivity( a1 );
         activityService.addActivity( a2 );

@@ -41,7 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
         int completedActivities = create.selectCount()
                 .from( Tables.ACTIVITY )
                 .where( Tables.ACTIVITY.PROJECT_ID.eq( id ) )
-                .and( Tables.ACTIVITY.STATUS.eq( Status.RESOLVED.ordinal() ) )
+                .and( Tables.ACTIVITY.STATUS.eq( Status.RESOLVED ) )
                 .fetchOne()
                 .value1();
 

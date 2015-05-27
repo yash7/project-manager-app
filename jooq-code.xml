@@ -17,7 +17,41 @@
 
       <!-- All elements that are generated from your schema -->
       <includes>.*</includes>
+
+      <customTypes>
+        <!-- We register our converter, convert an int to a Status enum -->
+        <customType>
+          <name>Status</name>
+          <type>ateamcomp354.projectmanagerapp.model.Status</type>
+          <converter>ateamcomp354.projectmanagerapp.jooq.converters.StatusConverter</converter>
+        </customType>
+      </customTypes>
+
+      <forcedTypes>
+        <!--
+          We force certain columns (that are integers but meant to be booleans) into booleans.
+          Project.completed
+          Users.manager_role
+        -->
+        <forcedType>
+          <name>BOOLEAN</name>
+          <expression>PROJECT\.COMPLETED|USERS\.MANAGER_ROLE</expression>
+          <types>.*</types>
+        </forcedType>
+
+        <!-- We force the activity status column into the Status enum -->
+        <forcedType>
+          <name>Status</name>
+          <expression>ACTIVITY\.STATUS</expression>
+          <types>.*</types>
+        </forcedType>
+      </forcedTypes>
     </database>
+
+    <!-- We want to name things differently just a bit -->
+    <strategy>
+      <name>ateamcomp354.projectmanagerapp.jooq.generator.GeneratorNamingStrategy</name>
+    </strategy>
 
 	<generate>
 	  <!-- Generate POJOs in addition to Record classes for usage of the
