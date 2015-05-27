@@ -10,7 +10,7 @@ import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row;
 import org.jooq.Row2;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.UseractivitiesTable;
 import org.jooq.impl.TableRecordImpl;
 
 
@@ -27,7 +27,7 @@ import org.jooq.impl.TableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UseractivitiesRecord extends TableRecordImpl<UseractivitiesRecord> implements Record2<Integer, Integer> {
 
-	private static final long serialVersionUID = -304197300;
+	private static final long serialVersionUID = -1521957280;
 
 	/**
 	 * Setter for <code>userActivities.activity_id</code>.
@@ -82,7 +82,7 @@ public class UseractivitiesRecord extends TableRecordImpl<UseractivitiesRecord> 
 	 */
 	@Override
 	public Field<Integer> field1() {
-		return Useractivities.USERACTIVITIES.ACTIVITY_ID;
+		return UseractivitiesTable.USERACTIVITIES.ACTIVITY_ID;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class UseractivitiesRecord extends TableRecordImpl<UseractivitiesRecord> 
 	 */
 	@Override
 	public Field<Integer> field2() {
-		return Useractivities.USERACTIVITIES.USER_ID;
+		return UseractivitiesTable.USERACTIVITIES.USER_ID;
 	}
 
 	/**
@@ -145,14 +145,14 @@ public class UseractivitiesRecord extends TableRecordImpl<UseractivitiesRecord> 
 	 * Create a detached UseractivitiesRecord
 	 */
 	public UseractivitiesRecord() {
-		super(Useractivities.USERACTIVITIES);
+		super(UseractivitiesTable.USERACTIVITIES);
 	}
 
 	/**
 	 * Create a detached, initialised UseractivitiesRecord
 	 */
 	public UseractivitiesRecord(Integer activityId, Integer userId) {
-		super(Useractivities.USERACTIVITIES);
+		super(UseractivitiesTable.USERACTIVITIES);
 
 		setValue(0, activityId);
 		setValue(1, userId);
