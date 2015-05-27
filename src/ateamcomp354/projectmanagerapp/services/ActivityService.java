@@ -57,6 +57,43 @@ public interface ActivityService {
      */
     void updateActivity( Activity activity );
 
+    /**
+     * Add a dependency between the activities represented by the two parameters.
+     * The activity for activityId will depend on the activity for dependingActivityId
+     *
+     * @param activityId The id of the activity to add a new dependency
+     * @param dependingActivityId The id of the activity to depend on.
+     */
+    void addDependency( int activityId, int dependingActivityId );
+
+    /**
+     * Delete a dependency between the activities represented by the two parameters.
+     * The activity for activityId is the one depending on the acitivity for
+     * dependingActivityId.
+     *
+     * @param activityId The id of the activity to delete a dependency
+     * @param dependingActivityId The id of the activity that was depended on.
+     */
+    void deleteDependency( int activityId, int dependingActivityId );
+
+    /**
+     * Get an activity's dependencies, or in graph terms,
+     * get the incoming edges of an activity.
+     *
+     * @param activityId The activity that acts as a node.
+     * @return The activity's dependencies as a list of ids.
+     */
+    List<Integer> getDependencies( int activityId );
+
+    /**
+     * Get the dependents of an activity, or in graph terms,
+     * get the outgoing edges of an activity.
+     *
+     * @param activityId The activity that acts as a node.
+     * @return The activity's that depend on the parameter activity as a list of ids.
+     */
+    List<Integer> getDependents( int activityId);
+
     // User story 3 proposition
     void addUserToActivity( int activityId, Users user );
 

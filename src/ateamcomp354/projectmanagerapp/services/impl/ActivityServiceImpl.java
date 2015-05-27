@@ -42,12 +42,12 @@ public class ActivityServiceImpl implements ActivityService {
         return create.select()
                 .from( Tables.ACTIVITY )
                 .where( Tables.ACTIVITY.PROJECT_ID.eq( projectId ) )
-                .fetchInto( Activity.class );
+                .fetchInto(Activity.class);
     }
 
     @Override
     public Activity getActivity(int id) {
-        return activityDao.fetchOneById( id );
+        return activityDao.fetchOneById(id);
     }
 
     @Override
@@ -62,7 +62,27 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void updateActivity(Activity activity) {
-        activityDao.update( activity );
+        activityDao.update(activity);
+    }
+
+    @Override
+    public void addDependency(int activityId, int dependingActivityId) {
+        
+    }
+
+    @Override
+    public void deleteDependency(int activityId, int dependingActivityId) {
+
+    }
+
+    @Override
+    public List<Integer> getDependencies(int activityId) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> getDependents(int activityId) {
+        return null;
     }
 
     @Override

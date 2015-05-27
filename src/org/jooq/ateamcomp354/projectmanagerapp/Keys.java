@@ -9,10 +9,12 @@ import javax.annotation.Generated;
 import org.jooq.ForeignKey;
 import org.jooq.UniqueKey;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Activity;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.Activitylinks;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.Users;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.records.ActivityRecord;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.records.ActivitylinksRecord;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.records.ProjectRecord;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.records.UseractivitiesRecord;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.records.UsersRecord;
@@ -51,6 +53,8 @@ public class Keys {
 	// -------------------------------------------------------------------------
 
 	public static final ForeignKey<ActivityRecord, ProjectRecord> FK_ACTIVITY_PROJECT_1 = ForeignKeys0.FK_ACTIVITY_PROJECT_1;
+	public static final ForeignKey<ActivitylinksRecord, ActivityRecord> FK_ACTIVITYLINKS_ACTIVITY_2 = ForeignKeys0.FK_ACTIVITYLINKS_ACTIVITY_2;
+	public static final ForeignKey<ActivitylinksRecord, ActivityRecord> FK_ACTIVITYLINKS_ACTIVITY_1 = ForeignKeys0.FK_ACTIVITYLINKS_ACTIVITY_1;
 	public static final ForeignKey<ProjectRecord, UsersRecord> FK_PROJECT_USERS_1 = ForeignKeys0.FK_PROJECT_USERS_1;
 	public static final ForeignKey<UseractivitiesRecord, ActivityRecord> FK_USERACTIVITIES_ACTIVITY_1 = ForeignKeys0.FK_USERACTIVITIES_ACTIVITY_1;
 	public static final ForeignKey<UseractivitiesRecord, UsersRecord> FK_USERACTIVITIES_USERS_1 = ForeignKeys0.FK_USERACTIVITIES_USERS_1;
@@ -67,6 +71,8 @@ public class Keys {
 
 	private static class ForeignKeys0 extends AbstractKeys {
 		public static final ForeignKey<ActivityRecord, ProjectRecord> FK_ACTIVITY_PROJECT_1 = createForeignKey(org.jooq.ateamcomp354.projectmanagerapp.Keys.PK_PROJECT, Activity.ACTIVITY, Activity.ACTIVITY.PROJECT_ID);
+		public static final ForeignKey<ActivitylinksRecord, ActivityRecord> FK_ACTIVITYLINKS_ACTIVITY_2 = createForeignKey(org.jooq.ateamcomp354.projectmanagerapp.Keys.PK_ACTIVITY, Activitylinks.ACTIVITYLINKS, Activitylinks.ACTIVITYLINKS.FROM_ACTIVITY_ID);
+		public static final ForeignKey<ActivitylinksRecord, ActivityRecord> FK_ACTIVITYLINKS_ACTIVITY_1 = createForeignKey(org.jooq.ateamcomp354.projectmanagerapp.Keys.PK_ACTIVITY, Activitylinks.ACTIVITYLINKS, Activitylinks.ACTIVITYLINKS.TO_ACTIVITY_ID);
 		public static final ForeignKey<ProjectRecord, UsersRecord> FK_PROJECT_USERS_1 = createForeignKey(org.jooq.ateamcomp354.projectmanagerapp.Keys.PK_USERS, Project.PROJECT, Project.PROJECT.PROJECT_MANAGER_ID);
 		public static final ForeignKey<UseractivitiesRecord, ActivityRecord> FK_USERACTIVITIES_ACTIVITY_1 = createForeignKey(org.jooq.ateamcomp354.projectmanagerapp.Keys.PK_ACTIVITY, Useractivities.USERACTIVITIES, Useractivities.USERACTIVITIES.ACTIVITY_ID);
 		public static final ForeignKey<UseractivitiesRecord, UsersRecord> FK_USERACTIVITIES_USERS_1 = createForeignKey(org.jooq.ateamcomp354.projectmanagerapp.Keys.PK_USERS, Useractivities.USERACTIVITIES, Useractivities.USERACTIVITIES.USER_ID);
