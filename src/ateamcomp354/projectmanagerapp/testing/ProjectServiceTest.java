@@ -217,12 +217,12 @@ public class ProjectServiceTest {
         Activity a1 = new Activity();
         a1.setProjectId( projectId );
         a1.setLabel( "a1" );
-        a1.setStatus(Status.RESOLVED.ordinal());
+        a1.setStatus(Status.RESOLVED);
 
         Activity a2 = new Activity();
         a2.setProjectId( projectId );
         a2.setLabel( "a2" );
-        a2.setStatus(Status.RESOLVED.ordinal());
+        a2.setStatus(Status.RESOLVED);
 
         activityService.addActivity( a1 );
         activityService.addActivity( a2 );
@@ -288,7 +288,7 @@ public class ProjectServiceTest {
 	}
 	
 	@Test
-	public void testDeleteProject_productExists() throws Exception {
+	public void testDeleteProject_projectExists() throws Exception {
 		
         File file = Files.createTempFile( "test", "db" ).toFile();
 
@@ -311,7 +311,77 @@ public class ProjectServiceTest {
         
 	}
 	
-	
+    @Test
+    public void testDeleteProject_activitiesDeleted() throws Exception {
+
+        final int projectId = 0;
+
+        File file = Files.createTempFile( "test", "db" ).toFile();
+
+        DatabaseManager db = new DatabaseManager( file.getName() );
+        ApplicationContext appCtx = App.getApplicationContext( db.getOpenConnection() );
+        ProjectService projectService = appCtx.getProjectService();
+        ActivityService activityService = appCtx.getActivityService( projectId );
+
+        Project p = new Project();
+        p.setId( projectId );
+        p.setProjectName("Test project");
+        p.setDescription("Test project");
+
+        projectService.addProject( p );
+
+        Activity a1 = new Activity();
+        a1.setProjectId( projectId );
+
+        Activity a2 = new Activity();
+        a2.setProjectId( projectId );
+
+        activityService.addActivity( a1 );
+        activityService.addActivity( a2 );
+        
+        List<Activity> activityList = activityService.getActivities();
+        
+        for (Activity a : activityList) {
+        	activityService.deleteActivity(a.getId());
+        }
+        
+        projectService.deleteProject(0);
+        
+        file.delete();
+    }
+    
+    @Test
+    public void testDeleteProject_activitiesNotDeleted() throws Exception {
+
+        final int projectId = 0;
+
+        File file = Files.createTempFile( "test", "db" ).toFile();
+
+        DatabaseManager db = new DatabaseManager( file.getName() );
+        ApplicationContext appCtx = App.getApplicationContext( db.getOpenConnection() );
+        ProjectService projectService = appCtx.getProjectService();
+        ActivityService activityService = appCtx.getActivityService( projectId );
+
+        Project p = new Project();
+        p.setId( projectId );
+        p.setProjectName("Test project");
+        p.setDescription("Test project");
+
+        projectService.addProject( p );
+
+        Activity a1 = new Activity();
+        a1.setProjectId( projectId );
+
+        Activity a2 = new Activity();
+        a2.setProjectId( projectId );
+
+        activityService.addActivity( a1 );
+        activityService.addActivity( a2 );
+        
+        projectService.deleteProject(0);
+        
+        file.delete();
+    }
 	
 	@Test
 	public void testUpdateProject_productExists() throws Exception {
