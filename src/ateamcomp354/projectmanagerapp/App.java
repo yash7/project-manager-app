@@ -79,7 +79,7 @@ public class App {
 		Users ssmith = usersDao.fetchByUsername( "ssmith"  ).get( 0 );
 
 		if ( projectDao.fetchByProjectName( "The Awesome Project" ).isEmpty() ) {
-			projectDao.insert( new Project( null, "The Awesome Project", jdoe.getId(), "This project is awesome.", false ) );
+			projectDao.insert( new Project( null, "The Awesome Project", "This project is awesome.", false ) );
 		}
 
 		Project project = projectDao.fetchByProjectName( "The Awesome Project" ).get( 0 );

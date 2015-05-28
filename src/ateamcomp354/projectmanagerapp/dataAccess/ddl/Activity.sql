@@ -1,6 +1,6 @@
 CREATE TABLE activity (
 	id INTEGER PRIMARY KEY,
-	project_id INTEGER REFERENCES project (id),
+	project_id INTEGER REFERENCES project (id) ON DELETE CASCADE,
 	status INTEGER,
 	earliest_start INTEGER,
 	earliest_finish INTEGER,
