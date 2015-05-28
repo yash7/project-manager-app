@@ -29,15 +29,15 @@ public class App {
 
 		sampleData( c, appCtx );
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+		EventQueue.invokeLater( () -> {
 				try {
 					new MainFrame( appCtx );
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-		});
+			});
+
+		Runtime.getRuntime().addShutdownHook( new Thread( db::closeConnection ) );
 	}
 
 	public static ApplicationContext getApplicationContext( Connection c ) {
