@@ -5,10 +5,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Takes care of all database access
@@ -18,7 +16,6 @@ import java.util.logging.Level;
 public class DatabaseManager {
 	private Connection connection;
 	private ResultSet resultSet;
-	private PreparedStatement preparedStatement;
 	private Statement statement;
 	private String dbName;
 	
@@ -31,28 +28,27 @@ public class DatabaseManager {
 		connection = null;
 		resultSet = null;
 		statement = null;
-		preparedStatement = null;
+		openConnection();
 		createTables();
 	}
 	
-	public Connection getOpenConnection() throws Exception {	
-		Class.forName("org.sqlite.JDBC");
-		Connection c = DriverManager.getConnection("jdbc:sqlite:" + dbName);
-		c.createStatement().execute("PRAGMA foreign_keys = ON");
-		return c;
+	public Connection getConnection() {
+		return connection;
 	}
 	
 	// opens connection with sqlite
 	private void openConnection() {
 		try {
-			connection = getOpenConnection();
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+			connection.createStatement().execute("PRAGMA foreign_keys = ON");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	// closes connection
-	private void closeConnection() {
+	public void closeConnection() {
 		try {
 			connection.close();
 		} catch (Exception e) {
@@ -106,7 +102,6 @@ public class DatabaseManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeConnection();
 			try {
 				statement.close();
 			} catch (Exception e) {
