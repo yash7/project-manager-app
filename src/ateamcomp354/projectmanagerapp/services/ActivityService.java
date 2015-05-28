@@ -13,32 +13,37 @@ public interface ActivityService {
 
     /**
      * @return The project this service's functionality are for.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     Project getProject();
 
     /**
      * @return all the activities in the project.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     List<Activity> getActivities();
 
     /**
      * @return activities that have their id in the parameter ids.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
-    List<Activity> getActivities( List<Integer> ids );
+    List<Activity> getActivities( List<Integer> activityIds );
 
     /**
      * A convenience method to obtain an activity by id.
      *
-     * @param id The activity id.
+     * @param activityId The activity id.
      * @return An activity whose id corresponds to the id parameter.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
-    Activity getActivity( int id );
+    Activity getActivity( int activityId );
 
     /**
      * Add a new activity to the project. The id property must be null. Other properties
      * may or may not be null.
      *
      * @param activity The activity to add to the project.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void addActivity( Activity activity );
 
@@ -46,6 +51,7 @@ public interface ActivityService {
      * Delete an activity from the project. The id property cannot be null.
      *
      * @param activityId The id of activity to murder.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void deleteActivity( int activityId );
 
@@ -54,25 +60,28 @@ public interface ActivityService {
      * as well as any other non null fields.
      *
      * @param activity The activity to update.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void updateActivity( Activity activity );
 
     /**
      * Add a dependency between the activities represented by the two parameters.
-     * The activity for activityId will depend on the activity for dependingActivityId
+     * The activity for activityId (to) will depend on the activity for dependingActivityId (from)
      *
      * @param activityId The id of the activity to add a new dependency
      * @param dependingActivityId The id of the activity to depend on.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void addDependency( int activityId, int dependingActivityId );
 
     /**
      * Delete a dependency between the activities represented by the two parameters.
-     * The activity for activityId is the one depending on the acitivity for
-     * dependingActivityId.
+     * The activity for activityId (to) is the one depending on the acitivity for
+     * dependingActivityId (from).
      *
      * @param activityId The id of the activity to delete a dependency
      * @param dependingActivityId The id of the activity that was depended on.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void deleteDependency( int activityId, int dependingActivityId );
 
@@ -82,6 +91,7 @@ public interface ActivityService {
      *
      * @param activityId The activity that acts as a node.
      * @return The activity's dependencies as a list of ids.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     List<Integer> getDependencies( int activityId );
 
@@ -91,6 +101,7 @@ public interface ActivityService {
      *
      * @param activityId The activity that acts as a node.
      * @return The activity's that depend on the parameter activity as a list of ids.
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     List<Integer> getDependents( int activityId);
 

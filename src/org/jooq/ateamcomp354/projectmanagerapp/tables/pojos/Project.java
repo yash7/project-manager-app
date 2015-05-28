@@ -22,11 +22,10 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Project implements Serializable {
 
-	private static final long serialVersionUID = -1669605195;
+	private static final long serialVersionUID = -2003978628;
 
 	private Integer id;
 	private String  projectName;
-	private Integer projectManagerId;
 	private String  description;
 	private Boolean completed;
 
@@ -35,7 +34,6 @@ public class Project implements Serializable {
 	public Project(Project value) {
 		this.id = value.id;
 		this.projectName = value.projectName;
-		this.projectManagerId = value.projectManagerId;
 		this.description = value.description;
 		this.completed = value.completed;
 	}
@@ -43,13 +41,11 @@ public class Project implements Serializable {
 	public Project(
 		Integer id,
 		String  projectName,
-		Integer projectManagerId,
 		String  description,
 		Boolean completed
 	) {
 		this.id = id;
 		this.projectName = projectName;
-		this.projectManagerId = projectManagerId;
 		this.description = description;
 		this.completed = completed;
 	}
@@ -68,14 +64,6 @@ public class Project implements Serializable {
 
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
-	}
-
-	public Integer getProjectManagerId() {
-		return this.projectManagerId;
-	}
-
-	public void setProjectManagerId(Integer projectManagerId) {
-		this.projectManagerId = projectManagerId;
 	}
 
 	public String getDescription() {

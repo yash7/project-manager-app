@@ -72,13 +72,6 @@ public class ProjectDao extends DAOImpl<ProjectRecord, Project, Integer> {
 	}
 
 	/**
-	 * Fetch records that have <code>project_manager_id IN (values)</code>
-	 */
-	public List<Project> fetchByProjectManagerId(Integer... values) {
-		return fetch(ProjectTable.PROJECT.PROJECT_MANAGER_ID, values);
-	}
-
-	/**
 	 * Fetch records that have <code>description IN (values)</code>
 	 */
 	public List<Project> fetchByDescription(String... values) {
