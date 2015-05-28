@@ -67,7 +67,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(int projectId) {
 
-        if ( !getProject( projectId ).getCompleted() ) {
+        Project project = getProject( projectId );
+
+        if ( project == null ) {
+            return;
+        }
+
+        if ( !project.getCompleted() ) {
 
             int count = countActivities(projectId);
 
