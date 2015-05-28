@@ -4,6 +4,8 @@
 package org.jooq.ateamcomp354.projectmanagerapp.tables;
 
 
+import ateamcomp354.projectmanagerapp.jooq.converters.C_BooleanConverter;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UsersTable extends TableImpl<UsersRecord> {
 
-	private static final long serialVersionUID = -1798205301;
+	private static final long serialVersionUID = 686106092;
 
 	/**
 	 * The reference instance of <code>users</code>
@@ -75,7 +77,7 @@ public class UsersTable extends TableImpl<UsersRecord> {
 	/**
 	 * The column <code>users.manager_role</code>.
 	 */
-	public final TableField<UsersRecord, Boolean> MANAGER_ROLE = createField("manager_role", org.jooq.impl.SQLDataType.BOOLEAN.defaulted(true), this, "");
+	public final TableField<UsersRecord, Boolean> MANAGER_ROLE = createField("manager_role", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "", new C_BooleanConverter());
 
 	/**
 	 * Create a <code>users</code> table reference

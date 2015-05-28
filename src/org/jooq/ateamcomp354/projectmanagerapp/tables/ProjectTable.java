@@ -4,6 +4,8 @@
 package org.jooq.ateamcomp354.projectmanagerapp.tables;
 
 
+import ateamcomp354.projectmanagerapp.jooq.converters.C_BooleanConverter;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ProjectTable extends TableImpl<ProjectRecord> {
 
-	private static final long serialVersionUID = -829458772;
+	private static final long serialVersionUID = -1077187507;
 
 	/**
 	 * The reference instance of <code>project</code>
@@ -65,7 +67,7 @@ public class ProjectTable extends TableImpl<ProjectRecord> {
 	/**
 	 * The column <code>project.completed</code>.
 	 */
-	public final TableField<ProjectRecord, Boolean> COMPLETED = createField("completed", org.jooq.impl.SQLDataType.BOOLEAN.defaulted(true), this, "");
+	public final TableField<ProjectRecord, Boolean> COMPLETED = createField("completed", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "", new C_BooleanConverter());
 
 	/**
 	 * Create a <code>project</code> table reference
