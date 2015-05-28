@@ -6,6 +6,7 @@ import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
+import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
@@ -274,7 +275,7 @@ public class ProjectServiceTest {
         assertEquals(1, projectService.getProjects().size());
 	}
 	
-	@Test
+	@Test (expected = ServiceFunctionalityException.class)
 	public void testAddProject_duplicateProjects() throws Exception {
 		
         File file = Files.createTempFile( "test", "db" ).toFile();
