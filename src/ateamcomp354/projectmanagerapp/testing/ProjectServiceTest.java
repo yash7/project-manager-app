@@ -275,6 +275,31 @@ public class ProjectServiceTest {
 	}
 	
 	@Test
+	public void testAddProject_duplicateProjects() throws Exception {
+		
+        File file = Files.createTempFile( "test", "db" ).toFile();
+
+        DatabaseManager db = new DatabaseManager( file.getName() );
+        ApplicationContext appCtx = App.getApplicationContext( db.getOpenConnection() );
+        ProjectService projectService = appCtx.getProjectService();
+        
+        Project p = new Project();
+        p.setId(0);
+        p.setProjectName("Test project");
+        p.setDescription("Test project");
+
+        
+        projectService.addProject(p);
+        
+        Project p2 = new Project();
+        p2.setId(0);
+        p2.setProjectName("Test project 2");
+        p2.setDescription("Test project 2");
+
+        projectService.addProject(p2);
+	}
+	
+	@Test
 	public void testDeleteProject_noProductExistsWithID() throws Exception {
 		
         File file = Files.createTempFile( "test", "db" ).toFile();
@@ -350,7 +375,7 @@ public class ProjectServiceTest {
         file.delete();
     }
     
-    @Test
+    @Test 
     public void testDeleteProject_activitiesNotDeleted() throws Exception {
 
         final int projectId = 0;
