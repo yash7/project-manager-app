@@ -1,9 +1,8 @@
 package ateamcomp354.projectmanagerapp.jooq.generator;
 
-import org.jooq.util.ColumnDefinition;
 import org.jooq.util.DefaultGeneratorStrategy;
 import org.jooq.util.Definition;
-import org.jooq.util.GeneratorStrategy;
+import org.jooq.util.TableDefinition;
 
 /**
  * Name generated objects that extend Table with a prefix.
@@ -23,7 +22,7 @@ public class GeneratorNamingStrategy extends DefaultGeneratorStrategy {
         // Dao generation calls this with ColumnDefinition instance for its fetchByY methods
         // where Y is the column of a table. In those cases we don't want the suffix.
 
-        String suffix = mode == Mode.DEFAULT  && !(definition instanceof ColumnDefinition) ? "Table" : "";
+        String suffix = mode == Mode.DEFAULT && definition instanceof TableDefinition ? "Table" : "";
 
         return super.getJavaClassName(definition, mode) + suffix;
     }

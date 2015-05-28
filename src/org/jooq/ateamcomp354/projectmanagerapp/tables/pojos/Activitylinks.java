@@ -22,24 +22,36 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activitylinks implements Serializable {
 
-	private static final long serialVersionUID = 803808377;
+	private static final long serialVersionUID = -1784410872;
 
+	private Integer id;
 	private Integer fromActivityId;
 	private Integer toActivityId;
 
 	public Activitylinks() {}
 
 	public Activitylinks(Activitylinks value) {
+		this.id = value.id;
 		this.fromActivityId = value.fromActivityId;
 		this.toActivityId = value.toActivityId;
 	}
 
 	public Activitylinks(
+		Integer id,
 		Integer fromActivityId,
 		Integer toActivityId
 	) {
+		this.id = id;
 		this.fromActivityId = fromActivityId;
 		this.toActivityId = toActivityId;
+	}
+
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Integer getFromActivityId() {

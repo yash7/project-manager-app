@@ -4,18 +4,22 @@ import ateamcomp354.projectmanagerapp.services.ActivityService;
 import org.jooq.DSLContext;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivityDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivitylinksDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activitylinks;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ActivityServiceImpl implements ActivityService {
 
     private final DSLContext create;
     private final ProjectDao projectDao;
     private final ActivityDao activityDao;
+    private final ActivitylinksDao activitylinksDao;
 
     private final int projectId;
 
@@ -24,6 +28,7 @@ public class ActivityServiceImpl implements ActivityService {
         this.projectId = projectId;
         projectDao = new ProjectDao( create.configuration() );
         activityDao = new ActivityDao( create.configuration() );
+        activitylinksDao = new ActivitylinksDao( create.configuration() );
     }
 
     @Override
@@ -67,22 +72,36 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void addDependency(int activityId, int dependingActivityId) {
-        
+
+        Activitylinks link = new Activitylinks( null, dependingActivityId, activityId );
+        activitylinksDao.insert( link );
     }
 
     @Override
     public void deleteDependency(int activityId, int dependingActivityId) {
 
+        create.deleteFrom( Tables.ACTIVITYLINKS )
+                .where( Tables.ACTIVITYLINKS.FROM_ACTIVITY_ID.eq( dependingActivityId ) )
+                .and( Tables.ACTIVITYLINKS.TO_ACTIVITY_ID.eq( activityId ) )
+                .execute();
     }
 
     @Override
     public List<Integer> getDependencies(int activityId) {
-        return null;
+
+        return activitylinksDao.fetchByToActivityId( activityId )
+                .stream()
+                .map( Activitylinks::getFromActivityId )
+                .collect(Collectors.toList() );
     }
 
     @Override
     public List<Integer> getDependents(int activityId) {
-        return null;
+
+        return activitylinksDao.fetchByFromActivityId( activityId )
+                .stream()
+                .map( Activitylinks::getToActivityId )
+                .collect(Collectors.toList() );
     }
 
     @Override
