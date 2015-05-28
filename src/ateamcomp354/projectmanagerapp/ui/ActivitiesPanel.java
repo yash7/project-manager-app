@@ -25,6 +25,7 @@ public class ActivitiesPanel {
 	private SplitPane1Gen splitPane1Gen;
 	private List<Activity> activities;
 	private Project project;
+	private int idIndexes[];
 	
 	private int projectId = 1;
 	private int activityId = 0;
@@ -43,7 +44,7 @@ public class ActivitiesPanel {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				activityId = 0;
-				clear();
+				clear(true);
 				activityService = appCtx.getActivityService(projectId);
 				activities = activityService.getActivities();
 				project = activityService.getProject();
@@ -68,9 +69,17 @@ public class ActivitiesPanel {
 		splitPane1Gen.getAddButton().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (!clear()) return;
+				if (!clear(true)) return;
 				activityId = -1;
 				splitPane1Gen.getActivityNameField().setText("New Activity");
+			}
+		});
+		
+		//deletes currently selected activity
+		splitPane1Gen.getDeleteButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				deleteActivity(activityId);
 			}
 		});
 	}
@@ -85,13 +94,13 @@ public class ActivitiesPanel {
 		projectId = id;
 	}
 	
-	private boolean clear()
+	private boolean clear(boolean allowDialog)
 	{
 		int dialogResult = 1;
-		if (isDirty())
+		if (isDirty() && allowDialog)
 		{
 			int dialogButton = JOptionPane.YES_NO_CANCEL_OPTION;
-			dialogResult = JOptionPane.showConfirmDialog(splitPane1Gen, "Would you like to save first?", "You forgot to save", dialogButton);	
+			dialogResult = JOptionPane.showConfirmDialog(splitPane1Gen, "Would you like to save " + splitPane1Gen.getActivityNameField().getText() + " first?", "You forgot to save", dialogButton);	
 		}
 		if (dialogResult != 2)
 		{
@@ -147,7 +156,7 @@ public class ActivitiesPanel {
 	
 	private void selectActivity(int id)
 	{
-		if (!clear()) return;
+		if (!clear(true)) return;
 		Activity activity = activityService.getActivity(id);
 		activityId = id;
 		splitPane1Gen.getActivityNameField().setText(activity.getLabel());
@@ -162,13 +171,24 @@ public class ActivitiesPanel {
 		//TODO: dependencies
 	}
 	
+	private void deleteActivity(int id)
+	{
+		clear(false);
+		activityService.deleteActivity(id);
+		activityId = 0;
+		fillActivitiesList();
+	}
+	
 	private void fillActivitiesList()
 	{
+		activities = activityService.getActivities();
 		String activityNames[] = new String[activities.size()];
+		idIndexes = new int[activities.size()];
 
 		for (int i = 0; i < activities.size(); i++)
 		{
 			activityNames[i] = activities.get(i).getLabel();
+			idIndexes[i] = activities.get(i).getId();
 		}
 		
 		JList<String> activityList = new JList<String>(activityNames);
@@ -182,7 +202,7 @@ public class ActivitiesPanel {
 
 				if (index >= 0)
 				{
-					selectActivity(index + 1);
+					selectActivity(idIndexes[index]);
 				}
 			}
 		});

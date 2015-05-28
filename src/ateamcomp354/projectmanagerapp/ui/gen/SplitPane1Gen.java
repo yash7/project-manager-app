@@ -111,11 +111,11 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("+");
-		addButton.setBounds(224, 65, 40, 40);
+		addButton.setBounds(210, 66, 54, 40);
 		LeftPanel.add(addButton);
 		
 		deleteButton = new JButton("X");
-		deleteButton.setBounds(175, 65, 40, 40);
+		deleteButton.setBounds(150, 66, 54, 40);
 		LeftPanel.add(deleteButton);
 		
 		currentButton = new JButton("Current");
