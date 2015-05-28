@@ -45,7 +45,9 @@ public class Keys {
 	// -------------------------------------------------------------------------
 
 	public static final UniqueKey<ActivityRecord> PK_ACTIVITY = UniqueKeys0.PK_ACTIVITY;
+	public static final UniqueKey<ActivitylinksRecord> PK_ACTIVITYLINKS = UniqueKeys0.PK_ACTIVITYLINKS;
 	public static final UniqueKey<ProjectRecord> PK_PROJECT = UniqueKeys0.PK_PROJECT;
+	public static final UniqueKey<UseractivitiesRecord> PK_USERACTIVITIES = UniqueKeys0.PK_USERACTIVITIES;
 	public static final UniqueKey<UsersRecord> PK_USERS = UniqueKeys0.PK_USERS;
 
 	// -------------------------------------------------------------------------
@@ -65,7 +67,9 @@ public class Keys {
 
 	private static class UniqueKeys0 extends AbstractKeys {
 		public static final UniqueKey<ActivityRecord> PK_ACTIVITY = createUniqueKey(ActivityTable.ACTIVITY, ActivityTable.ACTIVITY.ID);
+		public static final UniqueKey<ActivitylinksRecord> PK_ACTIVITYLINKS = createUniqueKey(ActivitylinksTable.ACTIVITYLINKS, ActivitylinksTable.ACTIVITYLINKS.ID);
 		public static final UniqueKey<ProjectRecord> PK_PROJECT = createUniqueKey(ProjectTable.PROJECT, ProjectTable.PROJECT.ID);
+		public static final UniqueKey<UseractivitiesRecord> PK_USERACTIVITIES = createUniqueKey(UseractivitiesTable.USERACTIVITIES, UseractivitiesTable.USERACTIVITIES.ID);
 		public static final UniqueKey<UsersRecord> PK_USERS = createUniqueKey(UsersTable.USERS, UsersTable.USERS.ID);
 	}
 
