@@ -2,12 +2,10 @@ package ateamcomp354.projectmanagerapp;
 
 import java.awt.EventQueue;
 import java.sql.Connection;
-import java.util.List;
 
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
-import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.impl.ApplicationContextImpl;
 import ateamcomp354.projectmanagerapp.dataAccess.DatabaseManager;
 import ateamcomp354.projectmanagerapp.ui.MainFrame;
@@ -25,21 +23,21 @@ public class App {
 	public static void main(String[] args) throws Exception {
 
 		DatabaseManager db = new DatabaseManager();
-		Connection c = db.getOpenConnection();
+		Connection c = db.getConnection();
 
 		ApplicationContext appCtx = getApplicationContext( c );
 
 		sampleData( c, appCtx );
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+		EventQueue.invokeLater( () -> {
 				try {
 					new MainFrame( appCtx );
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-		});
+			});
+
+		Runtime.getRuntime().addShutdownHook( new Thread( db::closeConnection ) );
 	}
 
 	public static ApplicationContext getApplicationContext( Connection c ) {

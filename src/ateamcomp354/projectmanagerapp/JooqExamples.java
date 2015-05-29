@@ -24,7 +24,7 @@ public class JooqExamples {
 		new File( "jooq-examples.db" ).delete();
 
 		DatabaseManager db = new DatabaseManager( "jooq-examples.db" );
-		Connection c = db.getOpenConnection();
+		Connection c = db.getConnection();
 
 		// This is just so jooq doesn't print its logo to stderr
 		// Disabled for now because it was hard to read this programs output.
