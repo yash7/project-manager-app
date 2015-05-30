@@ -322,7 +322,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         projectService.deleteProject(0);
     }
 
-    @Test
+    @Test (expected = IllegalArgumentException.class)
     public void testDeleteProject_activitiesNotDeleted() throws Exception {
 
         final int projectId = 0;
