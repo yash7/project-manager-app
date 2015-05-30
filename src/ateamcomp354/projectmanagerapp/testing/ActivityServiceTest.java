@@ -178,7 +178,7 @@ public class ActivityServiceTest {
 	
 	
 	/**
-	 * This test failed
+	 * This test failed, can still add an activity to completed project
 	 * @throws Exception
 	 */
 	@Test
@@ -202,6 +202,9 @@ public class ActivityServiceTest {
         assertEquals(0,ase.getActivities().size());
 	}
 	
+	/**
+	 * Test failed, getDependents() and getDepende
+	 */
 	@Test
 	public void testAddDependency(){
 		Activity a = new Activity();
@@ -224,12 +227,14 @@ public class ActivityServiceTest {
 		
 		System.out.println("Activites: " + ase.getActivities().size());
 		System.out.println("Dependents of Activity 0: " + ase.getDependents(0).size());
-		System.out.println("Dependencies of Activity 0: " + ase.getDependents(0).size());
 		
 		assertEquals(2,ase.getDependents(0).size());
 		assertEquals(1,ase.getDependencies(1).size());
 	}
 	
+	/**
+	 * Test failed also because of getDependents() returning 0
+	 */
 	@Test 
 	public void testDeleteDependency(){
 		Activity a = new Activity();
