@@ -223,8 +223,8 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(b);
 		ase.addActivity(c);
 		
-		ase.addDependency(1, 0);
-		ase.addDependency(2, 0);
+		ase.addDependency(0, 1);
+		ase.addDependency(0, 2);
 		
 		System.out.println("Activites: " + ase.getActivities().size());
 		System.out.println("Dependents of Activity 0: " + ase.getDependents(0).size());
@@ -252,9 +252,9 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		ase.addActivity(b);
 		ase.addActivity(c);
-		ase.addDependency(1, 0);
-		ase.addDependency(2, 0);
-		ase.deleteDependency(1, 0);
+		ase.addDependency(0, 1);
+		ase.addDependency(0, 2);
+		ase.deleteDependency(0, 1);
 		
 		assertEquals(1,ase.getDependents(0).size());
 		assertEquals(0,ase.getDependencies(1).size());

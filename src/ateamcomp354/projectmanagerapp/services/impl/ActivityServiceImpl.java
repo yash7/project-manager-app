@@ -75,6 +75,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void addActivity(Activity activity) {
+
+        checkProjectNotCompleted( "Project to add activity to is completed" );
+
         try {
             activityDao.insert(activity);
         } catch (DataAccessException e) {
@@ -84,6 +87,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void deleteActivity(int activityId) {
+
+        checkProjectNotCompleted( "Project to delete activity from is completed" );
+
         try {
             activityDao.deleteById(activityId);
         } catch (DataAccessException e) {
@@ -93,6 +99,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void updateActivity(Activity activity) {
+
+        checkProjectNotCompleted( "Project to edit activity from is completed" );
+
         try {
             activityDao.update(activity);
         } catch (DataAccessException e) {
@@ -101,38 +110,43 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void addDependency(int activityId, int dependingActivityId) {
+    public void addDependency(int fromActivityId, int toActivityId) {
 
-        Activitylinks link = new Activitylinks( null, dependingActivityId, activityId );
+        checkProjectNotCompleted( "Project to add activity dependency is completed" );
+
+        Activitylinks link = new Activitylinks( null, fromActivityId, toActivityId );
 
         try {
             activitylinksDao.insert(link);
         } catch (DataAccessException e) {
-            throw new ServiceFunctionalityException("failed to add a new dependency from " + dependingActivityId + " to " + activityId , e);
+            throw new ServiceFunctionalityException("failed to add a new dependency from " + fromActivityId + " to " + toActivityId , e);
         }
     }
 
     @Override
-    public void deleteDependency(int activityId, int dependingActivityId) {
+    public void deleteDependency(int fromActivityId, int toActivityId) {
+
+        checkProjectNotCompleted( "Project to delete activity dependency is completed" );
+
         try {
             create.deleteFrom(Tables.ACTIVITYLINKS)
-                    .where(Tables.ACTIVITYLINKS.FROM_ACTIVITY_ID.eq(dependingActivityId))
-                    .and(Tables.ACTIVITYLINKS.TO_ACTIVITY_ID.eq(activityId))
+                    .where(Tables.ACTIVITYLINKS.FROM_ACTIVITY_ID.eq(fromActivityId))
+                    .and(Tables.ACTIVITYLINKS.TO_ACTIVITY_ID.eq(toActivityId))
                     .execute();
         } catch (DataAccessException e) {
-            throw new ServiceFunctionalityException("failed to delete a dependency from " + dependingActivityId + " to " + activityId , e);
+            throw new ServiceFunctionalityException("failed to delete a dependency from " + fromActivityId + " to " + toActivityId , e);
         }
     }
 
     @Override
-    public List<Integer> getDependencies(int activityId) {
+    public List<Integer> getDependencies(int toActivityId) {
 
         List<Activitylinks> links;
 
         try {
-            links = activitylinksDao.fetchByToActivityId(activityId);
+            links = activitylinksDao.fetchByToActivityId(toActivityId);
         } catch (DataAccessException e) {
-            throw new ServiceFunctionalityException("failed to get dependencies of activity " + activityId , e);
+            throw new ServiceFunctionalityException("failed to get dependencies of activity " + toActivityId , e);
         }
 
         return links.stream()
@@ -141,19 +155,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<Integer> getDependents(int activityId) {
+    public List<Integer> getDependents(int fromActivityId) {
 
         List<Activitylinks> links;
 
         try {
-            links = activitylinksDao.fetchByToActivityId(activityId);
+            links = activitylinksDao.fetchByFromActivityId(fromActivityId);
         } catch (DataAccessException e) {
-            throw new ServiceFunctionalityException("failed to get dependents of activity " + activityId , e);
+            throw new ServiceFunctionalityException("failed to get dependents of activity " + fromActivityId , e);
         }
 
         return links.stream()
                 .map( Activitylinks::getToActivityId )
                 .collect( Collectors.toList() );
+    }
+
+    private void checkProjectNotCompleted( String errMsg ) {
+
+        if ( getProject().getCompleted() ) {
+            throw new IllegalStateException( errMsg );
+        }
     }
 
     @Override
