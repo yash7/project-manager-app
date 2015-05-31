@@ -8,36 +8,31 @@ package ateamcomp354.projectmanagerapp.testing;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.nio.file.Files;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
-import org.jooq.exception.DataAccessException;
 import org.junit.Before;
 import org.junit.Test;
 
 import ateamcomp354.projectmanagerapp.App;
-import ateamcomp354.projectmanagerapp.dataAccess.DatabaseManager;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 
-public class ActivityServiceTest {
+public class ActivityServiceTest extends AbstractDatabaseTest {
 
 	private ActivityService ase;
 	private ProjectService pjs;
-	private DatabaseManager db;
 	private ApplicationContext appCtx;
 	
 	
 	@Test
 	public void testAddActivitySuccess() throws Exception {
-		
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -51,12 +46,13 @@ public class ActivityServiceTest {
 	
 	@Test
 	public void testGetActivities_noActivities() throws Exception  {
+
 		assertEquals(0, ase.getActivities().size());
 	}
 	
 	@Test
 	public void testGetActivities() throws Exception  {
-        
+
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -73,12 +69,13 @@ public class ActivityServiceTest {
 	
 	@Test
 	public void testGetProject() throws Exception  {
-		
+
 		assertEquals("Test Project", ase.getProject().getProjectName());
 	}
 	
 	@Test
 	public void testGetActivity() throws Exception  {
+		
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -98,6 +95,7 @@ public class ActivityServiceTest {
 	
 	@Test
 	public void testGetProject_noProject() throws Exception  {
+
 		pjs.deleteProject(0);
 		Project p = ase.getProject();
 		
@@ -106,6 +104,7 @@ public class ActivityServiceTest {
 	
 	@Test
 	public void testDeleteActivity() throws Exception  {
+
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -123,6 +122,7 @@ public class ActivityServiceTest {
 	
 	@Test
 	public void testGetActivitiesWithIDs() throws Exception  {
+
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -157,6 +157,7 @@ public class ActivityServiceTest {
 	}
 	@Test(expected = UnsupportedOperationException.class)
 	public void testDeleteUserFromActivity() throws Exception  {
+
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -182,7 +183,7 @@ public class ActivityServiceTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testAddActivity_projectComplete() throws Exception{
+	public void testAddActivity_projectComplete() throws Exception{	
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(1);
@@ -261,9 +262,7 @@ public class ActivityServiceTest {
 	
 	@Before
 	public void initial()throws Exception{
-		File file = Files.createTempFile( "act_test", "db" ).toFile();
 
-		db = new DatabaseManager( file.getName() );
 		appCtx = App.getApplicationContext( db.getConnection() );
 		
 		pjs = appCtx.getProjectService();
