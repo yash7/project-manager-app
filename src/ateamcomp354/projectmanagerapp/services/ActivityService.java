@@ -43,6 +43,7 @@ public interface ActivityService {
      * may or may not be null.
      *
      * @param activity The activity to add to the project.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void addActivity( Activity activity );
@@ -51,6 +52,7 @@ public interface ActivityService {
      * Delete an activity from the project. The id property cannot be null.
      *
      * @param activityId The id of activity to murder.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void deleteActivity( int activityId );
@@ -60,50 +62,50 @@ public interface ActivityService {
      * as well as any other non null fields.
      *
      * @param activity The activity to update.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void updateActivity( Activity activity );
 
     /**
      * Add a dependency between the activities represented by the two parameters.
-     * The activity for activityId (to) will depend on the activity for dependingActivityId (from)
      *
-     * @param activityId The id of the activity to add a new dependency
-     * @param dependingActivityId The id of the activity to depend on.
+     * @param fromActivityId The id of the activity to depend on.
+     * @param toActivityId The id of the activity that will depend on fromActivityId
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
-    void addDependency( int activityId, int dependingActivityId );
+    void addDependency( int fromActivityId, int toActivityId );
 
     /**
      * Delete a dependency between the activities represented by the two parameters.
-     * The activity for activityId (to) is the one depending on the acitivity for
-     * dependingActivityId (from).
      *
-     * @param activityId The id of the activity to delete a dependency
-     * @param dependingActivityId The id of the activity that was depended on.
+     * @param fromActivityId The id of the activity to not depend on anymore.
+     * @param toActivityId The id of the activity that depended on fromActivityId.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
-    void deleteDependency( int activityId, int dependingActivityId );
+    void deleteDependency( int fromActivityId, int toActivityId );
 
     /**
      * Get an activity's dependencies, or in graph terms,
      * get the incoming edges of an activity.
      *
-     * @param activityId The activity that acts as a node.
+     * @param toActivityId The activity that acts as a node.
      * @return The activity's dependencies as a list of ids.
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
-    List<Integer> getDependencies( int activityId );
+    List<Integer> getDependencies( int toActivityId );
 
     /**
      * Get the dependents of an activity, or in graph terms,
      * get the outgoing edges of an activity.
      *
-     * @param activityId The activity that acts as a node.
+     * @param fromActivityId The activity that acts as a node.
      * @return The activity's that depend on the parameter activity as a list of ids.
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
-    List<Integer> getDependents( int activityId);
+    List<Integer> getDependents( int fromActivityId);
 
     // User story 3 proposition
     void addUserToActivity( int activityId, Users user );
