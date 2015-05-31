@@ -43,6 +43,7 @@ public interface ActivityService {
      * may or may not be null.
      *
      * @param activity The activity to add to the project.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void addActivity( Activity activity );
@@ -51,6 +52,7 @@ public interface ActivityService {
      * Delete an activity from the project. The id property cannot be null.
      *
      * @param activityId The id of activity to murder.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void deleteActivity( int activityId );
@@ -60,6 +62,7 @@ public interface ActivityService {
      * as well as any other non null fields.
      *
      * @param activity The activity to update.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void updateActivity( Activity activity );
@@ -69,6 +72,7 @@ public interface ActivityService {
      *
      * @param fromActivityId The id of the activity to depend on.
      * @param toActivityId The id of the activity that will depend on fromActivityId
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void addDependency( int fromActivityId, int toActivityId );
@@ -78,6 +82,7 @@ public interface ActivityService {
      *
      * @param fromActivityId The id of the activity to not depend on anymore.
      * @param toActivityId The id of the activity that depended on fromActivityId.
+     * @throws IllegalStateException if the underlying project is completed
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void deleteDependency( int fromActivityId, int toActivityId );
