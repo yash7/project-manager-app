@@ -32,7 +32,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	
 	
 	@Test
-	public void testAddActivitySuccess() throws Exception {
+	public void testAddActivitySuccess()  {
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -45,13 +45,13 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	
 	
 	@Test
-	public void testGetActivities_noActivities() throws Exception  {
+	public void testGetActivities_noActivities()   {
 
 		assertEquals(0, ase.getActivities().size());
 	}
 	
 	@Test
-	public void testGetActivities() throws Exception  {
+	public void testGetActivities()   {
 
 		Activity a = new Activity();
 		a.setId(0);
@@ -68,13 +68,13 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testGetProject() throws Exception  {
+	public void testGetProject() {
 
 		assertEquals("Test Project", ase.getProject().getProjectName());
 	}
 	
 	@Test
-	public void testGetActivity() throws Exception  {
+	public void testGetActivity() {
 		
 		Activity a = new Activity();
 		a.setId(0);
@@ -94,7 +94,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	
 	
 	@Test
-	public void testGetProject_noProject() throws Exception  {
+	public void testGetProject_noProject() {
 
 		pjs.deleteProject(0);
 		Project p = ase.getProject();
@@ -103,7 +103,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testDeleteActivity() throws Exception  {
+	public void testDeleteActivity() {
 
 		Activity a = new Activity();
 		a.setId(0);
@@ -121,7 +121,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testGetActivitiesWithIDs() throws Exception  {
+	public void testGetActivitiesWithIDs() {
 
 		Activity a = new Activity();
 		a.setId(0);
@@ -142,7 +142,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test (expected = UnsupportedOperationException.class)
-	public void testAddUserToActivity() throws Exception  {
+	public void testAddUserToActivity() {
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
@@ -156,7 +156,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		
 	}
 	@Test(expected = UnsupportedOperationException.class)
-	public void testDeleteUserFromActivity() throws Exception  {
+	public void testDeleteUserFromActivity()   {
 
 		Activity a = new Activity();
 		a.setId(0);
@@ -170,7 +170,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test(expected=ServiceFunctionalityException.class)
-	public void testAddActivity_wrongProject() throws Exception{
+	public void testAddActivity_wrongProject() {
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(1);
@@ -178,12 +178,8 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	
-	/**
-	 * This test failed, can still add an activity to completed project
-	 * @throws Exception
-	 */
-	@Test
-	public void testAddActivity_projectComplete() throws Exception{	
+	@Test(expected=IllegalStateException.class)
+	public void testAddActivity_projectComplete() {	
 		Activity a = new Activity();
 		a.setId(0);
 		a.setProjectId(1);
@@ -226,8 +222,6 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addDependency(0, 1);
 		ase.addDependency(0, 2);
 		
-		System.out.println("Activites: " + ase.getActivities().size());
-		System.out.println("Dependents of Activity 0: " + ase.getDependents(0).size());
 		
 		assertEquals(2,ase.getDependents(0).size());
 		assertEquals(1,ase.getDependencies(1).size());
@@ -261,7 +255,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Before
-	public void initial()throws Exception{
+	public void initial(){
 
 		appCtx = App.getApplicationContext( db.getConnection() );
 		
