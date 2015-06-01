@@ -233,7 +233,17 @@ public class ActivitiesPanel {
 					break;
 				}
 			}
-			if (!isDependency && activities.get(i).getId() != activityId)
+			//only checks for direct circular dependencies. A graph traversal will be needed later
+			boolean circular = false;
+			for (Integer dependent : activityService.getDependents(i))
+			{
+				if (dependent == activities.get(i).getId())
+				{
+					circular = true;
+					break;
+				}
+			}
+			if (!isDependency && activities.get(i).getId() != activityId && !circular)
 			{
 				splitPane1Gen.getDependenciesComboBox().addItem(activities.get(i).getLabel());
 				dependencyComboIndexes.add(activities.get(i).getId());
