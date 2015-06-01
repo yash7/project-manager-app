@@ -7,6 +7,7 @@ import javax.swing.*;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
+import ateamcomp354.projectmanagerapp.model.Status;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
@@ -26,6 +27,9 @@ public class ActivitiesPanel {
 	private List<Activity> activities;
 	private Project project;
 	private int idIndexes[];
+	private int dependencyIndexes[];
+	private List<Integer> dependencyComboIndexes;
+	private int selectedDependencyId;
 	
 	private int projectId = 1;
 	private int activityId = 0;
@@ -82,6 +86,22 @@ public class ActivitiesPanel {
 				deleteActivity(activityId);
 			}
 		});
+		
+		//adds a dependency to the selected project
+		splitPane1Gen.getAddDependencyButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				addDependency();
+			}
+		});
+		
+		//removes selected dependency from selected project
+		splitPane1Gen.getRemoveDependencyButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				removeDependency();
+			}
+		});
 	}
 	
 	public JComponent getComponent()
@@ -125,7 +145,7 @@ public class ActivitiesPanel {
 		activity.setId(activityId);
 		activity.setLabel(splitPane1Gen.getActivityNameField().getText());
 		activity.setProjectId(projectId);
-		activity.setStatus(splitPane1Gen.getStatusComboBox().getSelectedIndex());
+		activity.setStatus(Status.values()[splitPane1Gen.getStatusComboBox().getSelectedIndex()]);
 		activity.setEarliestStart(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()));
 		activity.setLatestStart(Integer.parseInt(splitPane1Gen.getLatestStartField().getText()));
 		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()));
@@ -160,7 +180,7 @@ public class ActivitiesPanel {
 		Activity activity = activityService.getActivity(id);
 		activityId = id;
 		splitPane1Gen.getActivityNameField().setText(activity.getLabel());
-		splitPane1Gen.getStatusComboBox().setSelectedIndex(activity.getStatus());
+		splitPane1Gen.getStatusComboBox().setSelectedIndex(activity.getStatus().ordinal());
 		splitPane1Gen.getEarliestStartField().setText(Integer.toString(activity.getEarliestStart()));
 		splitPane1Gen.getLatestStartField().setText(Integer.toString(activity.getLatestStart()));
 		splitPane1Gen.getEarliestFinishField().setText(Integer.toString(activity.getEarliestFinish()));
@@ -168,7 +188,71 @@ public class ActivitiesPanel {
 		splitPane1Gen.getMaxDurationField().setText(Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
-		//TODO: dependencies
+		showDependencies(id);
+	}
+	
+	private void showDependencies(int id)
+	{
+		selectedDependencyId = 0;
+		List<Integer> dependencies = activityService.getDependencies(id);
+		String dependencyNames[] = new String[dependencies.size()];
+		dependencyIndexes = new int[dependencies.size()];
+		
+		for (int i = 0; i < dependencies.size(); i++)
+		{
+			dependencyNames[i] = activityService.getActivity(dependencies.get(i)).getLabel();
+			dependencyIndexes[i] = activityService.getActivity(dependencies.get(i)).getId();
+		}
+		
+		JList<String> dependencyList = new JList<String>(dependencyNames);
+		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
+		splitPane1Gen.getDependencyScrollPane().validate();
+		fillDependencyComboBox();
+		
+		dependencyList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				selectedDependencyId = dependencyIndexes[dependencyList.locationToIndex(e.getPoint())];
+			}
+		});
+	}
+	
+	private void fillDependencyComboBox()
+	{
+		splitPane1Gen.getDependenciesComboBox().removeAllItems();
+		dependencyComboIndexes = activityService.getDependencies(0);
+		dependencyComboIndexes.clear();
+		for (int i = 0; i < activities.size(); i++)
+		{
+			boolean isDependency = false;
+			for (int j = 0; j < dependencyIndexes.length; j ++)
+			{
+				if (activities.get(i).getId() == dependencyIndexes[j])
+				{
+					isDependency = true;
+					break;
+				}
+			}
+			if (!isDependency && activities.get(i).getId() != activityId)
+			{
+				splitPane1Gen.getDependenciesComboBox().addItem(activities.get(i).getLabel());
+				dependencyComboIndexes.add(activities.get(i).getId());
+			}
+		}
+	}
+	
+	private void addDependency()
+	{
+		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
+		activityService.addDependency(toAdd, activityId);
+		showDependencies(activityId);
+	}
+	
+	private void removeDependency()
+	{
+		activityService.deleteDependency(selectedDependencyId, activityId);
+		selectedDependencyId = 0;
+		showDependencies(activityId);
 	}
 	
 	private void deleteActivity(int id)
@@ -224,7 +308,7 @@ public class ActivitiesPanel {
 				|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
 				|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
 				|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
-				|| a.getStatus() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
+				|| a.getStatus().ordinal() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
 				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
 				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
 				|| !a.getDescription().equals(splitPane1Gen.getDescriptionArea().getText()));
