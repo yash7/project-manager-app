@@ -235,7 +235,7 @@ public class ActivitiesPanel {
 			}
 			//only checks for direct circular dependencies. A graph traversal will be needed later
 			boolean circular = false;
-			for (Integer dependent : activityService.getDependents(i))
+			for (Integer dependent : activityService.getDependents(activityId))
 			{
 				if (dependent == activities.get(i).getId())
 				{
@@ -243,6 +243,10 @@ public class ActivitiesPanel {
 					break;
 				}
 			}
+			System.out.println(i);
+			System.out.println(isDependency);
+			System.out.println(activities.get(i).getId() != activityId);
+			System.out.println(circular);
 			if (!isDependency && activities.get(i).getId() != activityId && !circular)
 			{
 				splitPane1Gen.getDependenciesComboBox().addItem(activities.get(i).getLabel());
@@ -253,9 +257,16 @@ public class ActivitiesPanel {
 	
 	private void addDependency()
 	{
-		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
-		activityService.addDependency(toAdd, activityId);
-		showDependencies(activityId);
+		try
+		{
+			int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
+			activityService.addDependency(toAdd, activityId);
+			showDependencies(activityId);
+		}
+		catch (Exception e)
+		{
+			//do nothing. There is no activity selected
+		}
 	}
 	
 	private void removeDependency()
