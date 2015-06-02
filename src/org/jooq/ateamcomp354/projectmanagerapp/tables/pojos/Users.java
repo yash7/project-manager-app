@@ -22,14 +22,14 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users implements Serializable {
 
-	private static final long serialVersionUID = -611857019;
+	private static final long serialVersionUID = 991345905;
 
 	private Integer id;
 	private String  firstName;
 	private String  lastName;
 	private String  username;
 	private String  password;
-	private Integer managerRole;
+	private Boolean managerRole;
 
 	public Users() {}
 
@@ -48,7 +48,7 @@ public class Users implements Serializable {
 		String  lastName,
 		String  username,
 		String  password,
-		Integer managerRole
+		Boolean managerRole
 	) {
 		this.id = id;
 		this.firstName = firstName;
@@ -98,11 +98,11 @@ public class Users implements Serializable {
 		this.password = password;
 	}
 
-	public Integer getManagerRole() {
+	public Boolean getManagerRole() {
 		return this.managerRole;
 	}
 
-	public void setManagerRole(Integer managerRole) {
+	public void setManagerRole(Boolean managerRole) {
 		this.managerRole = managerRole;
 	}
 }

@@ -34,6 +34,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 
 import ateamcomp354.projectmanagerapp.ui.MainFrame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SplitPane1Gen extends JPanel {
 	private JButton logoutButton;
@@ -73,6 +75,9 @@ public class SplitPane1Gen extends JPanel {
 	private JButton saveActivityButton;
 	private JSplitPane splitPane;
 	private JTextField textField;
+	private JScrollPane dependencyScrollPane;
+	private JButton button;
+	private JButton button_1;
 	
 	/**
 	 * Create the panel.
@@ -111,11 +116,11 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("+");
-		addButton.setBounds(224, 65, 40, 40);
+		addButton.setBounds(210, 66, 54, 40);
 		LeftPanel.add(addButton);
 		
 		deleteButton = new JButton("X");
-		deleteButton.setBounds(175, 65, 40, 40);
+		deleteButton.setBounds(150, 66, 54, 40);
 		LeftPanel.add(deleteButton);
 		
 		currentButton = new JButton("Current");
@@ -211,29 +216,58 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(descriptionLabel);
 		
 		dependenciesLabel = new JLabel("Dependencies:");
-		dependenciesLabel.setBounds(12, 542, 89, 16);
+		dependenciesLabel.setBounds(12, 529, 89, 16);
 		RightPanel.add(dependenciesLabel);
 		
 		dependenciesComboBox = new JComboBox();
-		dependenciesComboBox.setBounds(12, 566, 100, 25);
+		dependenciesComboBox.setBounds(12, 681, 116, 25);
 		RightPanel.add(dependenciesComboBox);
 		
 		assigneesLabel = new JLabel("Assignees:");
-		assigneesLabel.setBounds(140, 542, 89, 16);
+		assigneesLabel.setBounds(147, 529, 89, 16);
 		RightPanel.add(assigneesLabel);
 		
 		assigneesComboBox = new JComboBox();
-		assigneesComboBox.setBounds(140, 566, 100, 25);
+		assigneesComboBox.setBounds(147, 681, 116, 25);
 		RightPanel.add(assigneesComboBox);
 		
 		saveActivityButton = new JButton("Save Activity");
-		saveActivityButton.setBounds(68, 637, 116, 25);
+		saveActivityButton.setBounds(151, 762, 116, 25);
 		RightPanel.add(saveActivityButton);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
 		textField.setBounds(103, 49, 116, 22);
 		RightPanel.add(textField);
+		
+		button = new JButton("+");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		button.setBounds(68, 717, 60, 32);
+		RightPanel.add(button);
+		
+		button_1 = new JButton("X");
+		button_1.setBounds(12, 717, 56, 32);
+		RightPanel.add(button_1);
+		
+		JButton button_2 = new JButton("+");
+		button_2.setBounds(203, 717, 60, 32);
+		RightPanel.add(button_2);
+		
+		JButton button_3 = new JButton("X");
+		button_3.setBounds(147, 717, 56, 32);
+		RightPanel.add(button_3);
+		
+		dependencyScrollPane = new JScrollPane();
+		dependencyScrollPane.setBounds(12, 545, 116, 129);
+		RightPanel.add(dependencyScrollPane);
+		
+		JScrollPane assigneeScrollPane = new JScrollPane();
+		assigneeScrollPane.setBounds(147, 545, 116, 129);
+		RightPanel.add(assigneeScrollPane);
 		
 	}
 
@@ -302,5 +336,14 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JTextField getActivityNameField() {
 		return textField;
+	}
+	public JScrollPane getDependencyScrollPane() {
+		return dependencyScrollPane;
+	}
+	public JButton getAddDependencyButton() {
+		return button;
+	}
+	public JButton getRemoveDependencyButton() {
+		return button_1;
 	}
 }

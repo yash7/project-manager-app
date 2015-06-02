@@ -6,10 +6,11 @@ package org.jooq.ateamcomp354.projectmanagerapp;
 
 import javax.annotation.Generated;
 
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Activity;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Project;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.Users;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.ActivityTable;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.ActivitylinksTable;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectTable;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.UseractivitiesTable;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.UsersTable;
 
 
 /**
@@ -28,20 +29,25 @@ public class Tables {
 	/**
 	 * The table activity
 	 */
-	public static final Activity ACTIVITY = org.jooq.ateamcomp354.projectmanagerapp.tables.Activity.ACTIVITY;
+	public static final ActivityTable ACTIVITY = org.jooq.ateamcomp354.projectmanagerapp.tables.ActivityTable.ACTIVITY;
+
+	/**
+	 * The table activityLinks
+	 */
+	public static final ActivitylinksTable ACTIVITYLINKS = org.jooq.ateamcomp354.projectmanagerapp.tables.ActivitylinksTable.ACTIVITYLINKS;
 
 	/**
 	 * The table project
 	 */
-	public static final Project PROJECT = org.jooq.ateamcomp354.projectmanagerapp.tables.Project.PROJECT;
+	public static final ProjectTable PROJECT = org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectTable.PROJECT;
 
 	/**
 	 * The table userActivities
 	 */
-	public static final Useractivities USERACTIVITIES = org.jooq.ateamcomp354.projectmanagerapp.tables.Useractivities.USERACTIVITIES;
+	public static final UseractivitiesTable USERACTIVITIES = org.jooq.ateamcomp354.projectmanagerapp.tables.UseractivitiesTable.USERACTIVITIES;
 
 	/**
 	 * The table users
 	 */
-	public static final Users USERS = org.jooq.ateamcomp354.projectmanagerapp.tables.Users.USERS;
+	public static final UsersTable USERS = org.jooq.ateamcomp354.projectmanagerapp.tables.UsersTable.USERS;
 }

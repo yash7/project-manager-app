@@ -4,6 +4,8 @@
 package org.jooq.ateamcomp354.projectmanagerapp.tables.pojos;
 
 
+import ateamcomp354.projectmanagerapp.model.Status;
+
 import java.io.Serializable;
 
 import javax.annotation.Generated;
@@ -22,11 +24,11 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity implements Serializable {
 
-	private static final long serialVersionUID = -212359003;
+	private static final long serialVersionUID = -1603570298;
 
 	private Integer id;
 	private Integer projectId;
-	private Integer status;
+	private Status  status;
 	private Integer earliestStart;
 	private Integer earliestFinish;
 	private String  label;
@@ -55,7 +57,7 @@ public class Activity implements Serializable {
 	public Activity(
 		Integer id,
 		Integer projectId,
-		Integer status,
+		Status  status,
 		Integer earliestStart,
 		Integer earliestFinish,
 		String  label,
@@ -94,11 +96,11 @@ public class Activity implements Serializable {
 		this.projectId = projectId;
 	}
 
-	public Integer getStatus() {
+	public Status getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 

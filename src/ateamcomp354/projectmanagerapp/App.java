@@ -2,12 +2,10 @@ package ateamcomp354.projectmanagerapp;
 
 import java.awt.EventQueue;
 import java.sql.Connection;
-import java.util.List;
 
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
-import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.impl.ApplicationContextImpl;
 import ateamcomp354.projectmanagerapp.dataAccess.DatabaseManager;
 import ateamcomp354.projectmanagerapp.ui.MainFrame;
@@ -25,21 +23,21 @@ public class App {
 	public static void main(String[] args) throws Exception {
 
 		DatabaseManager db = new DatabaseManager();
-		Connection c = db.getOpenConnection();
+		Connection c = db.getConnection();
 
 		ApplicationContext appCtx = getApplicationContext( c );
 
 		sampleData( c, appCtx );
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+		EventQueue.invokeLater( () -> {
 				try {
 					new MainFrame( appCtx );
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-		});
+			});
+
+		Runtime.getRuntime().addShutdownHook( new Thread( db::closeConnection ) );
 	}
 
 	public static ApplicationContext getApplicationContext( Connection c ) {
@@ -67,19 +65,19 @@ public class App {
 		ProjectDao projectDao = new ProjectDao( create.configuration() );
 
 		if ( usersDao.fetchByUsername( "jdoe"  ).isEmpty() ) {
-			usersDao.insert( new Users( null, "John", "Doe", "jdoe", "top!secret", 1 ) );
+			usersDao.insert( new Users( null, "John", "Doe", "jdoe", "top!secret", true ) );
 		}
 
 		Users jdoe = usersDao.fetchByUsername( "jdoe"  ).get( 0 );
 
 		if ( usersDao.fetchByUsername( "ssmith"  ).isEmpty() ) {
-			usersDao.insert( new Users( null, "Sarah", "Smith", "ssmith", "super_secret", 0 ) );
+			usersDao.insert( new Users( null, "Sarah", "Smith", "ssmith", "super_secret", false ) );
 		}
 
 		Users ssmith = usersDao.fetchByUsername( "ssmith"  ).get( 0 );
 
 		if ( projectDao.fetchByProjectName( "The Awesome Project" ).isEmpty() ) {
-			projectDao.insert( new Project( null, "The Awesome Project", jdoe.getId(), "This project is awesome." ) );
+			projectDao.insert( new Project( null, "The Awesome Project", "This project is awesome.", false ) );
 		}
 
 		Project project = projectDao.fetchByProjectName( "The Awesome Project" ).get( 0 );
@@ -88,8 +86,8 @@ public class App {
 
 		if ( activityService.getActivities().isEmpty() ) {
 
-			Activity a1 = new Activity( null, project.getId(), Status.NEW.ordinal(), 0, 0, "The cool activity", 0, 0, 0, 0, "This activity is for cool people to do." );
-			Activity a2 = new Activity( null, project.getId(), Status.NEW.ordinal(), 0, 0, "The ugly activity", 0, 0, 0, 0, "This activity that no one wants to do." );
+			Activity a1 = new Activity( null, project.getId(), Status.NEW, 0, 0, "The cool activity", 0, 0, 0, 0, "This activity is for cool people to do." );
+			Activity a2 = new Activity( null, project.getId(), Status.NEW, 0, 0, "The ugly activity", 0, 0, 0, 0, "This activity that no one wants to do." );
 
 			activityService.addActivity( a1 );
 			activityService.addActivity( a2 );

@@ -1,6 +1,7 @@
-package ateamcomp354.projectmanagerapp.dataAccess;
+package ateamcomp354.projectmanagerapp.jooq;
 
 
+import ateamcomp354.projectmanagerapp.dataAccess.DatabaseManager;
 import org.jooq.util.jaxb.Configuration;
 
 import java.io.File;

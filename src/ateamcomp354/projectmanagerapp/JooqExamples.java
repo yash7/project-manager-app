@@ -24,7 +24,7 @@ public class JooqExamples {
 		new File( "jooq-examples.db" ).delete();
 
 		DatabaseManager db = new DatabaseManager( "jooq-examples.db" );
-		Connection c = db.getOpenConnection();
+		Connection c = db.getConnection();
 
 		// This is just so jooq doesn't print its logo to stderr
 		// Disabled for now because it was hard to read this programs output.
@@ -92,8 +92,8 @@ public class JooqExamples {
 
 		// we assume we are at some point in the program were we have a list of users.
 		// for this example lets create that list.
-		UsersRecord user1 = new UsersRecord( null, "Smart", "Clark", "sclark", "pazzword", 0 );
-		UsersRecord user2 = new UsersRecord( null, "SmartyPants", "Debra", "spants-debra", "pazzword", 0 );
+		UsersRecord user1 = new UsersRecord( null, "Smart", "Clark", "sclark", "pazzword", false );
+		UsersRecord user2 = new UsersRecord( null, "SmartyPants", "Debra", "spants-debra", "pazzword", false );
 		List<UsersRecord> users = Arrays.asList( user1, user2 );
 
 		for ( UsersRecord user : users ) {
@@ -139,8 +139,8 @@ public class JooqExamples {
 
 		// we assume we are at some point in the program were we have a list of users.
 		// for this example lets create that list.
-		Users user1 = new Users( null, "Dao", "John", "djhon", "pazzword", 0 );
-		Users user2 = new Users( null, "DaoDao", "Smith", "dsmith", "pazzword", 0 );
+		Users user1 = new Users( null, "Dao", "John", "djhon", "pazzword", false );
+		Users user2 = new Users( null, "DaoDao", "Smith", "dsmith", "pazzword", false );
 		List<Users> users = Arrays.asList( user1, user2 );
 
 		System.out.println( "We are inserting users into the db..." );
