@@ -5,12 +5,15 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.Font;
+import java.awt.Color;
 
 public class LoginPanelGen extends JPanel {
 	private JTextField usernameField;
 	private JButton oKButton;
 	private JButton cancelButton;
 	private JPasswordField passwordField;
+	private JLabel validityLabel;
 
 	/**
 	 * Create the panel.
@@ -38,6 +41,12 @@ public class LoginPanelGen extends JPanel {
 		oKButton = new JButton("OK");
 		oKButton.setBounds(140, 206, 90, 25);
 		add(oKButton);
+		
+		validityLabel = new JLabel("");
+		validityLabel.setForeground(Color.RED);
+		validityLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		validityLabel.setBounds(140, 244, 298, 16);
+		add(validityLabel);
 
 	}
 	public JTextField getUsernameField() {
@@ -49,5 +58,7 @@ public class LoginPanelGen extends JPanel {
 	public JButton getOKButton() {
 		return oKButton;
 	}
-
+	public JLabel getValidityLabel() {
+		return validityLabel;
+	}
 }

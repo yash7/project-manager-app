@@ -1,5 +1,13 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 public interface SwapInterface {
-	public void showView(String name);
+	
+	public void showView( String name );
+	
+	public void showLoginView();
+	
+	public void showProjectsView();
+	
+	public void showActivitiesView();
+
 }

@@ -42,12 +42,21 @@ public class LoginPanel {
 				String username = loginPanelGen.getUsernameField().getText();
 				String password = new String(loginPanelGen.getPasswordField().getPassword());
 				Users u = l.login( username , password );
-				swap.showView("PROJECTS_PANEL");
+				if (u.getManagerRole())
+				{
+					swap.showProjectsView();
+				}
+				else
+				{
+					loginPanelGen.getValidityLabel().setText("Project member login not supported yet");
+				}
+					
 			}
 			catch (LoginFailedException lfe)
 			{
 				loginPanelGen.getUsernameField().setText("");
 				loginPanelGen.getPasswordField().setText("");
+				loginPanelGen.getValidityLabel().setText("Invalid username/password combination");
 			}
 			
 		}

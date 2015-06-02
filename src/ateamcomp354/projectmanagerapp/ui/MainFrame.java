@@ -33,7 +33,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 
 		loginPanel = new LoginPanel( appCtx , MainFrame.this );
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
-		activitiesPanel = new ActivitiesPanel( appCtx );
+		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
 		
 		buildMenuBar();
 
@@ -53,13 +53,13 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private void buildMenuBar() {
 
 		JMenuItem loginItm = new JMenuItem( "Login Panel" );
-		loginItm.addActionListener(__ -> showView(LOGIN_PANEL));
+		loginItm.addActionListener(__ -> showLoginView());
 
 		JMenuItem projectsItm = new JMenuItem( "Projects Panel" );
-		projectsItm.addActionListener(__ -> showView(PROJECTS_PANEL));
+		projectsItm.addActionListener(__ -> showProjectsView());
 
 		JMenuItem activitiesItm = new JMenuItem( "Activities Panel" );
-		activitiesItm.addActionListener( __ -> showView( ACTIVITIES_PANEL ) );
+		activitiesItm.addActionListener( __ -> showActivitiesView());
 
 		JMenu viewMenu = new JMenu( "View" );
 		viewMenu.add( loginItm );
@@ -75,7 +75,22 @@ public class MainFrame extends JFrame implements SwapInterface{
 	@Override
 	public void showView( String name ) {
 		cardLayout.show( getContentPane(), name);
-		
+	}
+	
+	@Override
+	public void showLoginView() {
+		cardLayout.show( getContentPane(), LOGIN_PANEL);
+		// TODO clear username and password fields
+	}
+	
+	@Override
+	public void showProjectsView() {
+		cardLayout.show( getContentPane(), PROJECTS_PANEL);
+	}
+	
+	@Override
+	public void showActivitiesView() {
+		cardLayout.show( getContentPane(), ACTIVITIES_PANEL);
 	}
 	
 	public static int getAppWidth(){
