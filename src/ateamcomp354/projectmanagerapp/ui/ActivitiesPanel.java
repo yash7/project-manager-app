@@ -9,12 +9,15 @@ import javax.swing.*;
 public class ActivitiesPanel {
 
 	private final ApplicationContext appCtx;
+	
+	private SwapInterface swap;
 
 	private SplitPane1Gen splitPane1Gen;
 
-	public ActivitiesPanel( ApplicationContext appCtx ) {
+	public ActivitiesPanel( ApplicationContext appCtx , SwapInterface swap) {
 
 		this.appCtx = appCtx;
+		this.swap = swap;
 
 		splitPane1Gen = new SplitPane1Gen();
 	}

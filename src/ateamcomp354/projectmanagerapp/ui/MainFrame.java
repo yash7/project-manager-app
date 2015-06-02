@@ -5,7 +5,7 @@ import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements SwapInterface{
 
 	private static final String LOGIN_PANEL = "LOGIN_PANEL";
 	private static final String PROJECTS_PANEL = "PROJECTS_PANEL";
@@ -31,8 +31,8 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		setLayout( cardLayout );
 
-		loginPanel = new LoginPanel( appCtx );
-		projectsPanel = new ProjectsPanel( appCtx );
+		loginPanel = new LoginPanel( appCtx , MainFrame.this );
+		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
 		activitiesPanel = new ActivitiesPanel( appCtx );
 		
 		buildMenuBar();
@@ -72,17 +72,17 @@ public class MainFrame extends JFrame {
 		setJMenuBar( menuBar );
 	}
 
-	private void showView( String name ) {
+	@Override
+	public void showView( String name ) {
 		cardLayout.show( getContentPane(), name);
+		
 	}
 	
-	public static int getAppWidth()
-	{
+	public static int getAppWidth(){
 		return WIDTH;
 	}
 	
-	public static int getAppHeight()
-	{
+	public static int getAppHeight(){
 		return HEIGHT;
 	}
 }
