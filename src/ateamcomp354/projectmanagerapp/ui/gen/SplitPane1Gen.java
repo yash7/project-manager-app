@@ -45,7 +45,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton deleteButton;
 	private JButton currentButton;
 	private JButton archivedButton;
-	private JButton manageActivitiesButton;
+	private JButton btnManage;
 	private JLabel activityNameLabel;
 
 	private int appWidth = 800;
@@ -78,6 +78,8 @@ public class SplitPane1Gen extends JPanel {
 	private JScrollPane dependencyScrollPane;
 	private JButton button;
 	private JButton button_1;
+	private JScrollPane scrollPane;
+	private JButton btnView;
 	
 	/**
 	 * Create the panel.
@@ -131,9 +133,17 @@ public class SplitPane1Gen extends JPanel {
 		archivedButton.setBounds(7, 142, 75, 25);
 		LeftPanel.add(archivedButton);
 		
-		manageActivitiesButton = new JButton("Manage Activities");
-		manageActivitiesButton.setBounds(124, 329, 148, 25);
-		LeftPanel.add(manageActivitiesButton);
+		btnManage = new JButton("Manage Activity");
+		btnManage.setBounds(120, 319, 148, 25);
+		LeftPanel.add(btnManage);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(86, 352, 182, 197);
+		LeftPanel.add(scrollPane);
+		
+		btnView = new JButton("View Activity");
+		btnView.setBounds(120, 560, 148, 25);
+		LeftPanel.add(btnView);
 
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
@@ -293,8 +303,8 @@ public class SplitPane1Gen extends JPanel {
 	public JButton getArchivedButton() {
 		return archivedButton;
 	}
-	public JButton getManageActivitiesButton() {
-		return manageActivitiesButton;
+	public JButton getBtnManage() {
+		return btnManage;
 	}
 	
 	// RightPanel
@@ -345,5 +355,11 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JButton getRemoveDependencyButton() {
 		return button_1;
+	}
+	public JScrollPane getCompletedScrollPane() {
+		return scrollPane;
+	}
+	public JButton getBtnView() {
+		return btnView;
 	}
 }
