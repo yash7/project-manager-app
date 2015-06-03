@@ -13,16 +13,20 @@ public class ProjectsPanel {
 
 	private SplitPane1Gen splitPane1Gen;
 	private US1RightPanelGen us1RightPanelGen;
+	private SwapInterface swap;
 	
-	public ProjectsPanel( ApplicationContext appCtx )
+	public ProjectsPanel( ApplicationContext appCtx , SwapInterface swap )
 	{
 		this.appCtx = appCtx;
-
+		this.swap = swap;
+		
 		splitPane1Gen = new SplitPane1Gen();
 
 		us1RightPanelGen = new US1RightPanelGen();
 
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
+		
+		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
 	}
 	
 	public JComponent getComponent()

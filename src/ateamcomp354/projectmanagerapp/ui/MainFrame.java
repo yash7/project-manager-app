@@ -1,11 +1,12 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements SwapInterface{
 
 	private static final String LOGIN_PANEL = "LOGIN_PANEL";
 	private static final String PROJECTS_PANEL = "PROJECTS_PANEL";
@@ -31,9 +32,9 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		setLayout( cardLayout );
 
-		loginPanel = new LoginPanel( appCtx );
-		projectsPanel = new ProjectsPanel( appCtx );
-		activitiesPanel = new ActivitiesPanel( appCtx );
+		loginPanel = new LoginPanel( appCtx , MainFrame.this );
+		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
+		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
 		
 		buildMenuBar();
 
@@ -53,13 +54,13 @@ public class MainFrame extends JFrame {
 	private void buildMenuBar() {
 
 		JMenuItem loginItm = new JMenuItem( "Login Panel" );
-		loginItm.addActionListener(__ -> showView(LOGIN_PANEL));
+		loginItm.addActionListener(__ -> showLoginView());
 
 		JMenuItem projectsItm = new JMenuItem( "Projects Panel" );
-		projectsItm.addActionListener(__ -> showView(PROJECTS_PANEL));
+		projectsItm.addActionListener(__ -> showProjectsView());
 
 		JMenuItem activitiesItm = new JMenuItem( "Activities Panel" );
-		activitiesItm.addActionListener( __ -> showView( ACTIVITIES_PANEL ) );
+		activitiesItm.addActionListener( __ -> showActivitiesView());
 
 		JMenu viewMenu = new JMenu( "View" );
 		viewMenu.add( loginItm );
@@ -72,17 +73,43 @@ public class MainFrame extends JFrame {
 		setJMenuBar( menuBar );
 	}
 
-	private void showView( String name ) {
+	@Override
+	public void showView( String name ) {
 		cardLayout.show( getContentPane(), name);
 	}
 	
-	public static int getAppWidth()
-	{
+	@Override
+	public void showLoginView() {
+		cardLayout.show( getContentPane(), LOGIN_PANEL);
+	}
+	
+	public void showLoginView(String logout) {
+		if (logout.equals("logout"))
+		{
+			loginPanel.logout();
+			cardLayout.show( getContentPane(), LOGIN_PANEL);
+		}
+	}
+	
+	@Override
+	public void showProjectsView() {
+		cardLayout.show( getContentPane(), PROJECTS_PANEL);
+	}
+	
+	@Override
+	public void showActivitiesView() {
+		cardLayout.show( getContentPane(), ACTIVITIES_PANEL);
+	}
+	
+	public static int getAppWidth() {
 		return WIDTH;
 	}
 	
-	public static int getAppHeight()
-	{
+	public static int getAppHeight() {
 		return HEIGHT;
+	}
+	
+	public Users getLoggedInUser() {
+		return loginPanel.getLoggedInUser();
 	}
 }
