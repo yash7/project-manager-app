@@ -27,6 +27,7 @@ public class ActivitiesPanel {
 	private List<Activity> activities;
 	private Project project;
 	private int idIndexes[];
+	private int completedIdIndexes[];
 	private int dependencyIndexes[];
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
@@ -42,6 +43,23 @@ public class ActivitiesPanel {
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
 		splitPane1Gen.getStatusComboBox().addItem("Resolved");
+		
+		//TEMPORARY - MAKE FIELDS READ ONLY FOR FIRST ITERATION
+		splitPane1Gen.getEarliestStartField().setEnabled(false);
+		splitPane1Gen.getLatestStartField().setEnabled(false);
+		splitPane1Gen.getEarliestFinishField().setEnabled(false);
+		splitPane1Gen.getLatestFinishField().setEnabled(false);
+		splitPane1Gen.getAssigneesComboBox().setEnabled(false);
+		splitPane1Gen.getAddAssigneeButton().setEnabled(false);
+		splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
+		splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
+		
+		splitPane1Gen.getEarliestStartField().setText("coming soon");
+		splitPane1Gen.getLatestStartField().setText("coming soon");
+		splitPane1Gen.getEarliestFinishField().setText("coming soon");
+		splitPane1Gen.getLatestFinishField().setText("coming soon");
+		splitPane1Gen.getAssigneesComboBox().addItem("coming soon");
+		splitPane1Gen.getAssigneeScrollPane().setColumnHeaderView(new JLabel("coming soon"));
 		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
@@ -127,10 +145,10 @@ public class ActivitiesPanel {
 			if (dialogResult == 0) saveActivity();
 			splitPane1Gen.getActivityNameField().setText("");
 			splitPane1Gen.getStatusComboBox().setSelectedIndex(0);
-			splitPane1Gen.getEarliestStartField().setText("0");
-			splitPane1Gen.getLatestStartField().setText("0");
-			splitPane1Gen.getEarliestFinishField().setText("0");
-			splitPane1Gen.getLatestFinishField().setText("0");
+			//splitPane1Gen.getEarliestStartField().setText("0");
+			//splitPane1Gen.getLatestStartField().setText("0");
+			//splitPane1Gen.getEarliestFinishField().setText("0");
+			//splitPane1Gen.getLatestFinishField().setText("0");
 			splitPane1Gen.getMaxDurationField().setText("0");
 			splitPane1Gen.getDurationField().setText("0");
 			splitPane1Gen.getDescriptionArea().setText("");
@@ -146,14 +164,15 @@ public class ActivitiesPanel {
 		activity.setLabel(splitPane1Gen.getActivityNameField().getText());
 		activity.setProjectId(projectId);
 		activity.setStatus(Status.values()[splitPane1Gen.getStatusComboBox().getSelectedIndex()]);
-		activity.setEarliestStart(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()));
-		activity.setLatestStart(Integer.parseInt(splitPane1Gen.getLatestStartField().getText()));
-		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()));
-		activity.setLatestFinish(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()));
+		//activity.setEarliestStart(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()));
+		//activity.setLatestStart(Integer.parseInt(splitPane1Gen.getLatestStartField().getText()));
+		//activity.setEarliestFinish(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()));
+		//activity.setLatestFinish(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()));
 		activity.setMaxDuration(Integer.parseInt(splitPane1Gen.getMaxDurationField().getText()));
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField().getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
 		addOrUpdateActivity(activity);
+		setReadOnly(activity.getStatus() != Status.RESOLVED);
 	}
 	
 	private void addOrUpdateActivity(Activity a)
@@ -181,14 +200,15 @@ public class ActivitiesPanel {
 		activityId = id;
 		splitPane1Gen.getActivityNameField().setText(activity.getLabel());
 		splitPane1Gen.getStatusComboBox().setSelectedIndex(activity.getStatus().ordinal());
-		splitPane1Gen.getEarliestStartField().setText(Integer.toString(activity.getEarliestStart()));
-		splitPane1Gen.getLatestStartField().setText(Integer.toString(activity.getLatestStart()));
-		splitPane1Gen.getEarliestFinishField().setText(Integer.toString(activity.getEarliestFinish()));
-		splitPane1Gen.getLatestFinishField().setText(Integer.toString(activity.getLatestFinish()));
+		//splitPane1Gen.getEarliestStartField().setText(Integer.toString(activity.getEarliestStart()));
+		//splitPane1Gen.getLatestStartField().setText(Integer.toString(activity.getLatestStart()));
+		//splitPane1Gen.getEarliestFinishField().setText(Integer.toString(activity.getEarliestFinish()));
+		//splitPane1Gen.getLatestFinishField().setText(Integer.toString(activity.getLatestFinish()));
 		splitPane1Gen.getMaxDurationField().setText(Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		showDependencies(id);
+		setReadOnly(activity.getStatus() != Status.RESOLVED);
 	}
 	
 	private void showDependencies(int id)
@@ -212,6 +232,7 @@ public class ActivitiesPanel {
 		dependencyList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
+				if (dependencyList.locationToIndex(e.getPoint()) == -1) return;
 				selectedDependencyId = dependencyIndexes[dependencyList.locationToIndex(e.getPoint())];
 			}
 		});
@@ -235,7 +256,7 @@ public class ActivitiesPanel {
 			}
 			//only checks for direct circular dependencies. A graph traversal will be needed later
 			boolean circular = false;
-			for (Integer dependent : activityService.getDependents(i))
+			for (Integer dependent : activityService.getDependents(activityId))
 			{
 				if (dependent == activities.get(i).getId())
 				{
@@ -243,7 +264,7 @@ public class ActivitiesPanel {
 					break;
 				}
 			}
-			if (!isDependency && activities.get(i).getId() != activityId && !circular)
+			if (!isDependency && activities.get(i).getId() != activityId && !circular && activities.get(i).getStatus() != Status.RESOLVED)
 			{
 				splitPane1Gen.getDependenciesComboBox().addItem(activities.get(i).getLabel());
 				dependencyComboIndexes.add(activities.get(i).getId());
@@ -252,7 +273,8 @@ public class ActivitiesPanel {
 	}
 	
 	private void addDependency()
-	{
+	{	
+		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1) return;
 		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
 		activityService.addDependency(toAdd, activityId);
 		showDependencies(activityId);
@@ -277,17 +299,31 @@ public class ActivitiesPanel {
 	{
 		activities = activityService.getActivities();
 		String activityNames[] = new String[activities.size()];
+		String completedActivityNames[] = new String[activities.size()];
 		idIndexes = new int[activities.size()];
+		completedIdIndexes = new int[activities.size()];
 
 		for (int i = 0; i < activities.size(); i++)
 		{
-			activityNames[i] = activities.get(i).getLabel();
-			idIndexes[i] = activities.get(i).getId();
+			if (activities.get(i).getStatus() != Status.RESOLVED)
+			{
+				String str = activities.get(i).getStatus() == Status.NEW ? "Open" : "In Progress";
+				activityNames[i] = activities.get(i).getLabel() + "    " + str;
+				idIndexes[i] = activities.get(i).getId();
+			}
+			else
+			{
+				completedActivityNames[i] = activities.get(i).getLabel() + "    Resolved";
+				completedIdIndexes[i] = activities.get(i).getId();
+			}
 		}
 		
 		JList<String> activityList = new JList<String>(activityNames);
+		JList<String> completedActivityList = new JList<String>(completedActivityNames);
 		splitPane1Gen.getListScrollPane().setViewportView(activityList);
 		splitPane1Gen.getListScrollPane().validate();
+		splitPane1Gen.getCompletedScrollPane().setViewportView(completedActivityList);
+		splitPane1Gen.getCompletedScrollPane().validate();
 		
 		activityList.addMouseListener(new MouseAdapter() {
 			@Override
@@ -300,6 +336,34 @@ public class ActivitiesPanel {
 				}
 			}
 		});
+		
+		completedActivityList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = completedActivityList.locationToIndex(e.getPoint());
+
+				if (index >= 0)
+				{
+					selectActivity(completedIdIndexes[index]);
+				}
+			}
+		});
+	}
+	
+	private void setReadOnly(boolean readOnly)
+	{
+		splitPane1Gen.getActivityNameField().setEnabled(readOnly);
+		//splitPane1Gen.getEarliestStartField().setEnabled(readOnly);
+		//splitPane1Gen.getLatestStartField().setEnabled(readOnly);
+		//splitPane1Gen.getEarliestFinishField().setEnabled(readOnly);
+		//splitPane1Gen.getLatestFinishField().setEnabled(readOnly);
+		splitPane1Gen.getMaxDurationField().setEnabled(readOnly);
+		splitPane1Gen.getDurationField().setEnabled(readOnly);
+		splitPane1Gen.getDescriptionArea().setEnabled(readOnly);
+		splitPane1Gen.getDependenciesComboBox().setEnabled(readOnly);
+		splitPane1Gen.getDependencyScrollPane().setEnabled(readOnly);
+		splitPane1Gen.getAddDependencyButton().setEnabled(readOnly);
+		splitPane1Gen.getRemoveDependencyButton().setEnabled(readOnly);
 	}
 	
 	private boolean isDirty()
