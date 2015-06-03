@@ -25,6 +25,8 @@ public class ProjectsPanel {
 		us1RightPanelGen = new US1RightPanelGen();
 
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
+		
+		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
 	}
 	
 	public JComponent getComponent()

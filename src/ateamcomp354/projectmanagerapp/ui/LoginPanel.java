@@ -17,6 +17,8 @@ public class LoginPanel {
 	
 	private SwapInterface swap;
 	
+	private Users loggedInUser;
+	
 	public LoginPanel( ApplicationContext appCtx , SwapInterface swap) {
 
 		this.appCtx = appCtx;
@@ -32,6 +34,17 @@ public class LoginPanel {
 		return loginPanelGen;
 	}
 	
+	public void logout() {
+		loginPanelGen.getUsernameField().setText("");
+		loginPanelGen.getPasswordField().setText("");
+		loginPanelGen.getValidityLabel().setText("");
+	}
+	
+	public Users getLoggedInUser()
+	{
+		return loggedInUser;
+	}
+	
 	class passwordActionListener implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e){
@@ -41,8 +54,8 @@ public class LoginPanel {
 			{
 				String username = loginPanelGen.getUsernameField().getText();
 				String password = new String(loginPanelGen.getPasswordField().getPassword());
-				Users u = l.login( username , password );
-				if (u.getManagerRole())
+				loggedInUser = l.login( username , password );
+				if (loggedInUser.getManagerRole())
 				{
 					swap.showProjectsView();
 				}

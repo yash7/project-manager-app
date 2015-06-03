@@ -6,6 +6,8 @@ public interface SwapInterface {
 	
 	public void showLoginView();
 	
+	public void showLoginView(String logout);
+	
 	public void showProjectsView();
 	
 	public void showActivitiesView();

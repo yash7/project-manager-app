@@ -1,6 +1,7 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +81,14 @@ public class MainFrame extends JFrame implements SwapInterface{
 	@Override
 	public void showLoginView() {
 		cardLayout.show( getContentPane(), LOGIN_PANEL);
-		// TODO clear username and password fields
+	}
+	
+	public void showLoginView(String logout) {
+		if (logout.equals("logout"))
+		{
+			loginPanel.logout();
+			cardLayout.show( getContentPane(), LOGIN_PANEL);
+		}
 	}
 	
 	@Override
@@ -93,11 +101,15 @@ public class MainFrame extends JFrame implements SwapInterface{
 		cardLayout.show( getContentPane(), ACTIVITIES_PANEL);
 	}
 	
-	public static int getAppWidth(){
+	public static int getAppWidth() {
 		return WIDTH;
 	}
 	
-	public static int getAppHeight(){
+	public static int getAppHeight() {
 		return HEIGHT;
+	}
+	
+	public Users getLoggedInUser() {
+		return loginPanel.getLoggedInUser();
 	}
 }

@@ -20,6 +20,8 @@ public class ActivitiesPanel {
 		this.swap = swap;
 
 		splitPane1Gen = new SplitPane1Gen();
+		
+		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
 	}
 	
 	public JComponent getComponent()
