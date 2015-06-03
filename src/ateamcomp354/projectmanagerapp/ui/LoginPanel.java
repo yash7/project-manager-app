@@ -35,6 +35,7 @@ public class LoginPanel {
 	}
 	
 	public void logout() {
+		loggedInUser = null;
 		loginPanelGen.getUsernameField().setText("");
 		loginPanelGen.getPasswordField().setText("");
 		loginPanelGen.getValidityLabel().setText("");
@@ -49,12 +50,12 @@ public class LoginPanel {
 		
 		public void actionPerformed(ActionEvent e){
 			
-			LoginService l = appCtx.getLoginService();
+			LoginService ls = appCtx.getLoginService();
 			try
 			{
 				String username = loginPanelGen.getUsernameField().getText();
 				String password = new String(loginPanelGen.getPasswordField().getPassword());
-				loggedInUser = l.login( username , password );
+				loggedInUser = ls.login( username , password );
 				if (loggedInUser.getManagerRole())
 				{
 					swap.showProjectsView();
@@ -67,7 +68,6 @@ public class LoginPanel {
 			}
 			catch (LoginFailedException lfe)
 			{
-				loginPanelGen.getUsernameField().setText("");
 				loginPanelGen.getPasswordField().setText("");
 				loginPanelGen.getValidityLabel().setText("Invalid username/password combination");
 			}

@@ -11,7 +11,7 @@ public class LogoutListener implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		swap.showLoginView("logout");
+		swap.showLoginView();
 	}
 
 }

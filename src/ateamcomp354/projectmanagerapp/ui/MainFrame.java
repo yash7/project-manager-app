@@ -73,22 +73,14 @@ public class MainFrame extends JFrame implements SwapInterface{
 		setJMenuBar( menuBar );
 	}
 
-	@Override
 	public void showView( String name ) {
 		cardLayout.show( getContentPane(), name);
 	}
 	
 	@Override
 	public void showLoginView() {
+		loginPanel.logout();
 		cardLayout.show( getContentPane(), LOGIN_PANEL);
-	}
-	
-	public void showLoginView(String logout) {
-		if (logout.equals("logout"))
-		{
-			loginPanel.logout();
-			cardLayout.show( getContentPane(), LOGIN_PANEL);
-		}
 	}
 	
 	@Override
