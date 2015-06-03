@@ -48,9 +48,12 @@ public class MainFrame extends JFrame implements SwapInterface{
 		setSize( WIDTH, HEIGHT );
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible( true );
+		setVisible(true);
 	}
 
+	/**
+	 * @deprecated - This is only for developing, should not be in release build.
+	 */
 	private void buildMenuBar() {
 
 		JMenuItem loginItm = new JMenuItem( "Login Panel" );
@@ -60,7 +63,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		projectsItm.addActionListener(__ -> showProjectsView());
 
 		JMenuItem activitiesItm = new JMenuItem( "Activities Panel" );
-		activitiesItm.addActionListener( __ -> showActivitiesView());
+		activitiesItm.addActionListener( __ -> showActivitiesView( 0 ) );
 
 		JMenu viewMenu = new JMenu( "View" );
 		viewMenu.add( loginItm );
@@ -70,7 +73,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add( viewMenu );
 
-		setJMenuBar( menuBar );
+		setJMenuBar(menuBar);
 	}
 
 	public void showView( String name ) {
@@ -85,12 +88,20 @@ public class MainFrame extends JFrame implements SwapInterface{
 	
 	@Override
 	public void showProjectsView() {
-		cardLayout.show( getContentPane(), PROJECTS_PANEL);
+		projectsPanel.refresh();
+		showView( PROJECTS_PANEL );
+	}
+
+	@Override
+	public void showProjectsView( int preferredProjectId ) {
+		projectsPanel.refresh( preferredProjectId );
+		showView( PROJECTS_PANEL );
 	}
 	
 	@Override
-	public void showActivitiesView() {
-		cardLayout.show( getContentPane(), ACTIVITIES_PANEL);
+	public void showActivitiesView( int projectId ) {
+		activitiesPanel.setProjectId( projectId );
+		showView(ACTIVITIES_PANEL);
 	}
 	
 	public static int getAppWidth() {

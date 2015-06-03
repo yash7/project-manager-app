@@ -78,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
             int count = countActivities(projectId);
 
             if ( count != 0 ) {
-                throw new IllegalArgumentException( "Project to delete it not completed and has activities: " + count );
+                throw new IllegalArgumentException( "Project to delete is not completed and has activities: " + count );
             }
         }
 

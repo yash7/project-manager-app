@@ -5,7 +5,9 @@ public interface SwapInterface {
 	public void showLoginView();
 	
 	public void showProjectsView();
+
+	public void showProjectsView( int preferredProjectId );
 	
-	public void showActivitiesView();
+	public void showActivitiesView( int projectId );
 
 }
