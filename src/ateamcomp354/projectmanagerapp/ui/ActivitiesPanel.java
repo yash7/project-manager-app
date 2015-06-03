@@ -274,13 +274,10 @@ public class ActivitiesPanel {
 	
 	private void addDependency()
 	{	
-		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1)
-		{
-			return;
-		}
-			int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
-			activityService.addDependency(toAdd, activityId);
-			showDependencies(activityId);
+		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1) return;
+		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
+		activityService.addDependency(toAdd, activityId);
+		showDependencies(activityId);
 	}
 	
 	private void removeDependency()
