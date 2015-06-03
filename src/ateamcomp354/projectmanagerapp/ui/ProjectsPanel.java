@@ -49,7 +49,9 @@ public class ProjectsPanel {
 	{
 		projectService = appCtx.getProjectService();
 		this.swap = swap;
-		
+
+		projectInfos = new HashMap<>();
+
 		splitPane1Gen = new SplitPane1Gen();
 
 		us1RightPanelGen = new US1RightPanelGen();
@@ -92,8 +94,6 @@ public class ProjectsPanel {
 		splitPane1Gen.getBtnView().addActionListener( __ -> viewActivitiesClicked() );
 
 		us1RightPanelGen.getSaveButton().addActionListener( __ -> saveProjectClicked() );
-
-		projectInfos = new HashMap<>();
 
 		newProjectTemplate = new Project();
 		newProjectTemplate.setProjectName( NEW_PROJECT_NAME_DEFAULT_VALUE );
