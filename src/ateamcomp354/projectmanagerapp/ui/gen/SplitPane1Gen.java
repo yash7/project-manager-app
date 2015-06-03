@@ -43,8 +43,6 @@ public class SplitPane1Gen extends JPanel {
 	private JScrollPane listScrollPane;
 	private JButton addButton;
 	private JButton deleteButton;
-	private JButton currentButton;
-	private JButton archivedButton;
 	private JButton btnManage;
 	private JLabel activityNameLabel;
 
@@ -124,14 +122,6 @@ public class SplitPane1Gen extends JPanel {
 		deleteButton = new JButton("X");
 		deleteButton.setBounds(150, 66, 54, 40);
 		LeftPanel.add(deleteButton);
-		
-		currentButton = new JButton("Current");
-		currentButton.setBounds(6, 111, 75, 25);
-		LeftPanel.add(currentButton);
-		
-		archivedButton = new JButton("Archived");
-		archivedButton.setBounds(7, 142, 75, 25);
-		LeftPanel.add(archivedButton);
 		
 		btnManage = new JButton("Manage Activity");
 		btnManage.setBounds(120, 319, 148, 25);
@@ -297,12 +287,7 @@ public class SplitPane1Gen extends JPanel {
 	public JButton getDeleteButton() {
 		return deleteButton;
 	}
-	public JButton getCurrentButton() {
-		return currentButton;
-	}
-	public JButton getArchivedButton() {
-		return archivedButton;
-	}
+
 	public JButton getBtnManage() {
 		return btnManage;
 	}
