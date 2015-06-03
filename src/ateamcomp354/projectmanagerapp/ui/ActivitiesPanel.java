@@ -44,6 +44,23 @@ public class ActivitiesPanel {
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
 		splitPane1Gen.getStatusComboBox().addItem("Resolved");
 		
+		//TEMPORARY - MAKE FIELDS READ ONLY FOR FIRST ITERATION
+		splitPane1Gen.getEarliestStartField().setEnabled(false);
+		splitPane1Gen.getLatestStartField().setEnabled(false);
+		splitPane1Gen.getEarliestFinishField().setEnabled(false);
+		splitPane1Gen.getLatestFinishField().setEnabled(false);
+		splitPane1Gen.getAssigneesComboBox().setEnabled(false);
+		splitPane1Gen.getAddAssigneeButton().setEnabled(false);
+		splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
+		splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
+		
+		splitPane1Gen.getEarliestStartField().setText("coming soon");
+		splitPane1Gen.getLatestStartField().setText("coming soon");
+		splitPane1Gen.getEarliestFinishField().setText("coming soon");
+		splitPane1Gen.getLatestFinishField().setText("coming soon");
+		splitPane1Gen.getAssigneesComboBox().addItem("coming soon");
+		splitPane1Gen.getAssigneeScrollPane().setColumnHeaderView(new JLabel("coming soon"));
+		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -128,10 +145,10 @@ public class ActivitiesPanel {
 			if (dialogResult == 0) saveActivity();
 			splitPane1Gen.getActivityNameField().setText("");
 			splitPane1Gen.getStatusComboBox().setSelectedIndex(0);
-			splitPane1Gen.getEarliestStartField().setText("0");
-			splitPane1Gen.getLatestStartField().setText("0");
-			splitPane1Gen.getEarliestFinishField().setText("0");
-			splitPane1Gen.getLatestFinishField().setText("0");
+			//splitPane1Gen.getEarliestStartField().setText("0");
+			//splitPane1Gen.getLatestStartField().setText("0");
+			//splitPane1Gen.getEarliestFinishField().setText("0");
+			//splitPane1Gen.getLatestFinishField().setText("0");
 			splitPane1Gen.getMaxDurationField().setText("0");
 			splitPane1Gen.getDurationField().setText("0");
 			splitPane1Gen.getDescriptionArea().setText("");
@@ -147,10 +164,10 @@ public class ActivitiesPanel {
 		activity.setLabel(splitPane1Gen.getActivityNameField().getText());
 		activity.setProjectId(projectId);
 		activity.setStatus(Status.values()[splitPane1Gen.getStatusComboBox().getSelectedIndex()]);
-		activity.setEarliestStart(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()));
-		activity.setLatestStart(Integer.parseInt(splitPane1Gen.getLatestStartField().getText()));
-		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()));
-		activity.setLatestFinish(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()));
+		//activity.setEarliestStart(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()));
+		//activity.setLatestStart(Integer.parseInt(splitPane1Gen.getLatestStartField().getText()));
+		//activity.setEarliestFinish(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()));
+		//activity.setLatestFinish(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()));
 		activity.setMaxDuration(Integer.parseInt(splitPane1Gen.getMaxDurationField().getText()));
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField().getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
@@ -183,10 +200,10 @@ public class ActivitiesPanel {
 		activityId = id;
 		splitPane1Gen.getActivityNameField().setText(activity.getLabel());
 		splitPane1Gen.getStatusComboBox().setSelectedIndex(activity.getStatus().ordinal());
-		splitPane1Gen.getEarliestStartField().setText(Integer.toString(activity.getEarliestStart()));
-		splitPane1Gen.getLatestStartField().setText(Integer.toString(activity.getLatestStart()));
-		splitPane1Gen.getEarliestFinishField().setText(Integer.toString(activity.getEarliestFinish()));
-		splitPane1Gen.getLatestFinishField().setText(Integer.toString(activity.getLatestFinish()));
+		//splitPane1Gen.getEarliestStartField().setText(Integer.toString(activity.getEarliestStart()));
+		//splitPane1Gen.getLatestStartField().setText(Integer.toString(activity.getLatestStart()));
+		//splitPane1Gen.getEarliestFinishField().setText(Integer.toString(activity.getEarliestFinish()));
+		//splitPane1Gen.getLatestFinishField().setText(Integer.toString(activity.getLatestFinish()));
 		splitPane1Gen.getMaxDurationField().setText(Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
@@ -247,7 +264,7 @@ public class ActivitiesPanel {
 					break;
 				}
 			}
-			if (!isDependency && activities.get(i).getId() != activityId && !circular)
+			if (!isDependency && activities.get(i).getId() != activityId && !circular && activities.get(i).getStatus() != Status.RESOLVED)
 			{
 				splitPane1Gen.getDependenciesComboBox().addItem(activities.get(i).getLabel());
 				dependencyComboIndexes.add(activities.get(i).getId());
@@ -293,12 +310,13 @@ public class ActivitiesPanel {
 		{
 			if (activities.get(i).getStatus() != Status.RESOLVED)
 			{
-				activityNames[i] = activities.get(i).getLabel();
+				String str = activities.get(i).getStatus() == Status.NEW ? "Open" : "In Progress";
+				activityNames[i] = activities.get(i).getLabel() + "    " + str;
 				idIndexes[i] = activities.get(i).getId();
 			}
 			else
 			{
-				completedActivityNames[i] = activities.get(i).getLabel();
+				completedActivityNames[i] = activities.get(i).getLabel() + "    Resolved";
 				completedIdIndexes[i] = activities.get(i).getId();
 			}
 		}
@@ -338,10 +356,10 @@ public class ActivitiesPanel {
 	private void setReadOnly(boolean readOnly)
 	{
 		splitPane1Gen.getActivityNameField().setEnabled(readOnly);
-		splitPane1Gen.getEarliestStartField().setEnabled(readOnly);
-		splitPane1Gen.getLatestStartField().setEnabled(readOnly);
-		splitPane1Gen.getEarliestFinishField().setEnabled(readOnly);
-		splitPane1Gen.getLatestFinishField().setEnabled(readOnly);
+		//splitPane1Gen.getEarliestStartField().setEnabled(readOnly);
+		//splitPane1Gen.getLatestStartField().setEnabled(readOnly);
+		//splitPane1Gen.getEarliestFinishField().setEnabled(readOnly);
+		//splitPane1Gen.getLatestFinishField().setEnabled(readOnly);
 		splitPane1Gen.getMaxDurationField().setEnabled(readOnly);
 		splitPane1Gen.getDurationField().setEnabled(readOnly);
 		splitPane1Gen.getDescriptionArea().setEnabled(readOnly);

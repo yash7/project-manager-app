@@ -78,6 +78,9 @@ public class SplitPane1Gen extends JPanel {
 	private JButton button_1;
 	private JScrollPane scrollPane;
 	private JButton btnView;
+	private JScrollPane assigneeScrollPane;
+	private JButton button_3;
+	private JButton button_2;
 	
 	/**
 	 * Create the panel.
@@ -253,11 +256,11 @@ public class SplitPane1Gen extends JPanel {
 		button_1.setBounds(12, 717, 56, 32);
 		RightPanel.add(button_1);
 		
-		JButton button_2 = new JButton("+");
+		button_2 = new JButton("+");
 		button_2.setBounds(203, 717, 60, 32);
 		RightPanel.add(button_2);
 		
-		JButton button_3 = new JButton("X");
+		button_3 = new JButton("X");
 		button_3.setBounds(147, 717, 56, 32);
 		RightPanel.add(button_3);
 		
@@ -265,7 +268,7 @@ public class SplitPane1Gen extends JPanel {
 		dependencyScrollPane.setBounds(12, 545, 116, 129);
 		RightPanel.add(dependencyScrollPane);
 		
-		JScrollPane assigneeScrollPane = new JScrollPane();
+		assigneeScrollPane = new JScrollPane();
 		assigneeScrollPane.setBounds(147, 545, 116, 129);
 		RightPanel.add(assigneeScrollPane);
 		
@@ -346,5 +349,14 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JButton getBtnView() {
 		return btnView;
+	}
+	public JScrollPane getAssigneeScrollPane() {
+		return assigneeScrollPane;
+	}
+	public JButton getRemoveAssigneeButton() {
+		return button_3;
+	}
+	public JButton getAddAssigneeButton() {
+		return button_2;
 	}
 }
