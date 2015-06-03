@@ -77,6 +77,7 @@ public class ActivitiesPanel {
 				splitPane1Gen.getTopLabel().setText(project.getProjectName());
 				JLabel projectLabel = new JLabel(project.getProjectName()); 
 				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
+				splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(projectLabel);
 				
 				fillActivitiesList();
 			}
@@ -377,6 +378,7 @@ public class ActivitiesPanel {
 				if (index >= 0)
 				{
 					selectActivity(idIndexes[index]);
+					completedActivityList.clearSelection();
 				}
 			}
 		});
@@ -389,6 +391,7 @@ public class ActivitiesPanel {
 				if (index >= 0)
 				{
 					selectActivity(completedIdIndexes[index]);
+					activityList.clearSelection();
 				}
 			}
 		});
@@ -422,10 +425,10 @@ public class ActivitiesPanel {
 		
 		//if this is not a new activity, but has been changed, it is dirty
 		return (!a.getLabel().equals(splitPane1Gen.getActivityNameField().getText())
-				|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
-				|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
-				|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
-				|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
+				//|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				//|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
+				//|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				//|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
 				|| a.getStatus().ordinal() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
 				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
 				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
