@@ -56,6 +56,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public int getProjectActivitiesCount(int projectId) {
+        return countActivities( projectId );
+    }
+
+    @Override
     public void addProject(Project project) {
         try {
             projectDao.insert(project);

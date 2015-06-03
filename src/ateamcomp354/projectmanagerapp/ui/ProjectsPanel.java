@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 
 import ateamcomp354.projectmanagerapp.model.Pojos;
+import ateamcomp354.projectmanagerapp.model.ProjectInfo;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
@@ -11,10 +12,10 @@ import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ProjectsPanel {
 
@@ -22,6 +23,7 @@ public class ProjectsPanel {
 	private static final String EDIT_PROJECT_TITLE_LBL_TXT = "Edit Project";
 	private static final String ADD_PROJECT_TITLE_LBL_TXT = "New Project";
 	private static final String NEW_PROJECT_NAME_DEFAULT_VALUE = "My new project";
+	private static final String NEW_PROJECT_DESC_DEFAULT_VALUE = "";
 	private static final String PROJECT_COMPLETION_FMT = "%s%%";
 
 	private final ProjectService projectService;
@@ -35,10 +37,13 @@ public class ProjectsPanel {
 	private final JList<Project> closedProjectList;
 	private final DefaultListModel<Project> closedProjectsModel;
 
-	private Map<Integer,Integer> projectCompletions;
+	private final Map<Integer,ProjectInfo> projectInfos;
 
 	private final Project newProjectTemplate;
 	private Optional<Project> selectedProject;
+
+	private boolean valueIsAdjusting;
+	private boolean saving;
 
 	public ProjectsPanel( ApplicationContext appCtx, SwapInterface swap )
 	{
@@ -65,8 +70,8 @@ public class ProjectsPanel {
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
 				p -> {
-					Integer pc = projectCompletions.get( p.getId() );
-					return String.format( PROJECT_COMPLETION_FMT, pc == null ? "?" : pc.toString() );
+					ProjectInfo pi = projectInfos.get( p.getId() );
+					return String.format(PROJECT_COMPLETION_FMT, pi == null ? "?" : Integer.toString(pi.getCompletion()));
 				}
 		);
 
@@ -88,11 +93,15 @@ public class ProjectsPanel {
 
 		us1RightPanelGen.getSaveButton().addActionListener( __ -> saveProjectClicked() );
 
+		projectInfos = new HashMap<>();
+
 		newProjectTemplate = new Project();
 		newProjectTemplate.setProjectName( NEW_PROJECT_NAME_DEFAULT_VALUE );
+		newProjectTemplate.setDescription( NEW_PROJECT_DESC_DEFAULT_VALUE);
 		newProjectTemplate.setCompleted( false );
 
 		selectedProject = Optional.empty();
+		displayProject();
 	}
 	
 	public JComponent getComponent()
@@ -124,16 +133,23 @@ public class ProjectsPanel {
 		boolean select = projectId != null;
 
 		if ( select ) {
-			select = !selectProject( openProjectList, projectId );
-		}
-
-		if ( select ) {
-			select = !selectProject( closedProjectList, projectId );
+			select = !selectProject( projectId );
 		}
 
 		if ( (projectId == null | select) && !openProjectsModel.isEmpty() ) {
 			openProjectList.setSelectedIndex( 0 );
 		}
+	}
+
+	private boolean selectProject( int projectId ) {
+
+		boolean r = selectProject( openProjectList, projectId );
+
+		if ( !r) {
+			r = !selectProject( closedProjectList, projectId );
+		}
+
+		return r;
 	}
 
 	private boolean selectProject( JList<Project> list, int projectId ) {
@@ -159,18 +175,25 @@ public class ProjectsPanel {
 		List<Project> projects = projectService.getProjects();
 
 		openProjectsModel.clear();
-		projects.stream()
-				.filter( p -> !p.getCompleted() )
-				.forEach( openProjectsModel::addElement );
-
-
 		closedProjectsModel.clear();
-		projects.stream()
-				.filter( p -> p.getCompleted() )
-				.forEach( closedProjectsModel::addElement );
+		projectInfos.clear();
 
-		projectCompletions = projects.stream()
-				.collect( Collectors.toMap( Project::getId, p -> projectService.getProjectCompletion( p.getId() ) ) );
+		for ( Project p : projects ) {
+
+			if ( p.getCompleted() ) {
+				closedProjectsModel.addElement( p );
+			}
+			else {
+				openProjectsModel.addElement( p );
+			}
+
+			int id = p.getId();
+
+			int completion = projectService.getProjectCompletion( id );
+			int activitiesCount = projectService.getProjectActivitiesCount( id );
+
+			projectInfos.put(id, new ProjectInfo(completion, activitiesCount));
+		}
 	}
 
 	private void openProjectSelected( ListSelectionEvent e ) {
@@ -181,77 +204,86 @@ public class ProjectsPanel {
 		projectSelected( e, closedProjectList, openProjectList );
 	}
 
-//	private JList<Project> oldList;
-//	private int oldSelectedIndex;
-
 	private void projectSelected( ListSelectionEvent e, JList<Project> list1, JList<Project> list2 ) {
 
-		if ( e.getValueIsAdjusting() ) { return; }
+		if ( valueIsAdjusting ) {
+			return;
+		}
 
 		int i = list1.getSelectedIndex();
 		if ( i == -1 ) {
-//			oldList = list1;
-//			oldSelectedIndex = -1;
 			splitPane1Gen.getDeleteButton().setEnabled( false );
 			splitPane1Gen.getBtnView().setEnabled( false );
 			return;
 		}
 
+		valueIsAdjusting = true;
 		list2.clearSelection();
+		valueIsAdjusting = false;
 
-//		if ( checkDirty() ) {
-//			return;
-//		}
-//
-//		oldList = list1;
-//		oldSelectedIndex = i;
+		Project project = list1.getModel().getElementAt( i );
 
-		selectedProject = Optional.of( list1.getModel().getElementAt( i ) );
+		int r = checkDirty();
+		if ( r == JOptionPane.YES_OPTION ) {
+			valueIsAdjusting = true;
+			selectProject( project.getId() );
+			valueIsAdjusting = false;
+		}
+		else if ( r == JOptionPane.CANCEL_OPTION ) {
+			return;
+		}
 
-		splitPane1Gen.getDeleteButton().setEnabled( getProject().getCompleted() );
+		ProjectInfo projectInfo = projectInfos.get( project.getId() );
+		int activitiesCount = projectInfo == null ? Integer.MAX_VALUE : projectInfo.getActivitesCount();
+
+		selectedProject = Optional.of( project );
+
+		splitPane1Gen.getDeleteButton().setEnabled( project.getCompleted() || activitiesCount == 0 );
 		splitPane1Gen.getBtnView().setEnabled( true );
 
 		displayProject();
 	}
 
-//	private boolean checkDirty( ) {
-//
-//		if ( oldList != null && isDirty() ) {
-//
-//			int r = JOptionPane.showConfirmDialog(
-//					splitPane1Gen,
-//					"Would you like to save " + us1RightPanelGen.getProjectNameField().getText() + " first?",
-//					"You forgot to save",
-//					JOptionPane.YES_NO_CANCEL_OPTION
-//			);
-//
-//			if ( r == JOptionPane.YES_OPTION ) {
-//
-//				setValueIsAdjusting(true);
-//				saveProjectClicked();
-//				setValueIsAdjusting(false);
-//			} else if ( r == JOptionPane.CANCEL_OPTION ) {
-//
-//				setValueIsAdjusting( true );
-//				if ( oldSelectedIndex == -1) {
-//					oldList.clearSelection();
-//				}
-//				else {
-//					oldList.setSelectedIndex( oldSelectedIndex );
-//				}
-//				setValueIsAdjusting( false );
-//
-//				return true;
-//			}
-//		}
-//
-//		return false;
-//	}
-//
-//	private void setValueIsAdjusting( boolean adjusting ) {
-//		openProjectList.getSelectionModel().setValueIsAdjusting( adjusting );
-//		closedProjectList.getSelectionModel().setValueIsAdjusting( adjusting );
-//	}
+	private int checkDirty( ) {
+
+		if ( saving ) {
+			return JOptionPane.NO_OPTION;
+		}
+
+		if ( isDirty() ) {
+
+			int r = JOptionPane.showConfirmDialog(
+					splitPane1Gen,
+					"Would you like to save " + us1RightPanelGen.getProjectNameField().getText() + " first?",
+					"You forgot to save",
+					JOptionPane.YES_NO_CANCEL_OPTION
+			);
+
+			if ( r == JOptionPane.YES_OPTION ) {
+
+				valueIsAdjusting = true;
+				saveProjectClicked();
+				valueIsAdjusting = false;
+			} else if ( r == JOptionPane.CANCEL_OPTION ) {
+
+				valueIsAdjusting = true;
+
+				Integer oldId = getProject().getId();
+				if ( oldId == null ) {
+					openProjectList.clearSelection();
+					closedProjectList.clearSelection();
+				} else {
+					selectProject( oldId );
+				}
+
+				valueIsAdjusting = false;
+			}
+
+			return r;
+		}
+
+		return JOptionPane.NO_OPTION;
+	}
 
 	private void viewActivitiesClicked() {
 
@@ -281,13 +313,14 @@ public class ProjectsPanel {
 
 		refresh();
 
-		selectNextProject( openProjectList, i );
+		selectNextProject( openProjectList, i);
 		selectNextProject( closedProjectList, j );
 	}
 
 	private void selectNextProject( JList<Project> list, int oldIndex ) {
 
-		if ( oldIndex == -1 ) { return; }
+		if ( oldIndex == -1 ) { return;
+		}
 
 		int newIndex = Math.max( 0, oldIndex - 1 );
 
@@ -298,27 +331,20 @@ public class ProjectsPanel {
 
 	private void saveProjectClicked() {
 
-		saveProject();
-
-		Project p = getProject();
-		if ( p.getId() == null ) {
-			refresh();
-			openProjectList.setSelectedIndex( openProjectsModel.getSize() - 1 );
-		}
-		else {
-			refresh( p.getId() );
-		}
-	}
-
-	private void saveProject() {
-
 		Project p = buildProject();
+
+		saving = true;
+
 		if ( p.getId() == null ) {
 			projectService.addProject( p );
-		}
-		else {
+			refresh();
+			openProjectList.setSelectedIndex( openProjectsModel.getSize() - 1);
+		} else {
 			projectService.updateProject( p );
+			refresh( p.getId() );
 		}
+
+		saving = false;
 	}
 
 	private void displayProject() {

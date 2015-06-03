@@ -32,6 +32,13 @@ public interface ProjectService {
     int getProjectCompletion( int projectId );
 
     /**
+     * @param projectId The id of the project to count its activities
+     * @return The number of activities in the project
+     * @throws ServiceFunctionalityException if something went wrong with this functionality.
+     */
+    int getProjectActivitiesCount( int projectId );
+
+    /**
      * Add a new project. The id property must be null. Other properties
      * may or may not be null.
      *
