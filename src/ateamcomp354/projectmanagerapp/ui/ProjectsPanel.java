@@ -9,6 +9,7 @@ import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
+import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
@@ -43,6 +44,7 @@ public class ProjectsPanel {
 	private Optional<Project> selectedProject;
 
 	private boolean valueIsAdjusting;
+	private boolean refreshing;
 	private boolean saving;
 
 	public ProjectsPanel( ApplicationContext appCtx, SwapInterface swap )
@@ -128,6 +130,8 @@ public class ProjectsPanel {
 
 	private void refresh( Integer projectId ) {
 
+		refreshing = true;
+
 		fillProjectLists();
 
 		boolean select = projectId != null;
@@ -139,6 +143,8 @@ public class ProjectsPanel {
 		if ( (projectId == null | select) && !openProjectsModel.isEmpty() ) {
 			openProjectList.setSelectedIndex( 0 );
 		}
+
+		refreshing = false;
 	}
 
 	private boolean selectProject( int projectId ) {
@@ -252,12 +258,7 @@ public class ProjectsPanel {
 
 		if ( isDirty() ) {
 
-			int r = JOptionPane.showConfirmDialog(
-					splitPane1Gen,
-					"Would you like to save " + us1RightPanelGen.getProjectNameField().getText() + " first?",
-					"You forgot to save",
-					JOptionPane.YES_NO_CANCEL_OPTION
-			);
+			int r = Dialogs.dirty( getComponent(), us1RightPanelGen.getProjectNameField().getText() );
 
 			if ( r == JOptionPane.YES_OPTION ) {
 
@@ -292,6 +293,9 @@ public class ProjectsPanel {
 	}
 
 	private void addProjectClicked() {
+
+		int r = checkDirty();
+		if ( r == JOptionPane.CANCEL_OPTION ) { return; }
 
 		openProjectList.clearSelection();
 		closedProjectList.clearSelection();
@@ -370,6 +374,7 @@ public class ProjectsPanel {
 	}
 
 	private boolean isDirty() {
-		return !Pojos.projectsEqual( getProject(), buildProject() );
+		Project p = getProject();
+		return !refreshing && ( p.getId() == null || !Pojos.projectsEqual( p, buildProject() ) );
 	}
 }
