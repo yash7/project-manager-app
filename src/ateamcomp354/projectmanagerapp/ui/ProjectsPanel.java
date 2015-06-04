@@ -87,13 +87,13 @@ public class ProjectsPanel {
 
 		us1RightPanelGen = new US1RightPanelGen();
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
-		
-		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
 
 		openProjectsModel = new DefaultListModel<>();
 		closedProjectsModel = new DefaultListModel<>();
 
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
+
+		splitPane1Gen.getBackBtn().setVisible( false );
 
 		splitPane1Gen.getTopLabel().setVisible( false );
 
@@ -145,7 +145,7 @@ public class ProjectsPanel {
 	 * See also refresh( int projectId ).
 	 */
 	public void refresh() {
-		refresh( null );
+		refreshImpl( null );
 	}
 
 	/**
@@ -154,10 +154,10 @@ public class ProjectsPanel {
 	 * See also refresh().
 	 */
 	public void refresh( int projectId ) {
-		refresh( projectId );
+		refreshImpl( projectId );
 	}
 
-	private void refresh( Integer projectId ) {
+	private void refreshImpl( Integer projectId ) {
 
 		refreshing = true;
 

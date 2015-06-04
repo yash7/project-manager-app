@@ -1,21 +1,18 @@
 package ateamcomp354.projectmanagerapp.ui;
 
-import java.util.List;
-
-import javax.swing.*;
-
+import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
-import ateamcomp354.projectmanagerapp.model.Status;
-
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
+import javax.swing.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 
 public class ActivitiesPanel {
@@ -127,8 +124,10 @@ public class ActivitiesPanel {
 				removeDependency();
 			}
 		});
-		
-		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
+
+		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
+
+		splitPane1Gen.getBackBtn().addActionListener( __ -> this.swap.showProjectsView( projectId ) );
 		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
