@@ -41,7 +41,6 @@ public class ActivitiesPanel {
 
 		this.appCtx = appCtx;
 		this.swap = swap;
-
 		splitPane1Gen = new SplitPane1Gen();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
@@ -78,6 +77,7 @@ public class ActivitiesPanel {
 				splitPane1Gen.getTopLabel().setText(project.getProjectName());
 				JLabel projectLabel = new JLabel(project.getProjectName()); 
 				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
+				splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(projectLabel);
 				
 				fillActivitiesList();
 			}
@@ -126,6 +126,41 @@ public class ActivitiesPanel {
 		});
 		
 		splitPane1Gen.getLogoutButton().addActionListener(new LogoutListener(swap));
+		
+		//occurs whenever the view is opened. projectId should be set from the project view
+		splitPane1Gen.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {	
+				clear(true);
+				activityService = appCtx.getActivityService(projectId);
+				activities = activityService.getActivities();
+				project = activityService.getProject();
+				
+				splitPane1Gen.getTopLabel().setText(project.getProjectName());
+				JLabel projectLabel = new JLabel(project.getProjectName()); 
+				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
+				
+				fillActivitiesList();
+			}
+		});
+		
+		//Saving the activity from the edited fields
+		splitPane1Gen.getSaveActivityButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				saveActivity();
+			}
+		});
+		
+		//adds a new activity. only finalized on save
+		splitPane1Gen.getAddButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				activityId = -1;
+				clear(true);
+				splitPane1Gen.getActivityNameField().setText("New Activity");
+			}
+		});
 	}
 	
 	public JComponent getComponent()
@@ -178,7 +213,7 @@ public class ActivitiesPanel {
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField().getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
 		addOrUpdateActivity(activity);
-		setReadOnly(activity.getStatus() != Status.RESOLVED);
+		setReadOnly(activity.getStatus() == Status.RESOLVED);
 	}
 	
 	private void addOrUpdateActivity(Activity a)
@@ -190,6 +225,12 @@ public class ActivitiesPanel {
 			activities = activityService.getActivities();
 			int lastIndex = activities.size() - 1;
 			activityId = activities.get(lastIndex).getId();
+			
+			//We disable dependency functionality until the activity is saved
+			splitPane1Gen.getAssigneesComboBox().setEnabled(false);
+			splitPane1Gen.getAddAssigneeButton().setEnabled(false);
+			splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
+			splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
 		}
 		else
 		{
@@ -214,7 +255,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		showDependencies(id);
-		setReadOnly(activity.getStatus() != Status.RESOLVED);
+		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
 	}
 	
 	private void showDependencies(int id)
@@ -339,6 +380,7 @@ public class ActivitiesPanel {
 				if (index >= 0)
 				{
 					selectActivity(idIndexes[index]);
+					completedActivityList.clearSelection();
 				}
 			}
 		});
@@ -351,6 +393,7 @@ public class ActivitiesPanel {
 				if (index >= 0)
 				{
 					selectActivity(completedIdIndexes[index]);
+					activityList.clearSelection();
 				}
 			}
 		});
@@ -358,18 +401,18 @@ public class ActivitiesPanel {
 	
 	private void setReadOnly(boolean readOnly)
 	{
-		splitPane1Gen.getActivityNameField().setEnabled(readOnly);
-		//splitPane1Gen.getEarliestStartField().setEnabled(readOnly);
-		//splitPane1Gen.getLatestStartField().setEnabled(readOnly);
-		//splitPane1Gen.getEarliestFinishField().setEnabled(readOnly);
-		//splitPane1Gen.getLatestFinishField().setEnabled(readOnly);
-		splitPane1Gen.getMaxDurationField().setEnabled(readOnly);
-		splitPane1Gen.getDurationField().setEnabled(readOnly);
-		splitPane1Gen.getDescriptionArea().setEnabled(readOnly);
-		splitPane1Gen.getDependenciesComboBox().setEnabled(readOnly);
-		splitPane1Gen.getDependencyScrollPane().setEnabled(readOnly);
-		splitPane1Gen.getAddDependencyButton().setEnabled(readOnly);
-		splitPane1Gen.getRemoveDependencyButton().setEnabled(readOnly);
+		splitPane1Gen.getActivityNameField().setEnabled(!readOnly);
+		//splitPane1Gen.getEarliestStartField().setEnabled(!readOnly);
+		//splitPane1Gen.getLatestStartField().setEnabled(!readOnly);
+		//splitPane1Gen.getEarliestFinishField().setEnabled(!readOnly);
+		//splitPane1Gen.getLatestFinishField().setEnabled(!readOnly);
+		splitPane1Gen.getMaxDurationField().setEnabled(!readOnly);
+		splitPane1Gen.getDurationField().setEnabled(!readOnly);
+		splitPane1Gen.getDescriptionArea().setEnabled(!readOnly);
+		splitPane1Gen.getDependenciesComboBox().setEnabled(!readOnly);
+		splitPane1Gen.getDependencyScrollPane().setEnabled(!readOnly);
+		splitPane1Gen.getAddDependencyButton().setEnabled(!readOnly);
+		splitPane1Gen.getRemoveDependencyButton().setEnabled(!readOnly);
 	}
 	
 	private boolean isDirty()
@@ -384,10 +427,10 @@ public class ActivitiesPanel {
 		
 		//if this is not a new activity, but has been changed, it is dirty
 		return (!a.getLabel().equals(splitPane1Gen.getActivityNameField().getText())
-				|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
-				|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
-				|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
-				|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
+				//|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				//|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
+				//|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				//|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
 				|| a.getStatus().ordinal() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
 				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
 				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
