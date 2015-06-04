@@ -39,13 +39,13 @@ For an idea on how to obtain an instance of that interface refer to
 ### Database interaction
 
 Use generated code by JOOQ to interact with the database. Refer to the class
-[JooqExamples](blob/df2be3121c516cd47410e8d66e5cde3a99d676a7/src/ateamcomp354/projectmanagerapp/JooqExamples.java)
-for usage examples. To learn more about using JOOQ refer to its (manual)[http://www.jooq.org/doc/3.6/manual/].
+[JooqExamples](src/ateamcomp354/projectmanagerapp/JooqExamples.java)
+for usage examples. To learn more about using JOOQ refer to its [manual](http://www.jooq.org/doc/3.6/manual/).
 
 ### Database schema
 
 Each database table should be written as a **create table statement** in its own sql file. Refer to
-[ateamcomp354.projectmanagerapp.dataAccess.ddl package](tree/master/src/ateamcomp354/projectmanagerapp/dataAccess/ddl)
+[ateamcomp354.projectmanagerapp.dataAccess.ddl package](src/ateamcomp354/projectmanagerapp/dataAccess/ddl)
 for examples.
 
 Then each **create table statement** file should be used in
@@ -63,13 +63,13 @@ Run the **main** function inside the class
 [GenerationTool](src/ateamcomp354/projectmanagerapp/jooq/GenerationTool.java)
 to generate java code.
 
-You can find all the generated code in the [org.jooq.ateamcomp354.projectmanagerapp package](tree/master/src/org/jooq/ateamcomp354/projectmanagerapp)
+You can find all the generated code in the [org.jooq.ateamcomp354.projectmanagerapp package](src/org/jooq/ateamcomp354/projectmanagerapp)
 
 ### Modifying the generation procedure
 
 Refer to the file [jooq-code.xml](jooq-code.xml) and JOOQ's manual for [code generation](http://www.jooq.org/doc/3.6/manual/code-generation/codegen-advanced/)
 
-### Mapping int columns to booleans
+#### Mapping int columns to booleans
 
 SQLite does not support a boolean column type. Instead an INT with a value of 0 or 1 can be used. However, in the generated
 java code we would want a boolean primitive.
@@ -80,7 +80,7 @@ in the jooq-code.xml file to convert desired int columns in the database to
 Boolean objects. You can find the code for the converter in the class
 [C_BooleanConverter](src/ateamcomp354/projectmanagerapp/jooq/converters/C_BooleanConverter.java)
 
-### Mapping int columns to enums
+#### Mapping int columns to enums
 
 SQLite does not support a enum column type. Instead an INT column can be used and it would contain contain valid ordinals of an enum.
 However, in the generated java code we would want to use an enum object.
