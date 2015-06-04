@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
+// This uses jooq to generate java code that models the database.
 public class GenerationTool {
 
 	public static void main(String[] args) throws Exception {

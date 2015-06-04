@@ -1,7 +1,7 @@
 package ateamcomp354.projectmanagerapp.services;
 
 /**
- * An exception to be thrown by the service functions that have failed.
+ * An exception to be thrown by a service function if it has failed.
  */
 public class ServiceFunctionalityException extends RuntimeException {
 

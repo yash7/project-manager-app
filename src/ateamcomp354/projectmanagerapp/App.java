@@ -18,6 +18,9 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.impl.DSL;
 
+/**
+ * The project manager app starts here! run this classes main function to launch the swing application.
+ */
 public class App {
 
 	public static void main(String[] args) throws Exception {
@@ -40,6 +43,11 @@ public class App {
 		Runtime.getRuntime().addShutdownHook( new Thread( db::closeConnection ) );
 	}
 
+	/**
+	 * Return the ApplicationContext, the object that abstract interacting with the database.
+	 *
+	 * Tests should use function to the application functionality.
+	 */
 	public static ApplicationContext getApplicationContext( Connection c ) {
 
 		// This is just so jooq doesn't print its logo to stderr
