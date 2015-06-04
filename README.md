@@ -18,7 +18,7 @@ For information about window builder see the pinned document **window-builder-in
 
 ## Running the app
 
-Run the **main** function inside the class [App](blob/master/src/ateamcomp354/projectmanagerapp/App.java)
+Run the **main** function inside the class [App](src/ateamcomp354/projectmanagerapp/App.java)
 
 ## Development guidelines
 
@@ -32,9 +32,9 @@ Keep business logic out of the UI code. For example, when deleting a project don
 click event listener. Instead make the delete button's click event listener delegate the work to an interface class.
 
 For an idea of what an interface class should look like refer to
-[ProjectService](blob/master/src/ateamcomp354/projectmanagerapp/services/ProjectService.java).
+[ProjectService](src/ateamcomp354/projectmanagerapp/services/ProjectService.java).
 For an idea on how to obtain an instance of that interface refer to
-[App.getApplicationContext](blob/master/src/ateamcomp354/projectmanagerapp/App.java#L51).
+[App.getApplicationContext](src/ateamcomp354/projectmanagerapp/App.java#L51).
 
 ### Database interaction
 
@@ -49,7 +49,7 @@ Each database table should be written as a **create table statement** in its own
 for examples.
 
 Then each **create table statement** file should be used in
-[DatabaseManager.createTables](blob/master/src/ateamcomp354/projectmanagerapp/dataAccess/DatabaseManager.java#L60)
+[DatabaseManager.createTables](src/ateamcomp354/projectmanagerapp/dataAccess/DatabaseManager.java#L60)
 function.
 
 When you modify the database schema make sure you also re-generate the java code. The next section explains the process.
@@ -60,14 +60,14 @@ With a database schema we can use JOOQ to generate java code to facilitate inter
 about using the generated code.
 
 Run the **main** function inside the class
-[GenerationTool](blob/master/src/ateamcomp354/projectmanagerapp/jooq/GenerationTool.java)
+[GenerationTool](src/ateamcomp354/projectmanagerapp/jooq/GenerationTool.java)
 to generate java code.
 
 You can find all the generated code in the [org.jooq.ateamcomp354.projectmanagerapp package](tree/master/src/org/jooq/ateamcomp354/projectmanagerapp)
 
 ### Modifying the generation procedure
 
-Refer to the file [jooq-code.xml](blob/master/jooq-code.xml) and JOOQ's manual for [code generation](http://www.jooq.org/doc/3.6/manual/code-generation/codegen-advanced/)
+Refer to the file [jooq-code.xml](jooq-code.xml) and JOOQ's manual for [code generation](http://www.jooq.org/doc/3.6/manual/code-generation/codegen-advanced/)
 
 ### Mapping int columns to booleans
 
@@ -75,10 +75,10 @@ SQLite does not support a boolean column type. Instead an INT with a value of 0 
 java code we would want a boolean primitive.
 
 You can use our custom type
-[C_Boolean](blob/master/jooq-code.xml#L30)
+[C_Boolean](jooq-code.xml#L30)
 in the jooq-code.xml file to convert desired int columns in the database to
 Boolean objects. You can find the code for the converter in the class
-[C_BooleanConverter](blob/master/src/ateamcomp354/projectmanagerapp/jooq/converters/C_BooleanConverter.java)
+[C_BooleanConverter](src/ateamcomp354/projectmanagerapp/jooq/converters/C_BooleanConverter.java)
 
 ### Mapping int columns to enums
 
@@ -86,9 +86,9 @@ SQLite does not support a enum column type. Instead an INT column can be used an
 However, in the generated java code we would want to use an enum object.
 
 You can create enum custom types and converters for JOOQ. Refer to the
-[Status](blob/master/jooq-code.xml#L24)
+[Status](jooq-code.xml#L24)
 custom type and class
-[StatusConverter](blob/master/src/ateamcomp354/projectmanagerapp/jooq/converters/StatusConverter.java)
+[StatusConverter](src/ateamcomp354/projectmanagerapp/jooq/converters/StatusConverter.java)
 for examples on how to create custom enum converters.
 
 ## FAQ
