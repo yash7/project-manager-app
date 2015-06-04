@@ -8,11 +8,14 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 public class US1RightPanelGen extends JPanel {
 	private JTextField projectNameField;
 	private JTextArea descriptionArea;
 	private JButton saveButton;
+	private JLabel newEditProjectLabel;
+	private JCheckBox chckbxProjectIsCompleted;
 
 	/**
 	 * Create the panel.
@@ -22,7 +25,7 @@ public class US1RightPanelGen extends JPanel {
 		setSize(MainFrame.getAppWidth()/2, MainFrame.getAppHeight());
 		setLayout(null);
 		
-		JLabel newEditProjectLabel = new JLabel("New/Edit Project");
+		newEditProjectLabel = new JLabel("New/Edit Project");
 		newEditProjectLabel.setBounds(12, 13, 112, 16);
 		add(newEditProjectLabel);
 		
@@ -36,17 +39,21 @@ public class US1RightPanelGen extends JPanel {
 		projectNameField.setColumns(10);
 		
 		JLabel descriptionLabel = new JLabel("Description:");
-		descriptionLabel.setBounds(12, 102, 68, 16);
+		descriptionLabel.setBounds(12, 129, 68, 16);
 		add(descriptionLabel);
 		
 		descriptionArea = new JTextArea();
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionArea);
-		descriptionScrollPane.setBounds(12, 131, 329, 150);
+		descriptionScrollPane.setBounds(12, 156, 329, 150);
 		add(descriptionScrollPane);
 		
-		saveButton = new JButton("Save");
-		saveButton.setBounds(244, 308, 97, 25);
+		saveButton = new JButton("Save Project");
+		saveButton.setBounds(244, 317, 97, 25);
 		add(saveButton);
+		
+		chckbxProjectIsCompleted = new JCheckBox("Project is completed");
+		chckbxProjectIsCompleted.setBounds(12, 99, 329, 23);
+		add(chckbxProjectIsCompleted);
 		
 	}
 	public JTextField getProjectNameField() {
@@ -57,5 +64,11 @@ public class US1RightPanelGen extends JPanel {
 	}
 	public JButton getSaveButton() {
 		return saveButton;
+	}
+	public JLabel getTitleLabel() {
+		return newEditProjectLabel;
+	}
+	public JCheckBox getCompletedCheckBox() {
+		return chckbxProjectIsCompleted;
 	}
 }
