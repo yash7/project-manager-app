@@ -47,6 +47,9 @@ public class ActivitiesPanel {
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
 		splitPane1Gen.getStatusComboBox().addItem("Resolved");
 		
+		splitPane1Gen.getBtnManage().setVisible(false);
+		splitPane1Gen.getBtnView().setVisible(false);
+		
 		//TEMPORARY - MAKE FIELDS READ ONLY FOR FIRST ITERATION
 		splitPane1Gen.getEarliestStartField().setEnabled(false);
 		splitPane1Gen.getLatestStartField().setEnabled(false);
@@ -141,24 +144,6 @@ public class ActivitiesPanel {
 				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
 				
 				fillActivitiesList();
-			}
-		});
-		
-		//Saving the activity from the edited fields
-		splitPane1Gen.getSaveActivityButton().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				saveActivity();
-			}
-		});
-		
-		//adds a new activity. only finalized on save
-		splitPane1Gen.getAddButton().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				activityId = -1;
-				clear(true);
-				splitPane1Gen.getActivityNameField().setText("New Activity");
 			}
 		});
 	}
