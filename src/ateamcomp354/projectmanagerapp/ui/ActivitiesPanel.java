@@ -229,6 +229,12 @@ public class ActivitiesPanel {
 			activities = activityService.getActivities();
 			int lastIndex = activities.size() - 1;
 			activityId = activities.get(lastIndex).getId();
+			
+			//We disable dependency functionality until the activity is saved
+			splitPane1Gen.getAssigneesComboBox().setEnabled(false);
+			splitPane1Gen.getAddAssigneeButton().setEnabled(false);
+			splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
+			splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
 		}
 		else
 		{
@@ -253,7 +259,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		showDependencies(id);
-		setReadOnly(activity.getStatus() != Status.RESOLVED);
+		setReadOnly(activity.getStatus() != Status.RESOLVED || project.getCompleted());
 	}
 	
 	private void showDependencies(int id)
