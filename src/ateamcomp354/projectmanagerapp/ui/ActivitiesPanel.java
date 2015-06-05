@@ -97,6 +97,7 @@ public class ActivitiesPanel {
 			public void mouseClicked(MouseEvent e) {
 				if (!clear(true)) return;
 				activityId = -1;
+				splitPane1Gen.getDeleteButton().setEnabled(false);
 				splitPane1Gen.getActivityNameField().setText("New Activity");
 			}
 		});
@@ -215,6 +216,7 @@ public class ActivitiesPanel {
 			splitPane1Gen.getAddAssigneeButton().setEnabled(false);
 			splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
 			splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
+			splitPane1Gen.getDeleteButton().setEnabled(true);
 		}
 		else
 		{
@@ -238,6 +240,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getMaxDurationField().setText(Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
+		splitPane1Gen.getDeleteButton().setEnabled(true);
 		showDependencies(id);
 		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
 	}
