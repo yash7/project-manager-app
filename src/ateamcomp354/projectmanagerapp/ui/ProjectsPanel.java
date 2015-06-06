@@ -130,6 +130,10 @@ public class ProjectsPanel {
 		newProjectTemplate.setProjectName( NEW_PROJECT_NAME_DEFAULT_VALUE );
 		newProjectTemplate.setDescription( NEW_PROJECT_DESC_DEFAULT_VALUE);
 		newProjectTemplate.setCompleted( false );
+		
+		splitPane1Gen.getListScrollPane().setColumnHeaderView(new JLabel("Open Projects"));
+		splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(new JLabel("Completed Projects"));
+		
 
 		selectedProject = Optional.empty();
 		displayProject();
