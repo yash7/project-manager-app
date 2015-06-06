@@ -5,6 +5,7 @@ import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 
+import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
@@ -33,8 +34,8 @@ public class ActivitiesPanel {
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
 	
-	private JList<String> activityList;
-	private JList<String> completedActivityList;
+	private JList<Activity> activityList;
+	private JList<Activity> completedActivityList;
 	
 	private int projectId = 1;
 	private int activityId = 0;
@@ -45,8 +46,8 @@ public class ActivitiesPanel {
 		this.swap = swap;
 		splitPane1Gen = new SplitPane1Gen();
 		
-		activityList = new JList<String>();
-		completedActivityList = new JList<String>();
+		activityList = new JList<>();
+		completedActivityList = new JList<>();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
@@ -350,28 +351,38 @@ public class ActivitiesPanel {
 	private void fillActivitiesList()
 	{
 		activities = activityService.getActivities();
-		String activityNames[] = new String[activities.size()];
-		String completedActivityNames[] = new String[activities.size()];
 		idIndexes = new int[activities.size()];
 		completedIdIndexes = new int[activities.size()];
 
+		DefaultListModel<Activity> activitiesModel = new DefaultListModel<>();
+		DefaultListModel<Activity> completedActivitiesModel = new DefaultListModel<>();
+
 		for (int i = 0; i < activities.size(); i++)
 		{
-			if (activities.get(i).getStatus() != Status.RESOLVED)
+			Activity a = activities.get(i);
+
+			if (a.getStatus() != Status.RESOLVED)
 			{
-				String str = activities.get(i).getStatus() == Status.NEW ? "Open" : "In Progress";
-				activityNames[i] = activities.get(i).getLabel() + "    " + str;
-				idIndexes[i] = activities.get(i).getId();
+				activitiesModel.addElement( a );
+				idIndexes[i] = a.getId();
 			}
 			else
 			{
-				completedActivityNames[i] = activities.get(i).getLabel() + "    Resolved";
-				completedIdIndexes[i] = activities.get(i).getId();
+				completedActivitiesModel.addElement( a );
+				completedIdIndexes[i] = a.getId();
 			}
 		}
-		
-		activityList = new JList<String>(activityNames);
-		completedActivityList = new JList<String>(completedActivityNames);
+
+		TwoColumnListCellRenderer<Activity> renderer = new TwoColumnListCellRenderer<>(
+			Activity::getLabel,
+			a -> a.getStatus().getPrettyString()
+		);
+
+		activityList = new JList<>(activitiesModel);
+		activityList.setCellRenderer( renderer );
+
+		completedActivityList = new JList<>(completedActivitiesModel);
+		completedActivityList.setCellRenderer( renderer );
 		
 		splitPane1Gen.getListScrollPane().setViewportView(activityList);
 		splitPane1Gen.getListScrollPane().validate();

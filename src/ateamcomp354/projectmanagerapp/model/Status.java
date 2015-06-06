@@ -5,7 +5,17 @@ package ateamcomp354.projectmanagerapp.model;
  */
 public enum Status {
 
-    NEW,
-    IN_PROGRESS,
-    RESOLVED;
+    NEW( "Open" ),
+    IN_PROGRESS( "In Progress" ),
+    RESOLVED( "Resolved" );
+
+    private final String pretty;
+
+    Status(String pretty) {
+        this.pretty = pretty;
+    }
+
+    public String getPrettyString() {
+        return pretty;
+    }
 }

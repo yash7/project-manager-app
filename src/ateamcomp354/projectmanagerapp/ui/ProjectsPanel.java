@@ -133,7 +133,6 @@ public class ProjectsPanel {
 		
 		splitPane1Gen.getListScrollPane().setColumnHeaderView(new JLabel("Open Projects"));
 		splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(new JLabel("Completed Projects"));
-		
 
 		selectedProject = Optional.empty();
 		displayProject();
