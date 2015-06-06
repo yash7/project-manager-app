@@ -85,9 +85,10 @@ public class ActivitiesPanel {
 				project = activityService.getProject();
 				
 				splitPane1Gen.getTopLabel().setText(project.getProjectName());
-				JLabel projectLabel = new JLabel(project.getProjectName()); 
-				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
-				splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(projectLabel);
+				JLabel projectLabelO = new JLabel(project.getProjectName() + " - open activities"); 
+				JLabel projectLabelC = new JLabel(project.getProjectName() + " - resolved activities"); 
+				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabelO);
+				splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(projectLabelC);
 				
 				fillActivitiesList();
 			}
@@ -141,22 +142,6 @@ public class ActivitiesPanel {
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
 		splitPane1Gen.getBackBtn().addActionListener( __ -> this.swap.showProjectsView( projectId ) );
-		
-		//occurs whenever the view is opened. projectId should be set from the project view
-		splitPane1Gen.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {	
-				clear(true);
-				activityService = appCtx.getActivityService(projectId);
-				activities = activityService.getActivities();
-				project = activityService.getProject();
-				
-				JLabel projectLabel = new JLabel(project.getProjectName()); 
-				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
-				
-				fillActivitiesList();
-			}
-		});
 	}
 	
 	public JComponent getComponent()

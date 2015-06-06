@@ -116,27 +116,27 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(topLabel);
 		
 		listScrollPane = new JScrollPane();
-		listScrollPane.setBounds(88, 111, 176, 197);
+		listScrollPane.setBounds(88, 111, 256, 197);
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("+");
-		addButton.setBounds(210, 66, 54, 40);
+		addButton.setBounds(286, 66, 54, 40);
 		LeftPanel.add(addButton);
 		
 		deleteButton = new JButton("X");
-		deleteButton.setBounds(150, 66, 54, 40);
+		deleteButton.setBounds(226, 66, 54, 40);
 		LeftPanel.add(deleteButton);
 		
 		btnManage = new JButton("Manage Activity");
-		btnManage.setBounds(120, 319, 148, 25);
+		btnManage.setBounds(196, 319, 148, 25);
 		LeftPanel.add(btnManage);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(86, 352, 182, 197);
+		scrollPane.setBounds(86, 352, 256, 197);
 		LeftPanel.add(scrollPane);
 		
 		btnView = new JButton("View Activity");
-		btnView.setBounds(120, 560, 148, 25);
+		btnView.setBounds(196, 560, 148, 25);
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
