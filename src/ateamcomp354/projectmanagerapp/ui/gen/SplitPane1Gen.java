@@ -245,7 +245,7 @@ public class SplitPane1Gen extends JPanel {
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(103, 49, 116, 22);
+		textField.setBounds(103, 48, 116, 22);
 		RightPanel.add(textField);
 		
 		button = new JButton("+");
@@ -271,11 +271,6 @@ public class SplitPane1Gen extends JPanel {
 		assigneeScrollPane = new JScrollPane();
 		assigneeScrollPane.setBounds(147, 545, 116, 129);
 		RightPanel.add(assigneeScrollPane);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(103, 49, 116, 22);
-		RightPanel.add(textField);
 		
 	}
 

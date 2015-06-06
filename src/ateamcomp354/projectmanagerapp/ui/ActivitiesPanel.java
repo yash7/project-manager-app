@@ -4,10 +4,12 @@ import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
 import javax.swing.*;
+
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -31,6 +33,9 @@ public class ActivitiesPanel {
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
 	
+	private JList<String> activityList;
+	private JList<String> completedActivityList;
+	
 	private int projectId = 1;
 	private int activityId = 0;
 
@@ -39,13 +44,18 @@ public class ActivitiesPanel {
 		this.appCtx = appCtx;
 		this.swap = swap;
 		splitPane1Gen = new SplitPane1Gen();
+		
+		activityList = new JList<String>();
+		completedActivityList = new JList<String>();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
 		splitPane1Gen.getStatusComboBox().addItem("Resolved");
 		
+		//REMOVE THINGS FROM SPLITPANE THAT ARE NOT NEEDED IN ACTIVITY VIEW
 		splitPane1Gen.getBtnManage().setVisible(false);
 		splitPane1Gen.getBtnView().setVisible(false);
+		splitPane1Gen.getTopLabel().setVisible(false);
 		
 		//TEMPORARY - MAKE FIELDS READ ONLY FOR FIRST ITERATION
 		splitPane1Gen.getEarliestStartField().setEnabled(false);
@@ -97,6 +107,8 @@ public class ActivitiesPanel {
 			public void mouseClicked(MouseEvent e) {
 				if (!clear(true)) return;
 				activityId = -1;
+				activityList.clearSelection();
+				completedActivityList.clearSelection();
 				splitPane1Gen.getDeleteButton().setEnabled(false);
 				splitPane1Gen.getActivityNameField().setText("New Activity");
 			}
@@ -139,7 +151,6 @@ public class ActivitiesPanel {
 				activities = activityService.getActivities();
 				project = activityService.getProject();
 				
-				splitPane1Gen.getTopLabel().setText(project.getProjectName());
 				JLabel projectLabel = new JLabel(project.getProjectName()); 
 				splitPane1Gen.getListScrollPane().setColumnHeaderView(projectLabel);
 				
@@ -182,7 +193,7 @@ public class ActivitiesPanel {
 		}
 		return false;
 	}
-	
+
 	private void saveActivity()
 	{
 		Activity activity = new Activity();
@@ -198,6 +209,28 @@ public class ActivitiesPanel {
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField().getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
 		addOrUpdateActivity(activity);
+		
+		boolean found = false;
+		for (int i = 0; i < idIndexes.length; i++)
+		{
+			if (idIndexes[i] == activityId)
+			{
+				found = true;
+				activityList.setSelectedIndex(i);
+				break;
+			}
+		}
+		if (!found)
+		{
+			for (int i = 0; i < completedIdIndexes.length; i ++)
+			{
+				if (completedIdIndexes[i] == activityId)
+				{
+					completedActivityList.setSelectedIndex(i);
+					break;
+				}
+			}
+		}
 		setReadOnly(activity.getStatus() == Status.RESOLVED);
 	}
 	
@@ -352,8 +385,9 @@ public class ActivitiesPanel {
 			}
 		}
 		
-		JList<String> activityList = new JList<String>(activityNames);
-		JList<String> completedActivityList = new JList<String>(completedActivityNames);
+		activityList = new JList<String>(activityNames);
+		completedActivityList = new JList<String>(completedActivityNames);
+		
 		splitPane1Gen.getListScrollPane().setViewportView(activityList);
 		splitPane1Gen.getListScrollPane().validate();
 		splitPane1Gen.getCompletedScrollPane().setViewportView(completedActivityList);

@@ -36,7 +36,8 @@ public class MainFrame extends JFrame implements SwapInterface{
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
 		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
 		
-		buildMenuBar();
+		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
+		//buildMenuBar();
 
 		add(loginPanel.getComponent(), LOGIN_PANEL);
 		add(projectsPanel.getComponent(), PROJECTS_PANEL);
