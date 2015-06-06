@@ -99,9 +99,6 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void updateActivity(Activity activity) {
-
-        checkProjectNotCompleted( "Project to edit activity from is completed" );
-
         try {
             activityDao.update(activity);
         } catch (DataAccessException e) {
