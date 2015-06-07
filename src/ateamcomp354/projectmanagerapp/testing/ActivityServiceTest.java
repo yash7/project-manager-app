@@ -199,9 +199,24 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
         assertEquals(0,ase.getActivities().size());
 	}
 	
-	/**
-	 * Test failed, getDependents() and getDepende
-	 */
+	@Test
+	public void testUpdateActivity() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(0);
+		a.setDescription("This was a test");
+		a.setDuration(3);
+		
+		ase.addActivity(a);
+		
+		a.setDescription("Update Success");
+		a.setDuration(4);
+		
+		ase.updateActivity(a);
+		assertEquals(new Integer(4), ase.getActivity(0).getDuration());
+		assertEquals("Update Success", ase.getActivity(0).getDescription());
+	}
+	
 	@Test
 	public void testAddDependency(){
 		Activity a = new Activity();
