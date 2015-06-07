@@ -46,8 +46,8 @@ public class SplitPane1Gen extends JPanel {
 	private JButton btnManage;
 	private JLabel activityNameLabel;
 
-	private int appWidth = 800;
-	private int appHeight = 800;
+	private int appWidth = MainFrame.getAppWidth();
+	private int appHeight = MainFrame.getAppHeight();
 	
 	private JLabel statusLabel;
 	private JComboBox statusComboBox;
@@ -88,13 +88,14 @@ public class SplitPane1Gen extends JPanel {
 	 */
 	public SplitPane1Gen() {
 		
-		setSize(MainFrame.getAppWidth(), MainFrame.getAppHeight());
+		setSize(appWidth, appHeight);
 		setLayout(null);
 		
 		splitPane = new JSplitPane();
 		splitPane.setBounds(0, 0, appWidth, appHeight);
-		splitPane.setDividerLocation(appWidth/2);
+		splitPane.setDividerLocation(2*(appWidth/5));
 		add(splitPane);
+		splitPane.setEnabled(false);
 		
 		JPanel LeftPanel = new JPanel();
 		
@@ -105,42 +106,44 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.setLayout(null);
 		
 		logoutButton = new JButton("Logout");
-		logoutButton.setBounds(12, 13, 90, 25);
+		logoutButton.setBounds(12, 13, 90, 30);
 		LeftPanel.add(logoutButton);
 		
 		topLabel = new JLabel("TopLabel");
 		topLabel.setBackground(Color.BLACK);
 		topLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		topLabel.setBounds(86, 73, 77, 25);
+		topLabel.setBounds(43, 94, 77, 25);
 		LeftPanel.add(topLabel);
 		
 		listScrollPane = new JScrollPane();
-		listScrollPane.setBounds(88, 111, 256, 197);
+		listScrollPane.setBounds(45, 132, 256, 197);
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("+");
-		addButton.setBounds(286, 66, 54, 40);
+		addButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		addButton.setBounds(243, 87, 54, 40);
 		LeftPanel.add(addButton);
 		
-		deleteButton = new JButton("X");
-		deleteButton.setBounds(226, 66, 54, 40);
+		deleteButton = new JButton("x");
+		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		deleteButton.setBounds(183, 87, 54, 40);
 		LeftPanel.add(deleteButton);
 		
 		btnManage = new JButton("Manage Activity");
-		btnManage.setBounds(196, 319, 148, 25);
+		btnManage.setBounds(153, 342, 148, 30);
 		LeftPanel.add(btnManage);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(86, 352, 256, 197);
+		scrollPane.setBounds(43, 385, 256, 197);
 		LeftPanel.add(scrollPane);
 		
 		btnView = new JButton("View Activity");
-		btnView.setBounds(196, 560, 148, 25);
+		btnView.setBounds(153, 595, 148, 30);
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
-		backBtn.setBounds(12, 49, 90, 25);
+		backBtn.setBounds(12, 49, 90, 30);
 		LeftPanel.add(backBtn);
 
 		splitPane.setRightComponent(RightPanel);
@@ -155,7 +158,7 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(statusLabel);
 		
 		statusComboBox = new JComboBox();
-		statusComboBox.setBounds(68, 81, 100, 25);
+		statusComboBox.setBounds(147, 81, 116, 25);
 		RightPanel.add(statusComboBox);
 		
 		earliestStartLabel = new JLabel("Earliest Start:");
@@ -183,93 +186,97 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(durationLabel);
 		
 		earliestStartField = new JTextField();
-		earliestStartField.setBounds(103, 131, 116, 22);
+		earliestStartField.setBounds(147, 134, 116, 22);
 		RightPanel.add(earliestStartField);
 		earliestStartField.setColumns(10);
 		
 		latestStartField = new JTextField();
 		latestStartField.setColumns(10);
-		latestStartField.setBounds(103, 160, 116, 22);
+		latestStartField.setBounds(147, 163, 116, 22);
 		RightPanel.add(latestStartField);
 		
 		earliestFinishField = new JTextField();
 		earliestFinishField.setColumns(10);
-		earliestFinishField.setBounds(103, 189, 116, 22);
+		earliestFinishField.setBounds(147, 192, 116, 22);
 		RightPanel.add(earliestFinishField);
 		
 		latestFinishField = new JTextField();
 		latestFinishField.setColumns(10);
-		latestFinishField.setBounds(103, 218, 116, 22);
+		latestFinishField.setBounds(147, 221, 116, 22);
 		RightPanel.add(latestFinishField);
 		
 		maxDurationField = new JTextField();
 		maxDurationField.setColumns(10);
-		maxDurationField.setBounds(103, 247, 116, 22);
+		maxDurationField.setBounds(147, 250, 116, 22);
 		RightPanel.add(maxDurationField);
 		
 		durationField = new JTextField();
 		durationField.setColumns(10);
-		durationField.setBounds(103, 276, 116, 22);
+		durationField.setBounds(147, 276, 116, 22);
 		RightPanel.add(durationField);
 		
 		descriptionArea = new JTextArea();
 		descriptionArea.setLineWrap(true);
 		
 		descriptionScrollPane = new JScrollPane(descriptionArea);
-		descriptionScrollPane.setBounds(12, 340, 207, 178);
+		descriptionScrollPane.setBounds(287, 80, 207, 178);
 		RightPanel.add(descriptionScrollPane);
 		
 		descriptionLabel = new JLabel("Description:");
-		descriptionLabel.setBounds(12, 319, 89, 16);
+		descriptionLabel.setBounds(287, 51, 89, 16);
 		RightPanel.add(descriptionLabel);
 		
 		dependenciesLabel = new JLabel("Dependencies:");
-		dependenciesLabel.setBounds(12, 529, 89, 16);
+		dependenciesLabel.setBounds(12, 328, 89, 16);
 		RightPanel.add(dependenciesLabel);
 		
 		dependenciesComboBox = new JComboBox();
-		dependenciesComboBox.setBounds(12, 681, 116, 25);
+		dependenciesComboBox.setBounds(12, 493, 116, 25);
 		RightPanel.add(dependenciesComboBox);
 		
 		assigneesLabel = new JLabel("Assignees:");
-		assigneesLabel.setBounds(147, 529, 89, 16);
+		assigneesLabel.setBounds(147, 328, 89, 16);
 		RightPanel.add(assigneesLabel);
 		
 		assigneesComboBox = new JComboBox();
-		assigneesComboBox.setBounds(147, 681, 116, 25);
+		assigneesComboBox.setBounds(147, 493, 116, 25);
 		RightPanel.add(assigneesComboBox);
 		
 		saveActivityButton = new JButton("Save Activity");
-		saveActivityButton.setBounds(151, 762, 116, 25);
+		saveActivityButton.setBounds(151, 595, 116, 30);
 		RightPanel.add(saveActivityButton);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(103, 48, 116, 22);
+		textField.setBounds(147, 48, 116, 22);
 		RightPanel.add(textField);
 		
 		button = new JButton("+");
-		button.setBounds(68, 717, 60, 32);
+		button.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		button.setBounds(74, 529, 54, 40);
 		RightPanel.add(button);
 		
-		button_1 = new JButton("X");
-		button_1.setBounds(12, 717, 56, 32);
+		button_1 = new JButton("x");
+		button_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		button_1.setBounds(12, 529, 54, 40);
 		RightPanel.add(button_1);
 		
 		button_2 = new JButton("+");
-		button_2.setBounds(203, 717, 60, 32);
+		button_2.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		button_2.setBounds(209, 529, 54, 40);
 		RightPanel.add(button_2);
 		
-		button_3 = new JButton("X");
-		button_3.setBounds(147, 717, 56, 32);
+		button_3 = new JButton("x");
+		button_3.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		button_3.setBounds(147, 529, 54, 40);
 		RightPanel.add(button_3);
 		
 		dependencyScrollPane = new JScrollPane();
-		dependencyScrollPane.setBounds(12, 545, 116, 129);
+		dependencyScrollPane.setBounds(12, 357, 116, 129);
 		RightPanel.add(dependencyScrollPane);
 		
 		assigneeScrollPane = new JScrollPane();
-		assigneeScrollPane.setBounds(147, 545, 116, 129);
+		assigneeScrollPane.setBounds(147, 357, 116, 129);
 		RightPanel.add(assigneeScrollPane);
 		
 	}
