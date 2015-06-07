@@ -113,6 +113,8 @@ public class ActivitiesPanel {
 				completedActivityList.clearSelection();
 				splitPane1Gen.getDeleteButton().setEnabled(false);
 				splitPane1Gen.getActivityNameField().setText("New Activity");
+				splitPane1Gen.getDependenciesComboBox().removeAllItems();
+				setReadOnly(false);
 			}
 		});
 		
