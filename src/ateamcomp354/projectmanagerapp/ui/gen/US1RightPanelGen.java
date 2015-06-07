@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import java.awt.Font;
 
 public class US1RightPanelGen extends JPanel {
 	private JTextField projectNameField;
@@ -26,7 +27,8 @@ public class US1RightPanelGen extends JPanel {
 		setLayout(null);
 		
 		newEditProjectLabel = new JLabel("New/Edit Project");
-		newEditProjectLabel.setBounds(12, 13, 112, 16);
+		newEditProjectLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		newEditProjectLabel.setBounds(12, 13, 173, 30);
 		add(newEditProjectLabel);
 		
 		JLabel projectNameLabel = new JLabel("Name:");
@@ -48,7 +50,7 @@ public class US1RightPanelGen extends JPanel {
 		add(descriptionScrollPane);
 		
 		saveButton = new JButton("Save Project");
-		saveButton.setBounds(244, 317, 97, 25);
+		saveButton.setBounds(200, 317, 141, 30);
 		add(saveButton);
 		
 		chckbxProjectIsCompleted = new JCheckBox("Project is completed");

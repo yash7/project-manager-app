@@ -12,7 +12,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final String PROJECTS_PANEL = "PROJECTS_PANEL";
 	private static final String ACTIVITIES_PANEL = "ACTIVITIES_PANEL";
 
-	private static final int WIDTH = 800;
+	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
 
 	private final ApplicationContext appCtx;
