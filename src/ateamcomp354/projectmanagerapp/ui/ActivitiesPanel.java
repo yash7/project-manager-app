@@ -357,19 +357,21 @@ public class ActivitiesPanel {
 		DefaultListModel<Activity> activitiesModel = new DefaultListModel<>();
 		DefaultListModel<Activity> completedActivitiesModel = new DefaultListModel<>();
 
-		for (int i = 0; i < activities.size(); i++)
+		int i = 0;
+		int j = 0;
+		for ( Activity a : activities )
 		{
-			Activity a = activities.get(i);
-
 			if (a.getStatus() != Status.RESOLVED)
 			{
 				activitiesModel.addElement( a );
 				idIndexes[i] = a.getId();
+				i++;
 			}
 			else
 			{
 				completedActivitiesModel.addElement( a );
-				completedIdIndexes[i] = a.getId();
+				completedIdIndexes[j] = a.getId();
+				j++;
 			}
 		}
 
