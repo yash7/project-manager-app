@@ -31,6 +31,8 @@ public class MainFrame extends JFrame implements SwapInterface{
 
 		cardLayout = new CardLayout();
 		setLayout( cardLayout );
+		
+		setResizable(false);
 
 		loginPanel = new LoginPanel( appCtx , MainFrame.this );
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );

@@ -74,13 +74,13 @@ public class SplitPane1Gen extends JPanel {
 	private JSplitPane splitPane;
 	private JTextField textField;
 	private JScrollPane dependencyScrollPane;
-	private JButton button;
-	private JButton button_1;
+	private JButton addDepButton;
+	private JButton delDepButton;
 	private JScrollPane scrollPane;
 	private JButton btnView;
 	private JScrollPane assigneeScrollPane;
-	private JButton button_3;
-	private JButton button_2;
+	private JButton delAssignButton;
+	private JButton addAssignButton;
 	private JButton backBtn;
 	
 	/**
@@ -120,14 +120,14 @@ public class SplitPane1Gen extends JPanel {
 		listScrollPane.setBounds(45, 132, 256, 197);
 		LeftPanel.add(listScrollPane);
 		
-		addButton = new JButton("+");
-		addButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		addButton.setBounds(243, 87, 54, 40);
+		addButton = new JButton("Add");
+		addButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		addButton.setBounds(231, 91, 70, 30);
 		LeftPanel.add(addButton);
 		
-		deleteButton = new JButton("x");
-		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		deleteButton.setBounds(183, 87, 54, 40);
+		deleteButton = new JButton("Delete");
+		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		deleteButton.setBounds(149, 91, 70, 30);
 		LeftPanel.add(deleteButton);
 		
 		btnManage = new JButton("Manage Activity");
@@ -139,7 +139,7 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(scrollPane);
 		
 		btnView = new JButton("View Activity");
-		btnView.setBounds(153, 595, 148, 30);
+		btnView.setBounds(149, 617, 148, 30);
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
@@ -243,7 +243,7 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(assigneesComboBox);
 		
 		saveActivityButton = new JButton("Save Activity");
-		saveActivityButton.setBounds(151, 595, 116, 30);
+		saveActivityButton.setBounds(86, 617, 116, 30);
 		RightPanel.add(saveActivityButton);
 		
 		textField = new JTextField();
@@ -251,25 +251,25 @@ public class SplitPane1Gen extends JPanel {
 		textField.setBounds(147, 48, 116, 22);
 		RightPanel.add(textField);
 		
-		button = new JButton("+");
-		button.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		button.setBounds(74, 529, 54, 40);
-		RightPanel.add(button);
+		addDepButton = new JButton("Add");
+		addDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		addDepButton.setBounds(31, 531, 70, 30);
+		RightPanel.add(addDepButton);
 		
-		button_1 = new JButton("x");
-		button_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		button_1.setBounds(12, 529, 54, 40);
-		RightPanel.add(button_1);
+		delDepButton = new JButton("Delete");
+		delDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		delDepButton.setBounds(31, 569, 70, 30);
+		RightPanel.add(delDepButton);
 		
-		button_2 = new JButton("+");
-		button_2.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		button_2.setBounds(209, 529, 54, 40);
-		RightPanel.add(button_2);
+		addAssignButton = new JButton("Add");
+		addAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		addAssignButton.setBounds(166, 531, 70, 30);
+		RightPanel.add(addAssignButton);
 		
-		button_3 = new JButton("x");
-		button_3.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		button_3.setBounds(147, 529, 54, 40);
-		RightPanel.add(button_3);
+		delAssignButton = new JButton("Delete");
+		delAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		delAssignButton.setBounds(166, 569, 70, 30);
+		RightPanel.add(delAssignButton);
 		
 		dependencyScrollPane = new JScrollPane();
 		dependencyScrollPane.setBounds(12, 357, 116, 129);
@@ -346,10 +346,10 @@ public class SplitPane1Gen extends JPanel {
 		return dependencyScrollPane;
 	}
 	public JButton getAddDependencyButton() {
-		return button;
+		return addDepButton;
 	}
 	public JButton getRemoveDependencyButton() {
-		return button_1;
+		return delDepButton;
 	}
 	public JScrollPane getCompletedScrollPane() {
 		return scrollPane;
@@ -361,10 +361,10 @@ public class SplitPane1Gen extends JPanel {
 		return assigneeScrollPane;
 	}
 	public JButton getRemoveAssigneeButton() {
-		return button_3;
+		return delAssignButton;
 	}
 	public JButton getAddAssigneeButton() {
-		return button_2;
+		return addAssignButton;
 	}
 	public JButton getBackBtn() {
 		return backBtn;
