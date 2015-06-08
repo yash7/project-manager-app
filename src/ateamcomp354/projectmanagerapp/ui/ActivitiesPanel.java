@@ -16,6 +16,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class ActivitiesPanel {
@@ -96,17 +98,17 @@ public class ActivitiesPanel {
 		});
 		
 		//Saving the activity from the edited fields
-		splitPane1Gen.getSaveActivityButton().addMouseListener(new MouseAdapter() {
+		splitPane1Gen.getSaveActivityButton().addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				saveActivity();
 			}
 		});
 		
 		//adds a new activity. only finalized on save
-		splitPane1Gen.getAddButton().addMouseListener(new MouseAdapter() {
+		splitPane1Gen.getAddButton().addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				if (!clear(true)) return;
 				activityId = -1;
 				activityList.clearSelection();
@@ -119,25 +121,25 @@ public class ActivitiesPanel {
 		});
 		
 		//deletes currently selected activity
-		splitPane1Gen.getDeleteButton().addMouseListener(new MouseAdapter() {
+		splitPane1Gen.getDeleteButton().addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				deleteActivity(activityId);
 			}
 		});
 		
 		//adds a dependency to the selected project
-		splitPane1Gen.getAddDependencyButton().addMouseListener(new MouseAdapter() {
+		splitPane1Gen.getAddDependencyButton().addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				addDependency();
 			}
 		});
 		
 		//removes selected dependency from selected project
-		splitPane1Gen.getRemoveDependencyButton().addMouseListener(new MouseAdapter() {
+		splitPane1Gen.getRemoveDependencyButton().addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				removeDependency();
 			}
 		});
@@ -434,6 +436,10 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDependencyScrollPane().setEnabled(!readOnly);
 		splitPane1Gen.getAddDependencyButton().setEnabled(!readOnly);
 		splitPane1Gen.getRemoveDependencyButton().setEnabled(!readOnly);
+		if (readOnly)
+		{
+			splitPane1Gen.getDependenciesComboBox().removeAllItems();
+		}
 	}
 	
 	private boolean isDirty()
