@@ -1,5 +1,6 @@
 package ateamcomp354.projectmanagerapp.dataAccess;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -66,7 +67,7 @@ public class DatabaseManager {
 			// create users table if doesn't exist already
 			resultSet = data.getTables(null, null, "users", null);
 			if (!resultSet.next()) {
-				String sql = readFile( "ddl/users.sql" );
+				String sql = readFile( "ddl/Users.sql" );
 				statement.execute(sql);
 				sql = readFile( "ddl/default-user.sql" );
 				statement.execute( sql );
@@ -75,28 +76,28 @@ public class DatabaseManager {
 			// create project table if doesn't exist already
 			resultSet = data.getTables(null, null, "project", null);
 			if (!resultSet.next()) {
-				String sql = readFile( "ddl/project.sql" );
+				String sql = readFile( "ddl/Project.sql" );
 				statement.execute(sql);
 			}
 			
 			// create activity table if doesn't exist already
 			resultSet = data.getTables(null, null, "activity", null);
 			if (!resultSet.next()) {
-				String sql = readFile( "ddl/activity.sql" );
+				String sql = readFile( "ddl/Activity.sql" );
 				statement.execute(sql);
 			}
 			
 			// create user activities table if doesn't exist already
 			resultSet = data.getTables(null, null, "userActivities", null);
 			if (!resultSet.next()) {
-				String sql = readFile( "ddl/userActivities.sql" );
+				String sql = readFile( "ddl/UserActivities.sql" );
 				statement.execute(sql);
 			}
 
 			// create activity links table if doesn't exist already
 			resultSet = data.getTables(null, null, "activityLinks", null);
 			if (!resultSet.next()) {
-				String sql = readFile( "ddl/activityLinks.sql" );
+				String sql = readFile( "ddl/ActivityLinks.sql" );
 				statement.execute(sql);
 			}
 		} catch (Exception e) {
