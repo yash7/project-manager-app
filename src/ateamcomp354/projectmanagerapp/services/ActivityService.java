@@ -112,4 +112,6 @@ public interface ActivityService {
 
     // User story 3 proposition
     void deleteUserFromActivity( int activityId, Users user );
+    
+    List<Users> getProjectMembersForActivity(int activityId);
 }

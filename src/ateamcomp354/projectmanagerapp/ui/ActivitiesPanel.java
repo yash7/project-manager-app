@@ -4,10 +4,11 @@ import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
-
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 
@@ -35,6 +36,9 @@ public class ActivitiesPanel {
 	private int dependencyIndexes[];
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
+	
+	private int selectedAssigneeId;
+	private int assigneeIndexes[];
 	
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
@@ -68,14 +72,12 @@ public class ActivitiesPanel {
 		splitPane1Gen.getAssigneesComboBox().setEnabled(false);
 		splitPane1Gen.getAddAssigneeButton().setEnabled(false);
 		splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
-		splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
 		
 		splitPane1Gen.getEarliestStartField().setText("coming soon");
 		splitPane1Gen.getLatestStartField().setText("coming soon");
 		splitPane1Gen.getEarliestFinishField().setText("coming soon");
 		splitPane1Gen.getLatestFinishField().setText("coming soon");
 		splitPane1Gen.getAssigneesComboBox().addItem("coming soon");
-		splitPane1Gen.getAssigneeScrollPane().setColumnHeaderView(new JLabel("coming soon"));
 		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
@@ -265,6 +267,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		splitPane1Gen.getDeleteButton().setEnabled(true);
 		showDependencies(id);
+		showAssignees(id);
 		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
 	}
 	
@@ -418,6 +421,39 @@ public class ActivitiesPanel {
 					selectActivity(completedIdIndexes[index]);
 					activityList.clearSelection();
 				}
+			}
+		});
+	}
+	
+	private void showAssignees(int activityId) {
+		System.out.println(activityId);
+		
+		List<Users> assignees = activityService.getProjectMembersForActivity(activityId);
+		
+		selectedAssigneeId = 0;
+		String assigneeNames[] = new String[assignees.size()];
+		assigneeIndexes = new int[assignees.size()];
+		
+		
+		for (int i = 0; i < assignees.size(); i++)
+		{
+			assigneeNames[i] = assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName();
+			assigneeIndexes[i] = assignees.get(i).getId();
+			
+			System.out.println(assigneeNames[i]);
+		}
+		
+		JList<String> assigneeList = new JList<String>(assigneeNames);
+		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
+		splitPane1Gen.getAssigneeScrollPane().validate();
+		
+		//fillAssigneeComboBox();
+		
+		assigneeList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if (assigneeList.locationToIndex(e.getPoint()) == -1) return;
+				selectedAssigneeId = assigneeIndexes[assigneeList.locationToIndex(e.getPoint())];
 			}
 		});
 	}

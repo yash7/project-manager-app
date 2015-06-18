@@ -2,6 +2,7 @@ package ateamcomp354.projectmanagerapp.services.impl;
 
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
+
 import org.jooq.DSLContext;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivityDao;
@@ -182,5 +183,19 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void deleteUserFromActivity(int activityId, Users user) {
         throw new UnsupportedOperationException("This is a proposition for user story 3. It may or may not be implemented later on.");
+    }
+    
+    @Override
+    public List<Users> getProjectMembersForActivity(int activityId)
+    {
+        try {
+            return create.select()
+                    .from(Tables.USERS)
+                    .join(Tables.USERACTIVITIES).on(Tables.USERACTIVITIES.ACTIVITY_ID.eq(activityId))
+                    .where(Tables.USERS.MANAGER_ROLE.eq(false))
+                    .fetchInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get project members for activity " + activityId, e);
+        }
     }
 }
