@@ -34,7 +34,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 	@Override
 	public List<Activity> getAssignedActivities(int projectId) {
         try {
-            return create.select()
+            return create.select(Tables.ACTIVITY.fields())
                     .from(Tables.ACTIVITY)
                     .join(Tables.USERACTIVITIES).on(Tables.ACTIVITY.ID.eq(Tables.USERACTIVITIES.ACTIVITY_ID))
                     .join(Tables.USERS).on(Tables.USERS.ID.eq(Tables.USERACTIVITIES.USER_ID))
@@ -49,11 +49,12 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 	@Override
 	public List<Project> getAssignedProjects() {
         try {
-            return create.select()
+            return create.select(Tables.PROJECT.fields())
                     .from(Tables.PROJECT)
                     .join(Tables.ACTIVITY).on(Tables.ACTIVITY.PROJECT_ID.eq(Tables.PROJECT.ID))
                     .join(Tables.USERACTIVITIES).on(Tables.ACTIVITY.ID.eq(Tables.USERACTIVITIES.ACTIVITY_ID))
                     .where(Tables.USERACTIVITIES.USER_ID.eq(projectMemberId))
+                    .groupBy(Tables.PROJECT.ID)
                     .fetchInto(Project.class);
         } catch (DataAccessException e) {
             throw new ServiceFunctionalityException("failed to get member's assigned projects", e);

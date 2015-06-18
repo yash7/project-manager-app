@@ -1,9 +1,11 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 public class MainFrame extends JFrame implements SwapInterface{
@@ -11,9 +13,11 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final String LOGIN_PANEL = "LOGIN_PANEL";
 	private static final String PROJECTS_PANEL = "PROJECTS_PANEL";
 	private static final String ACTIVITIES_PANEL = "ACTIVITIES_PANEL";
-
+	private static final String MEMBERPROJECT_PANEL = "MEMBERPROJECT_PANEL";
+	
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
+
 
 	private final ApplicationContext appCtx;
 
@@ -22,6 +26,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private LoginPanel loginPanel;
 	private ProjectsPanel projectsPanel;
 	private ActivitiesPanel activitiesPanel;
+	private MemberProjectPanel memberProjectPanel;
 	
 	public MainFrame( ApplicationContext appCtx ) {
 
@@ -37,6 +42,8 @@ public class MainFrame extends JFrame implements SwapInterface{
 		loginPanel = new LoginPanel( appCtx , MainFrame.this );
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
 		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
+		memberProjectPanel = new MemberProjectPanel(appCtx, MainFrame.this );
+		
 		
 		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
 		//buildMenuBar();
@@ -44,6 +51,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		add(loginPanel.getComponent(), LOGIN_PANEL);
 		add(projectsPanel.getComponent(), PROJECTS_PANEL);
 		add(activitiesPanel.getComponent(), ACTIVITIES_PANEL);
+		add(memberProjectPanel.getComponent(), MEMBERPROJECT_PANEL);
 	}
 
 	private void init() {
@@ -107,6 +115,18 @@ public class MainFrame extends JFrame implements SwapInterface{
 		showView(ACTIVITIES_PANEL);
 	}
 	
+	@Override
+	public void showMemberActivitiesView(int projectId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void showMemberProjectsView(int userId) {
+		memberProjectPanel.setUserId(userId);
+		showView( MEMBERPROJECT_PANEL );
+	}
+	
 	public static int getAppWidth() {
 		return WIDTH;
 	}
@@ -118,4 +138,5 @@ public class MainFrame extends JFrame implements SwapInterface{
 	public Users getLoggedInUser() {
 		return loginPanel.getLoggedInUser();
 	}
+
 }
