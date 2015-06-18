@@ -23,7 +23,8 @@ public interface ApplicationContext {
      * @return A service responsible for CRUD operations on activities in the specified project.
      */
     ActivityService getActivityService( int projectId );
-
-    // // User story 4 proposition
+    
     ProjectMemberService getProjectMemberService( int userId );
+    
+    UserService getUserService();
 }

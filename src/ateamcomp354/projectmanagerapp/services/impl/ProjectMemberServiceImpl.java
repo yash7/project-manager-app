@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivityDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UsersDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
@@ -19,12 +20,14 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     private final DSLContext create;
     private final ProjectDao projectDao;
     private final ActivityDao activityDao;
+    private final UsersDao usersDao;
     private final int projectMemberId;
     
     public ProjectMemberServiceImpl(DSLContext create, int projectMemberId) {
         this.create = create;
         projectDao = new ProjectDao( create.configuration() );
         activityDao = new ActivityDao (create.configuration());
+        usersDao = new UsersDao (create.configuration());
         this.projectMemberId = projectMemberId;
     }
 	
@@ -56,5 +59,4 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
             throw new ServiceFunctionalityException("failed to get member's assigned projects", e);
         }
 	}
-
 }

@@ -3,6 +3,7 @@ package ateamcomp354.projectmanagerapp.ui;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 
@@ -16,6 +17,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,7 @@ public class ActivitiesPanel {
 
 	private final ApplicationContext appCtx;
 	private ActivityService activityService;
+	private UserService userService;
 	
 	private SwapInterface swap;
 
@@ -39,6 +42,7 @@ public class ActivitiesPanel {
 	
 	private int selectedAssigneeId;
 	private int assigneeIndexes[];
+	private List<Integer> assigneeComboIndexes;
 	
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
@@ -69,15 +73,11 @@ public class ActivitiesPanel {
 		splitPane1Gen.getLatestStartField().setEnabled(false);
 		splitPane1Gen.getEarliestFinishField().setEnabled(false);
 		splitPane1Gen.getLatestFinishField().setEnabled(false);
-		splitPane1Gen.getAssigneesComboBox().setEnabled(false);
-		splitPane1Gen.getAddAssigneeButton().setEnabled(false);
-		splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
 		
 		splitPane1Gen.getEarliestStartField().setText("coming soon");
 		splitPane1Gen.getLatestStartField().setText("coming soon");
 		splitPane1Gen.getEarliestFinishField().setText("coming soon");
 		splitPane1Gen.getLatestFinishField().setText("coming soon");
-		splitPane1Gen.getAssigneesComboBox().addItem("coming soon");
 		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
@@ -86,6 +86,7 @@ public class ActivitiesPanel {
 				activityId = 0;
 				clear(true);
 				activityService = appCtx.getActivityService(projectId);
+				userService = appCtx.getUserService();
 				activities = activityService.getActivities();
 				project = activityService.getProject();
 				
@@ -143,6 +144,22 @@ public class ActivitiesPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				removeDependency();
+			}
+		});
+		
+		// adds a member to the selected activity
+		splitPane1Gen.getAddAssigneeButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addAssignee();
+			}
+		});
+		
+		// removes selected member from the selected activity
+		splitPane1Gen.getRemoveAssigneeButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAssignee();
 			}
 		});
 
@@ -425,29 +442,25 @@ public class ActivitiesPanel {
 		});
 	}
 	
-	private void showAssignees(int activityId) {
-		System.out.println(activityId);
+	private void showAssignees(int activityId) {		
 		
-		List<Users> assignees = activityService.getProjectMembersForActivity(activityId);
+		List<Users> assignees = activityService.getAssigneesForActivity(activityId);
 		
 		selectedAssigneeId = 0;
 		String assigneeNames[] = new String[assignees.size()];
 		assigneeIndexes = new int[assignees.size()];
 		
-		
 		for (int i = 0; i < assignees.size(); i++)
 		{
 			assigneeNames[i] = assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName();
 			assigneeIndexes[i] = assignees.get(i).getId();
-			
-			System.out.println(assigneeNames[i]);
 		}
 		
 		JList<String> assigneeList = new JList<String>(assigneeNames);
 		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
 		splitPane1Gen.getAssigneeScrollPane().validate();
 		
-		//fillAssigneeComboBox();
+		fillAssigneeComboBox();
 		
 		assigneeList.addMouseListener(new MouseAdapter() {
 			@Override
@@ -456,6 +469,35 @@ public class ActivitiesPanel {
 				selectedAssigneeId = assigneeIndexes[assigneeList.locationToIndex(e.getPoint())];
 			}
 		});
+	}
+	
+	private void fillAssigneeComboBox() {
+		splitPane1Gen.getAssigneesComboBox().removeAllItems();
+		assigneeComboIndexes = new ArrayList<Integer>();
+		assigneeComboIndexes.clear();
+		
+		List<Users> notAssigned = activityService.getUnassignedMembersForActivity(activityId);
+		
+		for (int i = 0; i < notAssigned.size(); i++) {
+			splitPane1Gen.getAssigneesComboBox().addItem(notAssigned.get(i).getFirstName() + " " + notAssigned.get(i).getLastName());
+			assigneeComboIndexes.add(notAssigned.get(i).getId());
+		}
+	}
+	
+	private void addAssignee()
+	{	
+		if (splitPane1Gen.getAssigneesComboBox().getSelectedIndex() == -1) return;
+		int toAdd = assigneeComboIndexes.get(splitPane1Gen.getAssigneesComboBox().getSelectedIndex());
+		activityService.addUserToActivity(activityId, userService.getUser(toAdd));
+		showAssignees(activityId);
+	}
+	
+	private void removeAssignee()
+	{
+		if (selectedAssigneeId == 0) return;
+		activityService.deleteUserFromActivity(activityId, userService.getUser(selectedAssigneeId));
+		selectedAssigneeId = 0;
+		showAssignees(activityId);
 	}
 	
 	private void setReadOnly(boolean readOnly)
