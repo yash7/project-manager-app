@@ -14,6 +14,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final String PROJECTS_PANEL = "PROJECTS_PANEL";
 	private static final String ACTIVITIES_PANEL = "ACTIVITIES_PANEL";
 	private static final String MEMBERPROJECT_PANEL = "MEMBERPROJECT_PANEL";
+	private static final String MEMBERACTIVITY_PANEL = "MEMBERACTIVITY_PANEL";
 	
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
@@ -27,6 +28,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private ProjectsPanel projectsPanel;
 	private ActivitiesPanel activitiesPanel;
 	private MemberProjectPanel memberProjectPanel;
+	private MemberActivityPanel memberActivityPanel;
 	
 	public MainFrame( ApplicationContext appCtx ) {
 
@@ -43,6 +45,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
 		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
 		memberProjectPanel = new MemberProjectPanel(appCtx, MainFrame.this );
+		memberActivityPanel = new MemberActivityPanel (appCtx, MainFrame.this);
 		
 		
 		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
@@ -52,6 +55,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		add(projectsPanel.getComponent(), PROJECTS_PANEL);
 		add(activitiesPanel.getComponent(), ACTIVITIES_PANEL);
 		add(memberProjectPanel.getComponent(), MEMBERPROJECT_PANEL);
+		add(memberActivityPanel.getComponent(), MEMBERACTIVITY_PANEL);
 	}
 
 	private void init() {
@@ -116,9 +120,10 @@ public class MainFrame extends JFrame implements SwapInterface{
 	}
 	
 	@Override
-	public void showMemberActivitiesView(int projectId) {
-		// TODO Auto-generated method stub
-		
+	public void showMemberActivitiesView(int projectId, int userId) {
+		memberActivityPanel.setUserId(userId);
+		memberActivityPanel.setProjectId(projectId);
+		showView(MEMBERACTIVITY_PANEL);
 	}
 
 	@Override

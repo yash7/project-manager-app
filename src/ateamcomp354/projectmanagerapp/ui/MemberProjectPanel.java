@@ -56,10 +56,11 @@ public class MemberProjectPanel {
 		memberProjectPanelGen.getViewActivitiesButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Optional.ofNullable( selectedProjectId )
-				.ifPresent( swap::showMemberActivitiesView );
+				swap.showMemberActivitiesView(selectedProjectId, userId);
 			}
 		});
+		
+		memberProjectPanelGen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 	}
 	
 	public JComponent getComponent()
