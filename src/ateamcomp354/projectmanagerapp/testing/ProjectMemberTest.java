@@ -39,13 +39,23 @@ public class ProjectMemberTest extends AbstractDatabaseTest {
 	public void testgetAssignedProjects()  {
 		assertEquals(0, pms.getAssignedProjects().size());
 		
-		ps.addProject(new Project(null, "testProject", "", false));
+		Project p = new Project();
+        p.setProjectName("Test Project 2");
+        p.setDescription("Test Project 2");
+        ps.addProject(p);
 		
-		Project p = ps.getProject(0);
-			
-		//TODO once we can add "members" to a project
+        ActivityService as2 = appCtx.getActivityService(1);
+
+        as.addActivity(new Activity(null, as.getProject().getId(), Status.NEW, 0, 5, "Label", 0, 5, 5, 5, "Desc"));
+        as2.addActivity(new Activity(null, as2.getProject().getId(), Status.NEW, 0, 35, "Label3", 0, 35, 35, 35, "Desc3"));
 		
-		assertEquals(1, pms.getAssignedProjects().size());
+        as.addUserToActivity(1, appCtx.getUserService().getUser(2));
+
+        assertEquals(1, pms.getAssignedProjects().size());
+        
+        as2.addUserToActivity(2, appCtx.getUserService().getUser(2));
+		
+		assertEquals(2, pms.getAssignedProjects().size());
 	}
 	
 	@Before
