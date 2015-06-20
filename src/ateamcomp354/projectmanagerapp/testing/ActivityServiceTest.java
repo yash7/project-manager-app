@@ -141,7 +141,27 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		assertEquals(2, acts.size());
 	}
 	
-	@Test (expected = UnsupportedOperationException.class)
+	@Test
+	public void testgetAssigneesForActivity() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(ase.getProject().getId());
+		ase.addActivity(a);
+
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
+	}
+	
+	@Test
+	public void testgetUnassignedMembersForActivity() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(ase.getProject().getId());
+		ase.addActivity(a);
+		
+		assertEquals(1, ase.getUnassignedMembersForActivity(a.getId()).size());
+	}
+	
+	@Test
 	public void testAddUserToActivity() {
 		Activity a = new Activity();
 		a.setId(0);
@@ -149,13 +169,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
+		u.setId(1);
 		u.setFirstName("Tester");
 		
 		ase.addUserToActivity(0, u);
-		
-		
+
+		assertEquals(1, ase.getAssigneesForActivity(a.getId()).size());
 	}
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testDeleteUserFromActivity()   {
 
 		Activity a = new Activity();
@@ -164,9 +185,12 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
+		u.setId(1);
 		u.setFirstName("Tester");
 
 		ase.deleteUserFromActivity(0, u);
+		
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
 	}
 	
 	@Test(expected=ServiceFunctionalityException.class)

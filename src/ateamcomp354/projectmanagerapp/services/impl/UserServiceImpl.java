@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         try {
             return usersDao.findAll();
         } catch (DataAccessException e) {
-            throw new ServiceFunctionalityException("failed to get all projects", e);
+            throw new ServiceFunctionalityException("failed to get all users", e);
         }
 	}
 
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 	    try {
 	        usersDao.insert(user);
 	    } catch (DataAccessException e) {
-	        throw new ServiceFunctionalityException("failed to add a new activity", e);
+	        throw new ServiceFunctionalityException("failed to add a new user", e);
 	    }
 	}
 
@@ -52,16 +52,16 @@ public class UserServiceImpl implements UserService {
 	    try {
 	        usersDao.deleteById(userId);
 	    } catch (DataAccessException e) {
-	        throw new ServiceFunctionalityException("failed to add a new activity", e);
+	        throw new ServiceFunctionalityException("failed to delete an existing user", e);
 	    }
 	}
 
 	@Override
 	public void updateUser(Users user) {
 	    try {
-	        usersDao.insert(user);
+	        usersDao.update(user);
 	    } catch (DataAccessException e) {
-	        throw new ServiceFunctionalityException("failed to add a new activity", e);
+	        throw new ServiceFunctionalityException("failed to update a user", e);
 	    }
 	}
 

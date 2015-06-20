@@ -172,8 +172,7 @@ public class ActivityServiceImpl implements ActivityService {
                 .collect( Collectors.toList() );
     }
 
-    private void checkProjectNotCompleted( String errMsg ) {
-
+    private void checkProjectNotCompleted( String errMsg ) {   	
         if ( getProject().getCompleted() ) {
             throw new IllegalStateException( errMsg );
         }
