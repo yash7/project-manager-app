@@ -3,10 +3,14 @@ package ateamcomp354.projectmanagerapp.services.impl;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
+
 import org.jooq.DSLContext;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UseractivitiesDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
 import java.util.List;
@@ -129,4 +133,31 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceFunctionalityException("failed to count activities with status " + status + " in project with id " + projectId, e);
         }
     }
+
+	@Override
+	public void addUserToProject(int projectId, Users user) {
+	    try {
+	    	//userActivitiesDao.insert(new Useractivities ( null, activityId, user.getId()));
+	    } catch (DataAccessException e) {
+	        throw new ServiceFunctionalityException("failed to add a new user to activity", e);
+	    }
+	}
+
+	@Override
+	public List<Users> getUnassignedMembersForProject(int projectId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Users> deleteUserFromProject(int projectId, Users user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Users> getAssigneesForProject(int projectId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

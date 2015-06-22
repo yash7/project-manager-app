@@ -4,14 +4,21 @@ import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.ProjectInfo;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
+import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +39,7 @@ public class ProjectsPanel {
 	private static final String PROJECT_COMPLETION_FMT = "%s%%";
 
 	private final ProjectService projectService;
+	private final UserService userService;
 	private final SwapInterface swap;
 
 	private final SplitPane1Gen splitPane1Gen;
@@ -41,7 +49,12 @@ public class ProjectsPanel {
 	private final DefaultListModel<Project> openProjectsModel;
 	private final JList<Project> closedProjectList;
 	private final DefaultListModel<Project> closedProjectsModel;
-
+	
+	private int selectedProjectMemberId;
+	private List<Integer> projectMemberComboIndexes;
+	private int[] projectMemberIndexes;
+	
+	
 	/**
 	 * A cache of project info, mapping a project id to its cached info.
 	 * The cache is built every time the list of projects is obtained from projectService.
@@ -79,6 +92,7 @@ public class ProjectsPanel {
 	public ProjectsPanel( ApplicationContext appCtx, SwapInterface swap )
 	{
 		projectService = appCtx.getProjectService();
+		userService = appCtx.getUserService();
 		this.swap = swap;
 
 		projectInfos = new HashMap<>();
@@ -133,6 +147,9 @@ public class ProjectsPanel {
 		
 		splitPane1Gen.getListScrollPane().setColumnHeaderView(new JLabel("Open Projects"));
 		splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(new JLabel("Completed Projects"));
+		
+		us1RightPanelGen.getAddButton().addActionListener ( __ -> addProjectMember() );
+		us1RightPanelGen.getDeleteButton().addActionListener( __ -> removeProjectMember() );
 
 		selectedProject = Optional.empty();
 		displayProject();
@@ -428,6 +445,72 @@ public class ProjectsPanel {
 		p.setDescription( us1RightPanelGen.getDescriptionArea().getText() );
 		p.setCompleted( p.getId() != null && us1RightPanelGen.getCompletedCheckBox().isSelected() );
 		return p;
+	}
+	
+	private void showProjectMembers(int projectId) {
+		
+		List<Users> projectMembers = projectService.getAssigneesForProject(projectId);
+		
+		selectedProjectMemberId = 0;
+		String projectMemberNames[] = new String[projectMembers.size()];
+		projectMemberIndexes = new int[projectMembers.size()];
+		
+		for (int i = 0; i < projectMembers.size(); i++)
+		{
+			projectMemberNames[i] = projectMembers.get(i).getFirstName() + " " + projectMembers.get(i).getLastName();
+			projectMemberIndexes[i] = projectMembers.get(i).getId();
+		}
+		
+		JList<String> projectMemberList = new JList<String>(projectMemberNames);
+		splitPane1Gen.getAssigneeScrollPane().setViewportView(projectMemberList);
+		splitPane1Gen.getAssigneeScrollPane().validate();
+		
+		fillProjectMembersComboBox();
+		
+		projectMemberList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if (projectMemberList.locationToIndex(e.getPoint()) == -1) return;
+				selectedProjectMemberId = projectMemberIndexes[projectMemberList.locationToIndex(e.getPoint())];
+			}
+		});
+	}
+	
+	private void fillProjectMembersComboBox() {
+		us1RightPanelGen.getProjectMembersComboBox().removeAllItems();
+		projectMemberComboIndexes = new ArrayList<Integer>();
+		projectMemberComboIndexes.clear();
+		
+		int projectId = getProject().getId();
+		
+		List<Users> notAssigned = projectService.getUnassignedMembersForProject(projectId);
+		
+		for (int i = 0; i < notAssigned.size(); i++) {
+			us1RightPanelGen.getProjectMembersComboBox().addItem(notAssigned.get(i).getFirstName() + " " + notAssigned.get(i).getLastName());
+			projectMemberComboIndexes.add(notAssigned.get(i).getId());
+		}
+	}
+	
+	private void addProjectMember()
+	{	
+		if (us1RightPanelGen.getProjectMembersComboBox().getSelectedIndex() == -1) return;
+		
+		int projectId = getProject().getId();
+		
+		int toAdd = projectMemberComboIndexes.get(us1RightPanelGen.getProjectMembersComboBox().getSelectedIndex());
+		projectService.addUserToProject(projectId, userService.getUser(toAdd));
+		showProjectMembers(projectId);
+	}
+	
+	private void removeProjectMember()
+	{
+		if (selectedProjectMemberId == 0) return;
+		
+		int projectId = getProject().getId();
+		
+		projectService.deleteUserFromProject(projectId, userService.getUser(selectedProjectMemberId));
+		selectedProjectMemberId = 0;
+		showProjectMembers(projectId);
 	}
 
 	// the form is dirty if the selected project does not equal the form inputs values.
