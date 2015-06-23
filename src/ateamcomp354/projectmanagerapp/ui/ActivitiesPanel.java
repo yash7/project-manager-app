@@ -46,8 +46,11 @@ public class ActivitiesPanel {
 	
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
-	private JList<String> assigneeList;
+	private JList<Users> assigneeList;
 	private JList<String> dependencyList;
+	
+	private DefaultListModel<String> assigneeListModel;
+	private DefaultListModel<String> dependencyListModel;
 	
 	private int projectId = 1;
 	private int activityId = 0;
@@ -60,6 +63,9 @@ public class ActivitiesPanel {
 		
 		activityList = new JList<>();
 		completedActivityList = new JList<>();
+		
+		assigneeListModel = new DefaultListModel();
+		dependencyListModel = new DefaultListModel();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
@@ -200,6 +206,12 @@ public class ActivitiesPanel {
 			splitPane1Gen.getMaxDurationField().setText("0");
 			splitPane1Gen.getDurationField().setText("0");
 			splitPane1Gen.getDescriptionArea().setText("");
+			
+			splitPane1Gen.getDependenciesComboBox().removeAllItems();
+			splitPane1Gen.getAssigneesComboBox().removeAllItems();
+			assigneeListModel.clear();
+			dependencyListModel.clear();
+			
 			return true;
 		}
 		return false;
@@ -292,18 +304,20 @@ public class ActivitiesPanel {
 	
 	private void showDependencies(int id)
 	{
+		
+		dependencyListModel.clear();
+		
 		selectedDependencyId = 0;
 		List<Integer> dependencies = activityService.getDependencies(id);
-		String dependencyNames[] = new String[dependencies.size()];
 		dependencyIndexes = new int[dependencies.size()];
 		
 		for (int i = 0; i < dependencies.size(); i++)
 		{
-			dependencyNames[i] = activityService.getActivity(dependencies.get(i)).getLabel();
+			dependencyListModel.addElement(activityService.getActivity(dependencies.get(i)).getLabel());
 			dependencyIndexes[i] = activityService.getActivity(dependencies.get(i)).getId();
 		}
 		
-		dependencyList = new JList<String>(dependencyNames);
+		dependencyList = new JList<String>(dependencyListModel);
 		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
 		splitPane1Gen.getDependencyScrollPane().validate();
 		fillDependencyComboBox();
@@ -446,19 +460,20 @@ public class ActivitiesPanel {
 	
 	private void showAssignees(int activityId) {		
 		
+		assigneeListModel.clear();
+		
 		List<Users> assignees = activityService.getAssigneesForActivity(activityId);
 		
 		selectedAssigneeId = 0;
-		String assigneeNames[] = new String[assignees.size()];
 		assigneeIndexes = new int[assignees.size()];
 		
 		for (int i = 0; i < assignees.size(); i++)
 		{
-			assigneeNames[i] = assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName();
+			assigneeListModel.addElement(assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName());
 			assigneeIndexes[i] = assignees.get(i).getId();
 		}
 		
-		JList<String> assigneeList = new JList<String>(assigneeNames);
+		JList<String> assigneeList = new JList<String>(assigneeListModel);
 		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
 		splitPane1Gen.getAssigneeScrollPane().validate();
 		
