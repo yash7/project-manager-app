@@ -434,6 +434,9 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
+		
+		if (p.getId() != null)
+			showProjectMembers(p.getId());
 	}
 
 	// gather the form input into a project object
@@ -449,7 +452,7 @@ public class ProjectsPanel {
 	
 	private void showProjectMembers(int projectId) {
 		
-		List<Users> projectMembers = projectService.getAssigneesForProject(projectId);
+		List<Users> projectMembers = projectService.getMembersForProject(projectId);
 		
 		selectedProjectMemberId = 0;
 		String projectMemberNames[] = new String[projectMembers.size()];
@@ -462,8 +465,8 @@ public class ProjectsPanel {
 		}
 		
 		JList<String> projectMemberList = new JList<String>(projectMemberNames);
-		splitPane1Gen.getAssigneeScrollPane().setViewportView(projectMemberList);
-		splitPane1Gen.getAssigneeScrollPane().validate();
+		us1RightPanelGen.getProjectMembersScrollPane().setViewportView(projectMemberList);
+		us1RightPanelGen.getProjectMembersScrollPane().validate();
 		
 		fillProjectMembersComboBox();
 		

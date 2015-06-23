@@ -46,6 +46,8 @@ public class ActivitiesPanel {
 	
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
+	private JList<String> assigneeList;
+	private JList<String> dependencyList;
 	
 	private int projectId = 1;
 	private int activityId = 0;
@@ -301,7 +303,7 @@ public class ActivitiesPanel {
 			dependencyIndexes[i] = activityService.getActivity(dependencies.get(i)).getId();
 		}
 		
-		JList<String> dependencyList = new JList<String>(dependencyNames);
+		dependencyList = new JList<String>(dependencyNames);
 		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
 		splitPane1Gen.getDependencyScrollPane().validate();
 		fillDependencyComboBox();

@@ -14,10 +14,12 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivityDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectmembersDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UseractivitiesDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UsersDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Projectmembers;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.impl.DSL;
@@ -77,6 +79,7 @@ public class App {
 		ProjectDao projectDao = new ProjectDao( create.configuration() );
 		ActivityDao activityDao = new ActivityDao (create.configuration());
 		UseractivitiesDao userActivitiesDao = new UseractivitiesDao (create.configuration() );
+		ProjectmembersDao projectMembersDao = new ProjectmembersDao (create.configuration());
 
 		if ( usersDao.fetchByUsername( "jdoe"  ).isEmpty() ) {
 			usersDao.insert( new Users( null, "John", "Doe", "jdoe", "top!secret", true ) );
@@ -120,6 +123,10 @@ public class App {
 			userActivitiesDao.insert(new Useractivities ( null, a2.getId(), cpratt.getId()));
 		}
 		
+		if (projectMembersDao.findAll().isEmpty()) {
+			projectMembersDao.insert(new Projectmembers (null, project.getId(), ssmith.getId()));
+			projectMembersDao.insert(new Projectmembers (null, project.getId(), cpratt.getId()));
+		}
 		
 	}
 }

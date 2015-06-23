@@ -70,7 +70,7 @@ public interface ProjectService {
     
     List<Users> getUnassignedMembersForProject(int projectId);
     
-    List <Users> deleteUserFromProject(int projectId, Users user);
+    void deleteUserFromProject(int projectId, Users user);
     
-    List<Users> getAssigneesForProject(int projectId);
+    List<Users> getMembersForProject(int projectId);
 }

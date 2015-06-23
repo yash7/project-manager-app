@@ -218,8 +218,12 @@ public class ActivityServiceImpl implements ActivityService {
         try {
             return create.select(Tables.USERS.fields())
                     .from(Tables.USERS)
-                    .where(Tables.USERS.ID.notIn(create.select(Tables.USERS.ID).from(Tables.USERS).join(Tables.USERACTIVITIES).on(Tables.USERACTIVITIES.USER_ID.equal(Tables.USERS.ID))
-                    .where(Tables.USERACTIVITIES.ACTIVITY_ID.equal(activityId))))
+                    .join(Tables.PROJECTMEMBERS).on(Tables.USERS.ID.equal(Tables.PROJECTMEMBERS.USER_ID))
+                    .where(Tables.PROJECTMEMBERS.USER_ID.notIn(create.select(Tables.PROJECTMEMBERS.USER_ID)
+                    		.from(Tables.PROJECTMEMBERS)
+                    		.join(Tables.USERACTIVITIES)
+                    		.on(Tables.USERACTIVITIES.USER_ID.equal(Tables.PROJECTMEMBERS.USER_ID))
+                    		.where(Tables.USERACTIVITIES.ACTIVITY_ID.equal(activityId))))
                     .fetchInto(Users.class);
         } catch (DataAccessException e) {
             throw new ServiceFunctionalityException("failed to get project members for activity " + activityId, e);
