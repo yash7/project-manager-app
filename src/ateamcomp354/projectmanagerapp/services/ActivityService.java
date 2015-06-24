@@ -114,4 +114,8 @@ public interface ActivityService {
     List<Users> getAssigneesForActivity(int activityId);
     
     List<Users> getUnassignedMembersForActivity(int activityId);
+
+	List<Users> getProjectMembers();
+
+	Users getProjectMember(int memberId);
 }

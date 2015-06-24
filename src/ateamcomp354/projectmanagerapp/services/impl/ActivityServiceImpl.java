@@ -180,11 +180,20 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void addUserToActivity(int activityId, Users user) {
+    	
+    	checkUserInProject(user.getId(), "User is not in project activity belongs to");
+    	
 	    try {
 	    	userActivitiesDao.insert(new Useractivities ( null, activityId, user.getId()));
 	    } catch (DataAccessException e) {
 	        throw new ServiceFunctionalityException("failed to add a new user to activity", e);
 	    }
+    }
+    
+    private void checkUserInProject( int memberId, String errMsg ) {   
+        if ( getProjectMember(memberId) == null ) {
+            throw new IllegalStateException( errMsg );
+        }
     }
 
     @Override
@@ -229,4 +238,33 @@ public class ActivityServiceImpl implements ActivityService {
             throw new ServiceFunctionalityException("failed to get project members for activity " + activityId, e);
         }
 	}
+	
+	@Override
+    public Users getProjectMember(int memberId)
+    {
+        try {
+            return create.select(Tables.USERS.fields())
+                    .from(Tables.USERS)
+                    .join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(this.projectId))
+                    .and(Tables.PROJECTMEMBERS.USER_ID.equal(memberId))
+                    .fetchOneInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get project member "+memberId+" for project", e);
+        }
+    }
+	
+	@Override
+    public List<Users> getProjectMembers()
+    {
+        try {
+            return create.select(Tables.USERS.fields())
+                    .from(Tables.USERS)
+                    .join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(this.projectId))
+                    .fetchInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get project members for project", e);
+        }
+    }
 }

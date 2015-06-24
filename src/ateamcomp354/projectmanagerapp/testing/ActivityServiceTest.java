@@ -149,16 +149,49 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
-		u.setId(1);
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
 		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
 		
 		pjs.addUserToProject(ase.getProject().getId(), u);
 
-		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
+		assertEquals("Tester", ase.getProjectMember(u.getId()).getFirstName());
 		
 		ase.addUserToActivity(a.getId(), u);
 		
 		assertEquals(1, ase.getAssigneesForActivity(a.getId()).size());
+	}
+	
+	@Test
+	public void testgetAssigneesForActivity_notinproject() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(ase.getProject().getId());
+		ase.addActivity(a);
+		
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		
+		assertEquals(0, ase.getProjectMembers().size());
+
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
+		
+		try { //should throw error, catch and ignore
+			ase.addUserToActivity(a.getId(), u);
+		}
+		catch(IllegalStateException e) {}
+		
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
 	}
 	
 	@Test
@@ -169,8 +202,13 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
-		u.setId(1);
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
 		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
 			
 		assertEquals(0, ase.getUnassignedMembersForActivity(a.getId()).size());
 		
@@ -187,8 +225,16 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
-		u.setId(1);
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
 		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		pjs.addUserToProject(ase.getProject().getId(), u);
+		
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
 		
 		ase.addUserToActivity(0, u);
 
@@ -203,9 +249,13 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
-		u.setId(1);
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
 		u.setFirstName("Tester");
-
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
 		ase.deleteUserFromActivity(0, u);
 		
 		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
