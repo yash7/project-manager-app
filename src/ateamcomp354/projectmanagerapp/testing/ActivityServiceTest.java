@@ -147,8 +147,18 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		a.setId(0);
 		a.setProjectId(ase.getProject().getId());
 		ase.addActivity(a);
+		
+		Users u = new Users();
+		u.setId(1);
+		u.setFirstName("Tester");
+		
+		pjs.addUserToProject(ase.getProject().getId(), u);
 
 		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
+		
+		ase.addUserToActivity(a.getId(), u);
+		
+		assertEquals(1, ase.getAssigneesForActivity(a.getId()).size());
 	}
 	
 	@Test
@@ -158,6 +168,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		a.setProjectId(ase.getProject().getId());
 		ase.addActivity(a);
 		
+		Users u = new Users();
+		u.setId(1);
+		u.setFirstName("Tester");
+			
+		assertEquals(0, ase.getUnassignedMembersForActivity(a.getId()).size());
+		
+		pjs.addUserToProject(ase.getProject().getId(), u);
+	
 		assertEquals(1, ase.getUnassignedMembersForActivity(a.getId()).size());
 	}
 	
