@@ -3,11 +3,13 @@ package ateamcomp354.projectmanagerapp.ui;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
-
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 
@@ -15,6 +17,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -24,6 +27,7 @@ public class ActivitiesPanel {
 
 	private final ApplicationContext appCtx;
 	private ActivityService activityService;
+	private UserService userService;
 	
 	private SwapInterface swap;
 
@@ -36,8 +40,17 @@ public class ActivitiesPanel {
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
 	
+	private int selectedAssigneeId;
+	private int assigneeIndexes[];
+	private List<Integer> assigneeComboIndexes;
+	
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
+	private JList<Users> assigneeList;
+	private JList<String> dependencyList;
+	
+	private DefaultListModel<String> assigneeListModel;
+	private DefaultListModel<String> dependencyListModel;
 	
 	private int projectId = 1;
 	private int activityId = 0;
@@ -50,6 +63,9 @@ public class ActivitiesPanel {
 		
 		activityList = new JList<>();
 		completedActivityList = new JList<>();
+		
+		assigneeListModel = new DefaultListModel();
+		dependencyListModel = new DefaultListModel();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
@@ -65,17 +81,11 @@ public class ActivitiesPanel {
 		splitPane1Gen.getLatestStartField().setEnabled(false);
 		splitPane1Gen.getEarliestFinishField().setEnabled(false);
 		splitPane1Gen.getLatestFinishField().setEnabled(false);
-		splitPane1Gen.getAssigneesComboBox().setEnabled(false);
-		splitPane1Gen.getAddAssigneeButton().setEnabled(false);
-		splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
-		splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
 		
 		splitPane1Gen.getEarliestStartField().setText("coming soon");
 		splitPane1Gen.getLatestStartField().setText("coming soon");
 		splitPane1Gen.getEarliestFinishField().setText("coming soon");
 		splitPane1Gen.getLatestFinishField().setText("coming soon");
-		splitPane1Gen.getAssigneesComboBox().addItem("coming soon");
-		splitPane1Gen.getAssigneeScrollPane().setColumnHeaderView(new JLabel("coming soon"));
 		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
@@ -84,6 +94,7 @@ public class ActivitiesPanel {
 				activityId = 0;
 				clear(true);
 				activityService = appCtx.getActivityService(projectId);
+				userService = appCtx.getUserService();
 				activities = activityService.getActivities();
 				project = activityService.getProject();
 				
@@ -143,6 +154,22 @@ public class ActivitiesPanel {
 				removeDependency();
 			}
 		});
+		
+		// adds a member to the selected activity
+		splitPane1Gen.getAddAssigneeButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addAssignee();
+			}
+		});
+		
+		// removes selected member from the selected activity
+		splitPane1Gen.getRemoveAssigneeButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAssignee();
+			}
+		});
 
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
@@ -179,6 +206,12 @@ public class ActivitiesPanel {
 			splitPane1Gen.getMaxDurationField().setText("0");
 			splitPane1Gen.getDurationField().setText("0");
 			splitPane1Gen.getDescriptionArea().setText("");
+			
+			splitPane1Gen.getDependenciesComboBox().removeAllItems();
+			splitPane1Gen.getAssigneesComboBox().removeAllItems();
+			assigneeListModel.clear();
+			dependencyListModel.clear();
+			
 			return true;
 		}
 		return false;
@@ -265,23 +298,26 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		splitPane1Gen.getDeleteButton().setEnabled(true);
 		showDependencies(id);
+		showAssignees(id);
 		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
 	}
 	
 	private void showDependencies(int id)
 	{
+		
+		dependencyListModel.clear();
+		
 		selectedDependencyId = 0;
 		List<Integer> dependencies = activityService.getDependencies(id);
-		String dependencyNames[] = new String[dependencies.size()];
 		dependencyIndexes = new int[dependencies.size()];
 		
 		for (int i = 0; i < dependencies.size(); i++)
 		{
-			dependencyNames[i] = activityService.getActivity(dependencies.get(i)).getLabel();
+			dependencyListModel.addElement(activityService.getActivity(dependencies.get(i)).getLabel());
 			dependencyIndexes[i] = activityService.getActivity(dependencies.get(i)).getId();
 		}
 		
-		JList<String> dependencyList = new JList<String>(dependencyNames);
+		dependencyList = new JList<String>(dependencyListModel);
 		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
 		splitPane1Gen.getDependencyScrollPane().validate();
 		fillDependencyComboBox();
@@ -420,6 +456,65 @@ public class ActivitiesPanel {
 				}
 			}
 		});
+	}
+	
+	private void showAssignees(int activityId) {		
+		
+		assigneeListModel.clear();
+		
+		List<Users> assignees = activityService.getAssigneesForActivity(activityId);
+		
+		selectedAssigneeId = 0;
+		assigneeIndexes = new int[assignees.size()];
+		
+		for (int i = 0; i < assignees.size(); i++)
+		{
+			assigneeListModel.addElement(assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName());
+			assigneeIndexes[i] = assignees.get(i).getId();
+		}
+		
+		JList<String> assigneeList = new JList<String>(assigneeListModel);
+		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
+		splitPane1Gen.getAssigneeScrollPane().validate();
+		
+		fillAssigneeComboBox();
+		
+		assigneeList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if (assigneeList.locationToIndex(e.getPoint()) == -1) return;
+				selectedAssigneeId = assigneeIndexes[assigneeList.locationToIndex(e.getPoint())];
+			}
+		});
+	}
+	
+	private void fillAssigneeComboBox() {
+		splitPane1Gen.getAssigneesComboBox().removeAllItems();
+		assigneeComboIndexes = new ArrayList<Integer>();
+		assigneeComboIndexes.clear();
+		
+		List<Users> notAssigned = activityService.getUnassignedMembersForActivity(activityId);
+		
+		for (int i = 0; i < notAssigned.size(); i++) {
+			splitPane1Gen.getAssigneesComboBox().addItem(notAssigned.get(i).getFirstName() + " " + notAssigned.get(i).getLastName());
+			assigneeComboIndexes.add(notAssigned.get(i).getId());
+		}
+	}
+	
+	private void addAssignee()
+	{	
+		if (splitPane1Gen.getAssigneesComboBox().getSelectedIndex() == -1) return;
+		int toAdd = assigneeComboIndexes.get(splitPane1Gen.getAssigneesComboBox().getSelectedIndex());
+		activityService.addUserToActivity(activityId, userService.getUser(toAdd));
+		showAssignees(activityId);
+	}
+	
+	private void removeAssignee()
+	{
+		if (selectedAssigneeId == 0) return;
+		activityService.deleteUserFromActivity(activityId, userService.getUser(selectedAssigneeId));
+		selectedAssigneeId = 0;
+		showAssignees(activityId);
 	}
 	
 	private void setReadOnly(boolean readOnly)

@@ -1,6 +1,7 @@
 package ateamcomp354.projectmanagerapp.services;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import java.util.List;
 
@@ -64,4 +65,12 @@ public interface ProjectService {
      * @throws ServiceFunctionalityException if something went wrong with this functionality.
      */
     void updateProject( Project project );
+    
+    void addUserToProject(int projectId, Users user);
+    
+    List<Users> getUnassignedMembersForProject(int projectId);
+    
+    void deleteUserFromProject(int projectId, Users user);
+    
+    List<Users> getMembersForProject(int projectId);
 }

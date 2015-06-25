@@ -62,7 +62,7 @@ public class LoginPanel {
 				}
 				else
 				{
-					loginPanelGen.getValidityLabel().setText("Project member login not supported yet");
+					swap.showMemberProjectsView(loggedInUser.getId());
 				}
 					
 			}

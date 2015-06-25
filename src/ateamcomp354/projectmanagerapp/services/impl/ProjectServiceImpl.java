@@ -3,10 +3,16 @@ package ateamcomp354.projectmanagerapp.services.impl;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
+
 import org.jooq.DSLContext;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectmembersDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UseractivitiesDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Projectmembers;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
 import java.util.List;
@@ -15,10 +21,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final DSLContext create;
     private final ProjectDao projectDao;
+    private final ProjectmembersDao projectMembersDao;
 
     public ProjectServiceImpl(DSLContext create) {
         this.create = create;
         projectDao = new ProjectDao( create.configuration() );
+        projectMembersDao = new ProjectmembersDao (create.configuration());
     }
 
     @Override
@@ -129,4 +137,55 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceFunctionalityException("failed to count activities with status " + status + " in project with id " + projectId, e);
         }
     }
+
+	@Override
+	public void addUserToProject(int projectId, Users user) {
+	    try {
+	    	projectMembersDao.insert(new Projectmembers ( null, projectId, user.getId()) );
+	    } catch (DataAccessException e) {
+	        throw new ServiceFunctionalityException("failed to add a new user to project", e);
+	    }
+	}
+
+	@Override
+	public List<Users> getUnassignedMembersForProject(int projectId) {
+        try {
+            return create.select(Tables.USERS.fields())
+                    .from(Tables.USERS)
+                    .where(Tables.USERS.ID.notIn(create.select(Tables.USERS.ID).from(Tables.USERS).join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(projectId))))
+                    .fetchInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get project members for project" + projectId, e);
+        }
+	}
+
+	@Override
+	public void deleteUserFromProject(int projectId, Users user) {
+	    try {
+	    	create.deleteFrom(Tables.PROJECTMEMBERS)
+	    	.where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(projectId))
+	    	.and(Tables.PROJECTMEMBERS.USER_ID.equal(user.getId()))
+	    	.execute();
+	    	
+	    	create.deleteFrom(Tables.USERACTIVITIES)
+	    	.where(Tables.USERACTIVITIES.USER_ID.equal(user.getId()))
+	    	.execute();
+	    } catch (DataAccessException e) {
+	        throw new ServiceFunctionalityException("failed to add delete user from project", e);
+	    }
+	}
+
+	@Override
+	public List<Users> getMembersForProject(int projectId) {
+        try {
+            return create.select(Tables.USERS.fields())
+                    .from(Tables.USERS)
+                    .join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(projectId))
+                    .fetchInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get project members for project " + projectId, e);
+        }
+	}
 }

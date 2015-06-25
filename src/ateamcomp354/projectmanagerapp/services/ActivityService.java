@@ -107,9 +107,15 @@ public interface ActivityService {
      */
     List<Integer> getDependents( int fromActivityId);
 
-    // User story 3 proposition
     void addUserToActivity( int activityId, Users user );
 
-    // User story 3 proposition
     void deleteUserFromActivity( int activityId, Users user );
+    
+    List<Users> getAssigneesForActivity(int activityId);
+    
+    List<Users> getUnassignedMembersForActivity(int activityId);
+
+	List<Users> getProjectMembers();
+
+	Users getProjectMember(int memberId);
 }

@@ -100,6 +100,12 @@ public class DatabaseManager {
 				String sql = readFile( "ddl/ActivityLinks.sql" );
 				statement.execute(sql);
 			}
+			
+			resultSet = data.getTables(null, null, "projectMembers", null);
+			if (!resultSet.next()) {
+				String sql = readFile( "ddl/ProjectMembers.sql" );
+				statement.execute(sql);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
