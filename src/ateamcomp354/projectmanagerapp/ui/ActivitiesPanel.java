@@ -3,6 +3,7 @@ package ateamcomp354.projectmanagerapp.ui;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
@@ -369,7 +370,12 @@ public class ActivitiesPanel {
 	{	
 		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1) return;
 		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
-		activityService.addDependency(toAdd, activityId);
+		try {
+			activityService.addDependency(toAdd, activityId);
+		}
+		catch(ServiceFunctionalityException e) {
+			JOptionPane.showMessageDialog(null, "Adding this Dependency would create a circular dependency chain. Unfortunately this is not allowed.");
+		}
 		showDependencies(activityId);
 	}
 	

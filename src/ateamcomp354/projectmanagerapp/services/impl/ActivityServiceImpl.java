@@ -16,6 +16,7 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,7 +116,8 @@ public class ActivityServiceImpl implements ActivityService {
     public void addDependency(int fromActivityId, int toActivityId) {
 
         checkProjectNotCompleted( "Project to add activity dependency is completed" );
-
+        checkCircularDependency(fromActivityId, toActivityId, "Project will have circular activities if these were added");
+        
         Activitylinks link = new Activitylinks( null, fromActivityId, toActivityId );
 
         try {
@@ -129,6 +131,7 @@ public class ActivityServiceImpl implements ActivityService {
     public void deleteDependency(int fromActivityId, int toActivityId) {
 
         checkProjectNotCompleted( "Project to delete activity dependency is completed" );
+        
 
         try {
             create.deleteFrom(Tables.ACTIVITYLINKS)
@@ -140,7 +143,39 @@ public class ActivityServiceImpl implements ActivityService {
         }
     }
 
-    @Override
+    private void checkCircularDependency(int fromActivityId, int toActivityId, String string) {
+		if(addActivityToList(fromActivityId, toActivityId, new ArrayList<Integer>()) == null) {
+			throw new ServiceFunctionalityException(string);
+		}
+	}
+    
+    private List<Integer> addActivityToList(int toAdd, int activityId, List<Integer> activities) {
+    	
+    	List<Integer> links = getDependencies(toAdd);
+    	if(activities.contains(toAdd)) {
+    		return null;
+    	}
+    	if(links.size() == 0) {
+    		return links;
+    	}
+    	
+    	for (int x : links) {
+    		if(activities.contains(activityId)) {
+    			return null;
+    		}
+    		else {
+    			activities.add(activityId);
+    			List<Integer> y = addActivityToList(x, toAdd, activities);
+    			if(y == null) {
+    				return null;
+    			}
+    		}
+    	}
+    	
+    	return activities;
+    }
+    
+	@Override
     public List<Integer> getDependencies(int toActivityId) {
 
         List<Activitylinks> links;
