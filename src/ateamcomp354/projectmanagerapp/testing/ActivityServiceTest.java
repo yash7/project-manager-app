@@ -327,11 +327,36 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(c);
 		
 		ase.addDependency(0, 1);
-		ase.addDependency(0, 2);
-		
+		ase.addDependency(0, 2);		
 		
 		assertEquals(2,ase.getDependents(0).size());
 		assertEquals(1,ase.getDependencies(1).size());
+	}
+	
+	@Test(expected=ServiceFunctionalityException.class)
+	public void testAddDependency_noCircular(){
+		Activity a = new Activity();
+		Activity b = new Activity();
+		Activity c = new Activity();
+		
+		a.setId(0);
+		a.setProjectId(0);
+		b.setId(1);
+		b.setProjectId(0);
+		c.setId(2);
+		c.setProjectId(0);
+		
+		ase.addActivity(a);
+		ase.addActivity(b);
+		ase.addActivity(c);
+		
+		ase.addDependency(0, 1);
+		ase.addDependency(1, 2);		
+		
+		assertEquals(1,ase.getDependents(1).size());
+		assertEquals(1,ase.getDependencies(2).size());
+		
+		ase.addDependency(2, 0); //circular dependency
 	}
 	
 	/**
