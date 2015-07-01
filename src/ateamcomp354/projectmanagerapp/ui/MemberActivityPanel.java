@@ -1,30 +1,42 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
+import ateamcomp354.projectmanagerapp.model.Status;
+import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectMemberService;
 import ateamcomp354.projectmanagerapp.ui.gen.MemberActivityPanelGen;
+
+import ateamcomp354.projectmanagerapp.model.Status;
 
 public class MemberActivityPanel {
 	private MemberActivityPanelGen memberActivityPanelGen;
 	
 	private ProjectMemberService projectMemberService;
+	private ActivityService activityService;
 	private SwapInterface swap;
 	
 	private List<Activity> assignedActivities;
 	private JList<String> assignedActivitiesList;
 	private int[] activityIndexes;
+	
+	private DefaultListModel<String> assigneeListModel;
 	
 	private int userId;
 	private int selectedActivityId;
@@ -35,16 +47,30 @@ public class MemberActivityPanel {
 		this.swap = swap;
 		
 		memberActivityPanelGen = new MemberActivityPanelGen();
+		assigneeListModel = new DefaultListModel();
+		
+		memberActivityPanelGen.getStatusComboBox().addItem("Open");
+		memberActivityPanelGen.getStatusComboBox().addItem("In Progress");
+		memberActivityPanelGen.getStatusComboBox().addItem("Resolved");
 		
 		memberActivityPanelGen.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				projectMemberService = appCtx.getProjectMemberService(userId);
+				activityService = appCtx.getActivityService(projectId);
 				assignedActivities = projectMemberService.getAssignedActivities(projectId);
 				
 				//memberActivityPanelGen.getActivityScrollPane().setColumnHeaderView(new JLabel("Assigned Activities"));
 
 				fillAssignedActivityList();
+			}
+		});
+		
+		//Saving the activity from the edited fields
+		memberActivityPanelGen.getSaveActivityButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveActivity();
 			}
 		});
 		
@@ -85,5 +111,53 @@ public class MemberActivityPanel {
 		
 		memberActivityPanelGen.getActivityScrollPane().setViewportView(assignedActivitiesList);
 		memberActivityPanelGen.getActivityScrollPane().validate();
+		
+		assignedActivitiesList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = assignedActivitiesList.locationToIndex(e.getPoint());
+
+				if (index >= 0)
+				{
+					selectActivity(activityIndexes[index]);
+				}
+			}
+		});
+	}
+	
+	private void selectActivity(int id)
+	{
+		Activity activity = activityService.getActivity(id);
+		selectedActivityId = id;
+		memberActivityPanelGen.getNameTextField().setText(activity.getLabel());
+		memberActivityPanelGen.getStatusComboBox().setSelectedIndex(activity.getStatus().ordinal());
+		memberActivityPanelGen.getDescriptionTextArea().setText(activity.getDescription());
+		showAssignees(id);
+	}
+	
+	private void saveActivity() {
+		Activity activity = activityService.getActivity(selectedActivityId);
+		activity.setLabel(memberActivityPanelGen.getNameTextField().getText());
+		activity.setProjectId(projectId);
+		activity.setStatus(Status.values()[memberActivityPanelGen.getStatusComboBox().getSelectedIndex()]);
+		activity.setDescription(memberActivityPanelGen.getDescriptionTextArea().getText());
+
+		activityService.updateActivity(activity);
+	}
+	
+	private void showAssignees(int activityId) {		
+		
+		assigneeListModel.clear();
+		
+		List<Users> assignees = projectMemberService.getOtherAssigneesForActivity(activityId);
+		
+		for (int i = 0; i < assignees.size(); i++)
+		{
+			assigneeListModel.addElement(assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName());
+		}
+		
+		JList<String> assigneeList = new JList<String>(assigneeListModel);
+		memberActivityPanelGen.getAssigneeScrollPane().setViewportView(assigneeList);
+		memberActivityPanelGen.getAssigneeScrollPane().validate();
 	}
 }
