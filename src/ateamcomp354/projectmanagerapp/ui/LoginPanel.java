@@ -1,12 +1,16 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 import javax.swing.JComponent;
+
 import java.awt.event.*;
 
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.LoginService;
 import ateamcomp354.projectmanagerapp.ui.gen.LoginPanelGen;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
+
 import ateamcomp354.projectmanagerapp.services.LoginFailedException;
 
 public class LoginPanel {
@@ -19,10 +23,12 @@ public class LoginPanel {
 	
 	private Users loggedInUser;
 	
+	
 	public LoginPanel( ApplicationContext appCtx , SwapInterface swap) {
 
 		this.appCtx = appCtx;
 		this.swap = swap;
+		
 		
 		loginPanelGen = new LoginPanelGen();
 		
@@ -51,6 +57,7 @@ public class LoginPanel {
 		public void actionPerformed(ActionEvent e){
 			
 			LoginService ls = appCtx.getLoginService();
+			
 			try
 			{
 				String username = loginPanelGen.getUsernameField().getText();
@@ -58,13 +65,25 @@ public class LoginPanel {
 				loggedInUser = ls.login( username , password );
 				if (loggedInUser.getManagerRole())
 				{
+					FrameSaver projectFrame = new FrameSaver();
+					projectFrame.setFrameName("PROJECTS_PANEL");
+					
+					swap.saveFrame(projectFrame);
 					swap.showProjectsView();
+		
 				}
 				else
 				{
-					swap.showMemberProjectsView(loggedInUser.getId());
-				}
+					FrameSaver memberProjectFrame = new FrameSaver();
+					memberProjectFrame.setFrameName("MEMBERPROJECT_PANEL");
+					memberProjectFrame.setFirstID(loggedInUser.getId());
 					
+					swap.saveFrame(memberProjectFrame);
+					swap.showMemberProjectsView(loggedInUser.getId());
+					
+					
+				}
+						
 			}
 			catch (LoginFailedException lfe)
 			{

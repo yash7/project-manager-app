@@ -1,5 +1,7 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -50,8 +52,18 @@ public class MemberActivityPanel {
 		
 		memberActivityPanelGen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 		
-		memberActivityPanelGen.getBackButton().addActionListener( __ -> this.swap.showMemberProjectsView(userId));
+		memberActivityPanelGen.getBackButton().addActionListener( new backActionListener());
 	}
+	
+	class backActionListener implements ActionListener{
+		
+		public void actionPerformed(ActionEvent e){
+			swap.removeSaveFrame();
+			swap.frameSwitch();
+			
+		}
+	}
+	
 	
 	public JComponent getComponent()
 	{

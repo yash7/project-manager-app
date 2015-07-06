@@ -6,6 +6,7 @@ import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
@@ -55,12 +56,14 @@ public class ActivitiesPanel {
 	
 	private int projectId = 1;
 	private int activityId = 0;
+	
 
 	public ActivitiesPanel( ApplicationContext appCtx , SwapInterface swap) {
 
 		this.appCtx = appCtx;
 		this.swap = swap;
 		splitPane1Gen = new SplitPane1Gen();
+	
 		
 		activityList = new JList<>();
 		completedActivityList = new JList<>();
@@ -88,6 +91,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getEarliestFinishField().setText("coming soon");
 		splitPane1Gen.getLatestFinishField().setText("coming soon");
 		
+		
 		//occurs whenever the view is opened. projectId should be set from the project view
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -106,6 +110,8 @@ public class ActivitiesPanel {
 				splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(projectLabelC);
 				
 				fillActivitiesList();
+				
+				
 			}
 		});
 		
@@ -172,10 +178,20 @@ public class ActivitiesPanel {
 			}
 		});
 
-		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
+		//splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
-		splitPane1Gen.getBackBtn().addActionListener( __ -> this.swap.showProjectsView( projectId ) );
+		splitPane1Gen.getBackBtn().addActionListener(  new backActionListener());
+		
 	}
+	
+	class backActionListener implements ActionListener{
+		
+		public void actionPerformed(ActionEvent e){
+			swap.removeSaveFrame();
+			swap.showProjectsView();
+		}
+	}
+	
 	
 	public JComponent getComponent()
 	{

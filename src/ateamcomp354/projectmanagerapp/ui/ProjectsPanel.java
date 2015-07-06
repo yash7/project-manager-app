@@ -8,6 +8,7 @@ import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
@@ -105,7 +106,7 @@ public class ProjectsPanel {
 		openProjectsModel = new DefaultListModel<>();
 		closedProjectsModel = new DefaultListModel<>();
 
-		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
+		//splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
 		splitPane1Gen.getBackBtn().setVisible( false );
 
@@ -309,6 +310,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getBtnView().setEnabled( true );
 
 		displayProject();
+	
 	}
 
 	// If the form input is dirty then prompt the user if they want to save the changes.
@@ -357,6 +359,11 @@ public class ProjectsPanel {
 
 		Optional.ofNullable( getProject().getId() )
 				.ifPresent( swap::showActivitiesView );
+		
+		FrameSaver activityFrame = new FrameSaver();
+		activityFrame.setFirstID(getProject().getId()); // Saves the project's ID
+		activityFrame.setFrameName("ACTIVITIES_PANEL");
+		swap.saveFrame(activityFrame); // Saves the frame next frame
 	}
 
 	// Btn to create new project is clicked, clear list selections and
