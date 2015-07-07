@@ -102,6 +102,7 @@ public class ProjectsPanel {
 
 		us1RightPanelGen = new US1RightPanelGen();
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
+		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
 		openProjectsModel = new DefaultListModel<>();
 		closedProjectsModel = new DefaultListModel<>();
