@@ -30,6 +30,8 @@ public class ProjectMemberTest extends AbstractDatabaseTest {
 		assertEquals(1, as.getActivities().size());
 		assertEquals(0, as.getAssigneesForActivity(1).size());
 		
+		ps.addUserToProject(as.getProject().getId(), appCtx.getUserService().getUser(2));
+		
 		as.addUserToActivity(1, appCtx.getUserService().getUser(2));
 		
 		assertEquals(1, as.getAssigneesForActivity(1).size());
@@ -49,13 +51,53 @@ public class ProjectMemberTest extends AbstractDatabaseTest {
         as.addActivity(new Activity(null, as.getProject().getId(), Status.NEW, 0, 5, "Label", 0, 5, 5, 5, "Desc"));
         as2.addActivity(new Activity(null, as2.getProject().getId(), Status.NEW, 0, 35, "Label3", 0, 35, 35, 35, "Desc3"));
 		
+        
+        ps.addUserToProject(as.getProject().getId(), appCtx.getUserService().getUser(2));
         as.addUserToActivity(1, appCtx.getUserService().getUser(2));
 
         assertEquals(1, pms.getAssignedProjects().size());
         
+        ps.addUserToProject(as2.getProject().getId(), appCtx.getUserService().getUser(2));
         as2.addUserToActivity(2, appCtx.getUserService().getUser(2));
 		
 		assertEquals(2, pms.getAssignedProjects().size());
+	}
+	
+	@Test
+	public void testgetOtherAssigneesForActivity()  {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(as.getProject().getId());
+		as.addActivity(a);
+
+		Users u = new Users();
+		u.setId(3);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		
+		Users u2 = new Users();
+		u2.setId(4);
+		u2.setUsername("tts");
+		u2.setPassword("tttt");
+		u2.setFirstName("Tester 2");
+		u2.setLastName("Testington 2");
+		
+		appCtx.getUserService().addUser(u2);
+		
+		ps.addUserToProject(as.getProject().getId(), u);
+		ps.addUserToProject(as.getProject().getId(), u2);
+		
+		as.addUserToActivity(a.getId(), u);
+
+		assertEquals(1, pms.getOtherAssigneesForActivity(0).size());
+		
+		as.addUserToActivity(a.getId(), u2);
+		
+		assertEquals(2, pms.getOtherAssigneesForActivity(0).size());
 	}
 	
 	@Before

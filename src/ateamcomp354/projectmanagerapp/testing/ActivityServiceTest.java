@@ -386,6 +386,57 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		assertEquals(0,ase.getDependencies(1).size());
 	}
 	
+	@Test
+	public void testgetProjectMember() {
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		Users u2 = new Users();
+		u2.setId(3);
+		u2.setUsername("ttt2");
+		u2.setPassword("ttt2");
+		u2.setFirstName("Tester2");
+		u2.setLastName("Testington2");
+		
+		appCtx.getUserService().addUser(u);
+		appCtx.getUserService().addUser(u2);
+		
+		pjs.addUserToProject(0, u);
+		pjs.addUserToProject(0, u2);
+		
+		assertEquals("ttt", ase.getProjectMember(2).getUsername());
+		assertEquals("ttt2", ase.getProjectMember(3).getUsername());
+	}
+	
+	@Test
+	public void testgetProjectMembers() {
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		Users u2 = new Users();
+		u2.setId(3);
+		u2.setUsername("ttt2");
+		u2.setPassword("ttt2");
+		u2.setFirstName("Tester");
+		u2.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		appCtx.getUserService().addUser(u2);
+		
+		pjs.addUserToProject(0, u);
+		pjs.addUserToProject(0, u2);
+		
+		assertEquals(2, ase.getProjectMembers().size());
+	}
+	
 	@Before
 	public void initial(){
 

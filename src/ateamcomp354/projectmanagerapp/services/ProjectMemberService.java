@@ -15,6 +15,8 @@ public interface ProjectMemberService {
     List<Activity> getAssignedActivities(int projectId);
     
     List<Project> getAssignedProjects();
+
+	List<Users> getOtherAssigneesForActivity(int activityId);
     
     //void markPercentCompleteOfActivity( Activity activity );
 }
