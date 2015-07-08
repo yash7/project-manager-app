@@ -9,5 +9,9 @@ public interface SwapInterface {
 	public void showProjectsView( int preferredProjectId );
 	
 	public void showActivitiesView( int projectId );
+	
+	public void showMemberActivitiesView (int projectId, int userId);
+	
+	public void showMemberProjectsView(int userId);
 
 }

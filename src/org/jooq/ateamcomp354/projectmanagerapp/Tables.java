@@ -9,6 +9,7 @@ import javax.annotation.Generated;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.ActivityTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.ActivitylinksTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectTable;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectmembersTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.UseractivitiesTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.UsersTable;
 
@@ -40,6 +41,11 @@ public class Tables {
 	 * The table project
 	 */
 	public static final ProjectTable PROJECT = org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectTable.PROJECT;
+
+	/**
+	 * The table projectMembers
+	 */
+	public static final ProjectmembersTable PROJECTMEMBERS = org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectmembersTable.PROJECTMEMBERS;
 
 	/**
 	 * The table userActivities

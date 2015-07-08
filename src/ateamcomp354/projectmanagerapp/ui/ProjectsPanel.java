@@ -2,16 +2,21 @@ package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.ProjectInfo;
+import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
+import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
+
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,9 @@ public class ProjectsPanel {
 	private final DefaultListModel<Project> openProjectsModel;
 	private final JList<Project> closedProjectList;
 	private final DefaultListModel<Project> closedProjectsModel;
+	
+	private ApplicationContext appCtx;
+	private ActivityService ase;
 
 	/**
 	 * A cache of project info, mapping a project id to its cached info.
@@ -78,6 +86,7 @@ public class ProjectsPanel {
 
 	public ProjectsPanel( ApplicationContext appCtx, SwapInterface swap )
 	{
+		this.appCtx = appCtx;
 		projectService = appCtx.getProjectService();
 		this.swap = swap;
 
@@ -99,7 +108,8 @@ public class ProjectsPanel {
 
 		splitPane1Gen.getAddButton().addActionListener( __ -> addProjectClicked() );
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
-
+		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
+		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
 				p -> {
@@ -120,10 +130,12 @@ public class ProjectsPanel {
 		closedProjectList.getSelectionModel().addListSelectionListener( this::closedProjectSelected );
 		splitPane1Gen.getCompletedScrollPane().setViewportView( closedProjectList );
 
-		splitPane1Gen.getBtnManage().setVisible( false );
+		splitPane1Gen.getBtnManage().setVisible( true );
 		splitPane1Gen.getBtnView().setText(VIEW_BTN_TXT);
 		splitPane1Gen.getBtnView().addActionListener( __ -> viewActivitiesClicked() );
 
+		
+		
 		us1RightPanelGen.getSaveButton().addActionListener( __ -> saveProjectClicked() );
 
 		newProjectTemplate = new Project();
@@ -264,6 +276,7 @@ public class ProjectsPanel {
 		if ( i == -1 ) {
 			splitPane1Gen.getDeleteButton().setEnabled( false );
 			splitPane1Gen.getBtnView().setEnabled( false );
+			
 			return;
 		}
 
@@ -340,6 +353,23 @@ public class ProjectsPanel {
 
 		Optional.ofNullable( getProject().getId() )
 				.ifPresent( swap::showActivitiesView );
+	}
+	
+	private void viewProgressClicked(){
+		//if(openProjectList.)
+		if(openProjectList.getSelectedValue()!= null)
+		{
+			List<Activity> acts = appCtx.getActivityService(openProjectList.getSelectedValue().getId()).getActivities();
+			
+			if(acts.size()>0){
+			GanttChartGen chart = new GanttChartGen(openProjectList.getSelectedValue().getProjectName()
+					 + " Progress",acts); 
+			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
+			}
+			else
+				JOptionPane.showMessageDialog (null, "There are no activities for this project"
+						, "No Report", JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 
 	// Btn to create new project is clicked, clear list selections and

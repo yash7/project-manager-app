@@ -14,6 +14,7 @@ import org.jooq.Table;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.ActivityTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.ActivitylinksTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectTable;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.ProjectmembersTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.UseractivitiesTable;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.UsersTable;
 import org.jooq.impl.SchemaImpl;
@@ -32,7 +33,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-	private static final long serialVersionUID = 1520264144;
+	private static final long serialVersionUID = -2068615857;
 
 	/**
 	 * The reference instance of <code></code>
@@ -58,6 +59,7 @@ public class DefaultSchema extends SchemaImpl {
 			ActivityTable.ACTIVITY,
 			ActivitylinksTable.ACTIVITYLINKS,
 			ProjectTable.PROJECT,
+			ProjectmembersTable.PROJECTMEMBERS,
 			UseractivitiesTable.USERACTIVITIES,
 			UsersTable.USERS);
 	}

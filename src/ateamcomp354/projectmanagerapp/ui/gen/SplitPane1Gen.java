@@ -82,6 +82,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton delAssignButton;
 	private JButton addAssignButton;
 	private JButton backBtn;
+	private JButton btnChart;
 	
 	/**
 	 * Create the panel.
@@ -131,7 +132,7 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(deleteButton);
 		
 		btnManage = new JButton("Manage Activity");
-		btnManage.setBounds(153, 342, 148, 30);
+		btnManage.setBounds(170, 342, 131, 30);
 		LeftPanel.add(btnManage);
 		
 		scrollPane = new JScrollPane();
@@ -145,6 +146,10 @@ public class SplitPane1Gen extends JPanel {
 		backBtn = new JButton("< Back");
 		backBtn.setBounds(12, 49, 90, 30);
 		LeftPanel.add(backBtn);
+		
+		btnChart = new JButton("Progress Chart");
+		btnChart.setBounds(43, 342, 120, 30);
+		LeftPanel.add(btnChart);
 
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
@@ -300,6 +305,10 @@ public class SplitPane1Gen extends JPanel {
 
 	public JButton getBtnManage() {
 		return btnManage;
+	}
+	
+	public JButton getChartButton(){
+		return btnChart;
 	}
 	
 	// RightPanel
