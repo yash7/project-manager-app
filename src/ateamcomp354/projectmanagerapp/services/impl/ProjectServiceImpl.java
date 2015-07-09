@@ -188,4 +188,17 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceFunctionalityException("failed to get project members for project " + projectId, e);
         }
 	}
+
+	@Override
+	public void updateProjectBudgetAtCompletion(int projectId) {
+        try {
+            return create.select(Tables.USERS.fields())
+                    .from(Tables.USERS)
+                    .join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(projectId))
+                    .fetchInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("unable to update project's BAC " + projectId, e);
+        }
+	}
 }

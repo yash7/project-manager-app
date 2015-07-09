@@ -84,4 +84,11 @@ public class ProjectDao extends DAOImpl<ProjectRecord, Project, Integer> {
 	public List<Project> fetchByCompleted(Boolean... values) {
 		return fetch(ProjectTable.PROJECT.COMPLETED, values);
 	}
+
+	/**
+	 * Fetch records that have <code>budget_at_completion IN (values)</code>
+	 */
+	public List<Project> fetchByBudgetAtCompletion(Integer... values) {
+		return fetch(ProjectTable.PROJECT.BUDGET_AT_COMPLETION, values);
+	}
 }

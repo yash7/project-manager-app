@@ -135,4 +135,11 @@ public class ActivityDao extends DAOImpl<ActivityRecord, Activity, Integer> {
 	public List<Activity> fetchByDescription(String... values) {
 		return fetch(ActivityTable.ACTIVITY.DESCRIPTION, values);
 	}
+
+	/**
+	 * Fetch records that have <code>planned_value IN (values)</code>
+	 */
+	public List<Activity> fetchByPlannedValue(Integer... values) {
+		return fetch(ActivityTable.ACTIVITY.PLANNED_VALUE, values);
+	}
 }

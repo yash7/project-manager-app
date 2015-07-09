@@ -442,6 +442,7 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
+		us1RightPanelGen.getBudgetAtCompletionLabel().setText("$" + p.getBudgetAtCompletion());
 		
 		if (p.getId() != null)
 			showProjectMembers(p.getId());
