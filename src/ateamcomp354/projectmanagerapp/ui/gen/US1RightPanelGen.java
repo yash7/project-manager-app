@@ -92,7 +92,7 @@ public class US1RightPanelGen extends JPanel {
 		add(lblBudgetAtCompletion);
 		
 		budgetAtCompletionLabel = new JLabel("$0");
-		budgetAtCompletionLabel.setBounds(159, 101, 182, 16);
+		budgetAtCompletionLabel.setBounds(123, 101, 218, 16);
 		add(budgetAtCompletionLabel);
 		
 	}

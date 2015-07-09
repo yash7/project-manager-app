@@ -280,12 +280,12 @@ public class SplitPane1Gen extends JPanel {
 		assigneeScrollPane.setBounds(147, 357, 116, 129);
 		RightPanel.add(assigneeScrollPane);
 		
-		JLabel lblPlannedValue = new JLabel("Planned Value:");
+		JLabel lblPlannedValue = new JLabel("Planned Value ($):");
 		lblPlannedValue.setBounds(12, 107, 101, 16);
 		RightPanel.add(lblPlannedValue);
 		
 		plannedValueField = new JTextField();
-		plannedValueField.setBounds(147, 101, 116, 28);
+		plannedValueField.setBounds(147, 107, 116, 22);
 		RightPanel.add(plannedValueField);
 		plannedValueField.setColumns(10);
 		

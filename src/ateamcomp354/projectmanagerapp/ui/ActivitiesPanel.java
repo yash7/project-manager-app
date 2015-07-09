@@ -3,6 +3,7 @@ package ateamcomp354.projectmanagerapp.ui;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
@@ -30,6 +31,7 @@ public class ActivitiesPanel {
 	private final ApplicationContext appCtx;
 	private ActivityService activityService;
 	private UserService userService;
+	private ProjectService projectService;
 	
 	private SwapInterface swap;
 
@@ -100,6 +102,7 @@ public class ActivitiesPanel {
 				clear(true);
 				activityService = appCtx.getActivityService(projectId);
 				userService = appCtx.getUserService();
+				projectService = appCtx.getProjectService();
 				activities = activityService.getActivities();
 				project = activityService.getProject();
 				
@@ -252,6 +255,7 @@ public class ActivitiesPanel {
 		activity.setPlannedValue(Integer.parseInt(splitPane1Gen.getPlannedValueField().getText()));
 		
 		addOrUpdateActivity(activity);
+		projectService.updateProjectBudgetAtCompletion(projectId);
 		
 		boolean found = false;
 		for (int i = 0; i < idIndexes.length; i++)
@@ -275,10 +279,6 @@ public class ActivitiesPanel {
 			}
 		}
 		setReadOnly(activity.getStatus() == Status.RESOLVED);
-	}
-	
-	private void verifyPlannedValue(int plannedValue) {
-		
 	}
 
 	private void addOrUpdateActivity(Activity a)

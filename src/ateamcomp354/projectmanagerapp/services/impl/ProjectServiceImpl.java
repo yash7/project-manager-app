@@ -192,11 +192,21 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void updateProjectBudgetAtCompletion(int projectId) {
         try {
-            return create.select(Tables.USERS.fields())
-                    .from(Tables.USERS)
-                    .join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
-                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(projectId))
-                    .fetchInto(Users.class);
+            List<Integer> plannedValues = create.select(Tables.ACTIVITY.PLANNED_VALUE)
+            		.from(Tables.ACTIVITY)
+            		.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+            		.fetchInto(Integer.class);
+            
+            int sum = 0;
+            
+            for (Integer i : plannedValues)
+            	sum += i;
+            
+            create.update(Tables.PROJECT)
+            .set(Tables.PROJECT.BUDGET_AT_COMPLETION, sum)
+            .where(Tables.PROJECT.ID.equal(projectId))
+            .execute();
+            
         } catch (DataAccessException e) {
             throw new ServiceFunctionalityException("unable to update project's BAC " + projectId, e);
         }
