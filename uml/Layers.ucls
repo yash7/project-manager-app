@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.8" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <package id="1" language="java" name="ateamcomp354.projectmanagerapp" project="project-manager-app" 
+    file="/project-manager-app/src/ateamcomp354/projectmanagerapp" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="342" width="723" x="24" y="13"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="ateamcomp354.projectmanagerapp.ui" project="project-manager-app" 
+    file="/project-manager-app/src/ateamcomp354/projectmanagerapp/ui" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="64" width="278" x="50" y="116"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="ateamcomp354.projectmanagerapp.ui.gen" project="project-manager-app" 
+    file="/project-manager-app/src/ateamcomp354/projectmanagerapp/ui/gen" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="267" x="445" y="94"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="ateamcomp354.projectmanagerapp.ui.util" project="project-manager-app" 
+    file="/project-manager-app/src/ateamcomp354/projectmanagerapp/ui/util" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="265" x="446" y="154"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="ateamcomp354.projectmanagerapp.services" project="project-manager-app" 
+    file="/project-manager-app/src/ateamcomp354/projectmanagerapp/services" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="190" y="288"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="ateamcomp354.projectmanagerapp.model" project="project-manager-app" 
+    file="/project-manager-app/src/ateamcomp354/projectmanagerapp/model" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="571" y="289"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="7" language="java" name="org.jooq.ateamcomp354.projectmanagerapp.tables" project="project-manager-app" 
+    file="/project-manager-app/src/org/jooq/ateamcomp354/projectmanagerapp/tables" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="295" width="724" x="25" y="376"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="8" language="java" name="org.jooq.ateamcomp354.projectmanagerapp.tables.daos" 
+    project="project-manager-app" file="/project-manager-app/src/org/jooq/ateamcomp354/projectmanagerapp/tables/daos" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="556" y="623"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="9" language="java" name="org.jooq.ateamcomp354.projectmanagerapp.tables.pojos" 
+    project="project-manager-app" file="/project-manager-app/src/org/jooq/ateamcomp354/projectmanagerapp/tables/pojos" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="366" y="474"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="10" language="java" name="org.jooq.ateamcomp354.projectmanagerapp.tables.records" 
+    project="project-manager-app" file="/project-manager-app/src/org/jooq/ateamcomp354/projectmanagerapp/tables/records" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="222" y="550"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="false" package="false" protected="false" private="false" static="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
