@@ -49,6 +49,8 @@ public class MainFrame extends JFrame implements SwapInterface{
 
 		setResizable(false);
 
+		this.setTitle("A Team - Project Management System");
+		
 		loginPanel = new LoginPanel( appCtx , MainFrame.this);
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
 		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
