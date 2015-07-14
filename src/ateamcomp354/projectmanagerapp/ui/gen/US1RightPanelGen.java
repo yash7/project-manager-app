@@ -25,6 +25,10 @@ public class US1RightPanelGen extends JPanel {
 	private JButton addButton;
 	private JButton deleteButton;
 
+	private JLabel lblBudgetAtCompletion;
+	private JLabel budgetAtCompletionLabel;
+	private JLabel projectMembersLabel;
+
 	/**
 	 * Create the panel.
 	 */
@@ -48,23 +52,25 @@ public class US1RightPanelGen extends JPanel {
 		projectNameField.setColumns(10);
 		
 		JLabel descriptionLabel = new JLabel("Description:");
-		descriptionLabel.setBounds(12, 129, 112, 16);
+
+		descriptionLabel.setBounds(12, 154, 112, 16);
 		add(descriptionLabel);
-		
-		descriptionArea = new JTextArea();
-		JScrollPane descriptionScrollPane = new JScrollPane(descriptionArea);
-		descriptionScrollPane.setBounds(12, 156, 329, 150);
+		JScrollPane descriptionScrollPane = new JScrollPane();
+		descriptionScrollPane.setBounds(12, 182, 329, 150);
 		add(descriptionScrollPane);
 		
+		descriptionArea = new JTextArea();
+		descriptionScrollPane.setViewportView(descriptionArea);
+		
 		saveButton = new JButton("Save Project");
-		saveButton.setBounds(200, 317, 141, 30);
+		saveButton.setBounds(200, 344, 141, 30);
 		add(saveButton);
 		
 		chckbxProjectIsCompleted = new JCheckBox("Project is completed");
-		chckbxProjectIsCompleted.setBounds(12, 99, 329, 23);
+		chckbxProjectIsCompleted.setBounds(12, 125, 329, 23);
 		add(chckbxProjectIsCompleted);
 		
-		JLabel projectMembersLabel = new JLabel("Project Members:");
+		projectMembersLabel = new JLabel("Project Members:");
 		projectMembersLabel.setBounds(12, 390, 132, 16);
 		add(projectMembersLabel);
 		
@@ -83,7 +89,14 @@ public class US1RightPanelGen extends JPanel {
 		deleteButton = new JButton("Delete");
 		deleteButton.setBounds(141, 665, 117, 29);
 		add(deleteButton);
+
+		lblBudgetAtCompletion = new JLabel("Budget at Completion:");
+		lblBudgetAtCompletion.setBounds(12, 101, 141, 16);
+		add(lblBudgetAtCompletion);
 		
+		budgetAtCompletionLabel = new JLabel("$0");
+		budgetAtCompletionLabel.setBounds(123, 101, 218, 16);
+		add(budgetAtCompletionLabel);		
 	}
 	public JTextField getProjectNameField() {
 		return projectNameField;
@@ -100,6 +113,9 @@ public class US1RightPanelGen extends JPanel {
 	public JCheckBox getCompletedCheckBox() {
 		return chckbxProjectIsCompleted;
 	}
+	public JLabel getProjectMembersLabel() {
+		return projectMembersLabel;
+	}
 	public JScrollPane getProjectMembersScrollPane() {
 		return projectMembersScrollPane;
 	}
@@ -111,5 +127,8 @@ public class US1RightPanelGen extends JPanel {
 	}
 	public JButton getDeleteButton() {
 		return deleteButton;
+	}
+	public JLabel getBudgetAtCompletionLabel() {
+		return budgetAtCompletionLabel;
 	}
 }

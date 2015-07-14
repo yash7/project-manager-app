@@ -20,6 +20,7 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectMemberService;
 import ateamcomp354.projectmanagerapp.ui.gen.MemberProjectPanelGen;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 
 public class MemberProjectPanel {
 	
@@ -56,7 +57,14 @@ public class MemberProjectPanel {
 		memberProjectPanelGen.getViewActivitiesButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				swap.showMemberActivitiesView(selectedProjectId, userId);
+				
+				FrameSaver memberActivityFrame = new FrameSaver();
+				
+				memberActivityFrame.setFirstID(selectedProjectId);
+				memberActivityFrame.setSecondID(userId);
+				memberActivityFrame.setFrameName("MEMBERACTIVITY_PANEL");
+				swap.saveFrame(memberActivityFrame); // Saves the next frame
+				swap.frameSwitch(); 
 			}
 		});
 		

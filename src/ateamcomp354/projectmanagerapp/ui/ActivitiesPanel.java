@@ -3,13 +3,16 @@ package ateamcomp354.projectmanagerapp.ui;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 
@@ -21,6 +24,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.awt.event.ActionListener;
@@ -31,6 +35,8 @@ public class ActivitiesPanel {
 	private final ApplicationContext appCtx;
 	private ActivityService activityService;
 
+	private UserService userService;
+	private ProjectService projectService;
 	private SwapInterface swap;
 
 	private SplitPane1Gen splitPane1Gen;
@@ -41,12 +47,23 @@ public class ActivitiesPanel {
 	private int dependencyIndexes[];
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
-
+	
+	private int selectedAssigneeId;
+	private int assigneeIndexes[];
+	private List<Integer> assigneeComboIndexes;
+	
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
-
+	private JList<Users> assigneeList;
+	private JList<String> dependencyList;
+	
+	private DefaultListModel<String> assigneeListModel;
+	private DefaultListModel<String> dependencyListModel;
+	
 	private int projectId = 1;
 	private int activityId = 0;
+	private int oldYPos = -1;
+	
 
 	public ActivitiesPanel(ApplicationContext appCtx, SwapInterface swap) {
 
@@ -56,6 +73,9 @@ public class ActivitiesPanel {
 
 		activityList = new JList<>();
 		completedActivityList = new JList<>();
+		
+		assigneeListModel = new DefaultListModel();
+		dependencyListModel = new DefaultListModel();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
@@ -71,27 +91,19 @@ public class ActivitiesPanel {
 		splitPane1Gen.getLatestStartField().setEnabled(true);
 		splitPane1Gen.getEarliestFinishField().setEnabled(true);
 		splitPane1Gen.getLatestFinishField().setEnabled(true);
-		splitPane1Gen.getAssigneesComboBox().setEnabled(false);
-		splitPane1Gen.getAddAssigneeButton().setEnabled(false);
-		splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
-		splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
-
-		splitPane1Gen.getEarliestStartField().setText("coming soon");
-		splitPane1Gen.getLatestStartField().setText("coming soon");
-		splitPane1Gen.getEarliestFinishField().setText("coming soon");
-		splitPane1Gen.getLatestFinishField().setText("coming soon");
-		splitPane1Gen.getAssigneesComboBox().addItem("coming soon");
-		splitPane1Gen.getAssigneeScrollPane().setColumnHeaderView(
-				new JLabel("coming soon"));
-
-		// occurs whenever the view is opened. projectId should be set from the
-		// project view
+		splitPane1Gen.getAssigneesComboBox().setEnabled(true);
+		splitPane1Gen.getAddAssigneeButton().setEnabled(true);
+		splitPane1Gen.getRemoveAssigneeButton().setEnabled(true);
+		splitPane1Gen.getAssigneeScrollPane().setEnabled(true);
+		
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				activityId = 0;
 				clear(true);
 				activityService = appCtx.getActivityService(projectId);
+				userService = appCtx.getUserService();
+				projectService = appCtx.getProjectService();
 				activities = activityService.getActivities();
 				project = activityService.getProject();
 
@@ -106,6 +118,8 @@ public class ActivitiesPanel {
 						projectLabelC);
 
 				fillActivitiesList();
+				
+				
 			}
 		});
 
@@ -130,6 +144,9 @@ public class ActivitiesPanel {
 				splitPane1Gen.getDeleteButton().setEnabled(false);
 				splitPane1Gen.getActivityNameField().setText("New Activity");
 				splitPane1Gen.getDependenciesComboBox().removeAllItems();
+				
+				toggleDependenciesAndAssignees(false);
+				
 				setReadOnly(false);
 			}
 		});
@@ -139,6 +156,38 @@ public class ActivitiesPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				deleteActivity(activityId);
+			}
+		});
+
+		//adds a dependency to the selected project
+		splitPane1Gen.getAddDependencyButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addDependency();
+			}
+		});
+		
+		//removes selected dependency from selected project
+		splitPane1Gen.getRemoveDependencyButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeDependency();
+			}
+		});
+		
+		// adds a member to the selected activity
+		splitPane1Gen.getAddAssigneeButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addAssignee();
+			}
+		});
+		
+		// removes selected member from the selected activity
+		splitPane1Gen.getRemoveAssigneeButton().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeAssignee();
 			}
 		});
 
@@ -167,6 +216,29 @@ public class ActivitiesPanel {
 				__ -> this.swap.showProjectsView(projectId));
 	}
 
+	protected void toggleDependenciesAndAssignees(boolean b) {
+		splitPane1Gen.getDependenciesLabel().setVisible(b);
+		splitPane1Gen.getDependencyScrollPane().setVisible(b);
+		splitPane1Gen.getDependenciesComboBox().setVisible(b);
+		splitPane1Gen.getAddDependencyButton().setVisible(b);
+		splitPane1Gen.getDelDepButton().setVisible(b);
+		
+		splitPane1Gen.getAssigneesLabel().setVisible(b);
+		splitPane1Gen.getAssigneeScrollPane().setVisible(b);
+		splitPane1Gen.getAssigneesComboBox().setVisible(b);
+		splitPane1Gen.getAddAssigneeButton().setVisible(b);
+		splitPane1Gen.getDelAssignButton().setVisible(b);
+		
+		if(!b) {
+			oldYPos = splitPane1Gen.getSaveActivityButton().getLocation().y;
+			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, splitPane1Gen.getSaveActivityButton().getLocation().y - 300);
+		}
+		else {
+			
+			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, oldYPos == -1 ? splitPane1Gen.getSaveActivityButton().getLocation().y : oldYPos);
+		}
+	}
+
 	public JComponent getComponent() {
 		return splitPane1Gen;
 	}
@@ -189,13 +261,20 @@ public class ActivitiesPanel {
 				saveActivity();
 			splitPane1Gen.getActivityNameField().setText("");
 			splitPane1Gen.getStatusComboBox().setSelectedIndex(0);
-			splitPane1Gen.getEarliestStartField().setText("0");
-			splitPane1Gen.getLatestStartField().setText("0");
-			splitPane1Gen.getEarliestFinishField().setText("0");
-			splitPane1Gen.getLatestFinishField().setText("0");
-			splitPane1Gen.getMaxDurationField().setText("0");
-			splitPane1Gen.getDurationField().setText("0");
+			splitPane1Gen.getEarliestStartField().setText("20150721");
+			splitPane1Gen.getLatestStartField().setText("20150721");
+			splitPane1Gen.getEarliestFinishField().setText("20150722");
+			splitPane1Gen.getLatestFinishField().setText("20150722");
+			splitPane1Gen.getMaxDurationField().setText("1");
+			splitPane1Gen.getDurationField().setText("1");
 			splitPane1Gen.getDescriptionArea().setText("");
+			splitPane1Gen.getPlannedValueField().setText("0");
+			
+			splitPane1Gen.getDependenciesComboBox().removeAllItems();
+			splitPane1Gen.getAssigneesComboBox().removeAllItems();
+			assigneeListModel.clear();
+			dependencyListModel.clear();
+			
 			return true;
 		}
 		return false;
@@ -221,8 +300,12 @@ public class ActivitiesPanel {
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField()
 				.getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
+		activity.setPlannedValue(Integer.parseInt(splitPane1Gen.getPlannedValueField().getText()));
+		
 		addOrUpdateActivity(activity);
 
+		projectService.updateProjectBudgetAtCompletion(projectId);
+		
 		boolean found = false;
 		for (int i = 0; i < idIndexes.length; i++) {
 			if (idIndexes[i] == activityId) {
@@ -251,10 +334,10 @@ public class ActivitiesPanel {
 			activityId = activities.get(lastIndex).getId();
 
 			// We disable dependency functionality until the activity is saved
-			splitPane1Gen.getAssigneesComboBox().setEnabled(false);
-			splitPane1Gen.getAddAssigneeButton().setEnabled(false);
-			splitPane1Gen.getRemoveAssigneeButton().setEnabled(false);
-			splitPane1Gen.getAssigneeScrollPane().setEnabled(false);
+			splitPane1Gen.getAssigneesComboBox().setEnabled(true);
+			splitPane1Gen.getAddAssigneeButton().setEnabled(true);
+			splitPane1Gen.getRemoveAssigneeButton().setEnabled(true);
+			splitPane1Gen.getAssigneeScrollPane().setEnabled(true);
 			splitPane1Gen.getDeleteButton().setEnabled(true);
 		} else {
 			activityService.updateActivity(a);
@@ -266,6 +349,7 @@ public class ActivitiesPanel {
 	private void selectActivity(int id) {
 		if (!clear(true))
 			return;
+		toggleDependenciesAndAssignees(true);
 		Activity activity = activityService.getActivity(id);
 		activityId = id;
 		splitPane1Gen.getActivityNameField().setText(activity.getLabel());
@@ -285,25 +369,24 @@ public class ActivitiesPanel {
 				Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		splitPane1Gen.getDeleteButton().setEnabled(true);
+		splitPane1Gen.getPlannedValueField().setText(Integer.toString(activity.getPlannedValue()));
 		showDependencies(id);
-		setReadOnly(activity.getStatus() == Status.RESOLVED
-				|| project.getCompleted());
+		showAssignees(id);
+		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
 	}
-
 	private void showDependencies(int id) {
+		dependencyListModel.clear();
 		selectedDependencyId = 0;
 		List<Integer> dependencies = activityService.getDependencies(id);
-		String dependencyNames[] = new String[dependencies.size()];
 		dependencyIndexes = new int[dependencies.size()];
-
-		for (int i = 0; i < dependencies.size(); i++) {
-			dependencyNames[i] = activityService.getActivity(
-					dependencies.get(i)).getLabel();
-			dependencyIndexes[i] = activityService.getActivity(
-					dependencies.get(i)).getId();
+		
+		for (int i = 0; i < dependencies.size(); i++)
+		{
+			dependencyListModel.addElement(activityService.getActivity(dependencies.get(i)).getLabel());
+			dependencyIndexes[i] = activityService.getActivity(dependencies.get(i)).getId();
 		}
-
-		JList<String> dependencyList = new JList<String>(dependencyNames);
+		
+		dependencyList = new JList<String>(dependencyListModel);
 		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
 		splitPane1Gen.getDependencyScrollPane().validate();
 		fillDependencyComboBox();
@@ -349,13 +432,17 @@ public class ActivitiesPanel {
 			}
 		}
 	}
-
-	private void addDependency() {
-		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1)
-			return;
-		int toAdd = dependencyComboIndexes.get(splitPane1Gen
-				.getDependenciesComboBox().getSelectedIndex());
-		activityService.addDependency(toAdd, activityId);
+	
+	private void addDependency()
+	{	
+		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1) return;
+		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
+		try {
+			activityService.addDependency(toAdd, activityId);
+		}
+		catch(ServiceFunctionalityException e) {
+			JOptionPane.showMessageDialog(null, "Adding this Dependency would create a circular dependency chain. Unfortunately this is not allowed.");
+		}
 		showDependencies(activityId);
 		//forwardPass(activityId);
 	//	backwardPass(toAdd);
@@ -513,8 +600,68 @@ public class ActivitiesPanel {
 			}
 		});
 	}
-
-	private void setReadOnly(boolean readOnly) {
+	
+	private void showAssignees(int activityId) {		
+		
+		assigneeListModel.clear();
+		
+		List<Users> assignees = activityService.getAssigneesForActivity(activityId);
+		
+		selectedAssigneeId = 0;
+		assigneeIndexes = new int[assignees.size()];
+		
+		for (int i = 0; i < assignees.size(); i++)
+		{
+			assigneeListModel.addElement(assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName());
+			assigneeIndexes[i] = assignees.get(i).getId();
+		}
+		
+		JList<String> assigneeList = new JList<String>(assigneeListModel);
+		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
+		splitPane1Gen.getAssigneeScrollPane().validate();
+		
+		fillAssigneeComboBox();
+		
+		assigneeList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if (assigneeList.locationToIndex(e.getPoint()) == -1) return;
+				selectedAssigneeId = assigneeIndexes[assigneeList.locationToIndex(e.getPoint())];
+			}
+		});
+	}
+	
+	private void fillAssigneeComboBox() {
+		splitPane1Gen.getAssigneesComboBox().removeAllItems();
+		assigneeComboIndexes = new ArrayList<Integer>();
+		assigneeComboIndexes.clear();
+		
+		List<Users> notAssigned = activityService.getUnassignedMembersForActivity(activityId);
+		
+		for (int i = 0; i < notAssigned.size(); i++) {
+			splitPane1Gen.getAssigneesComboBox().addItem(notAssigned.get(i).getFirstName() + " " + notAssigned.get(i).getLastName());
+			assigneeComboIndexes.add(notAssigned.get(i).getId());
+		}
+	}
+	
+	private void addAssignee()
+	{	
+		if (splitPane1Gen.getAssigneesComboBox().getSelectedIndex() == -1) return;
+		int toAdd = assigneeComboIndexes.get(splitPane1Gen.getAssigneesComboBox().getSelectedIndex());
+		activityService.addUserToActivity(activityId, userService.getUser(toAdd));
+		showAssignees(activityId);
+	}
+	
+	private void removeAssignee()
+	{
+		if (selectedAssigneeId == 0) return;
+		activityService.deleteUserFromActivity(activityId, userService.getUser(selectedAssigneeId));
+		selectedAssigneeId = 0;
+		showAssignees(activityId);
+	}
+	
+	private void setReadOnly(boolean readOnly)
+	{
 		splitPane1Gen.getActivityNameField().setEnabled(!readOnly);
 		// splitPane1Gen.getEarliestStartField().setEnabled(!readOnly);
 		// splitPane1Gen.getLatestStartField().setEnabled(!readOnly);
@@ -542,24 +689,17 @@ public class ActivitiesPanel {
 			return false;
 
 		Activity a = activityService.getActivity(activityId);
-
-		// if this is not a new activity, but has been changed, it is dirty
-		return (!a.getLabel().equals(
-				splitPane1Gen.getActivityNameField().getText())
-				// || a.getEarliestStart() !=
-				// Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
-				// || a.getLatestStart() !=
-				// Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
-				// || a.getEarliestFinish() !=
-				// Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
-				// || a.getLatestFinish() !=
-				// Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
-				|| a.getStatus().ordinal() != splitPane1Gen.getStatusComboBox()
-						.getSelectedIndex()
-				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen
-						.getMaxDurationField().getText())
-				|| a.getDuration() != Integer.parseInt(splitPane1Gen
-						.getDurationField().getText()) || !a.getDescription()
-				.equals(splitPane1Gen.getDescriptionArea().getText()));
+		
+		//if this is not a new activity, but has been changed, it is dirty
+		return (!a.getLabel().equals(splitPane1Gen.getActivityNameField().getText())
+				//|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				//|| a.getLatestStart() != Integer.parseInt(splitPane1Gen.getLatestStartField().getText())
+				//|| a.getEarliestFinish() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
+				//|| a.getLatestFinish() != Integer.parseInt(splitPane1Gen.getLatestFinishField().getText())
+				|| a.getStatus().ordinal() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
+				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
+				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
+				|| a.getPlannedValue() != Integer.parseInt(splitPane1Gen.getPlannedValueField().getText())
+				|| !a.getDescription().equals(splitPane1Gen.getDescriptionArea().getText()));
 	}
 }

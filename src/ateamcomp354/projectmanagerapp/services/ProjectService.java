@@ -73,4 +73,6 @@ public interface ProjectService {
     void deleteUserFromProject(int projectId, Users user);
     
     List<Users> getMembersForProject(int projectId);
+    
+    void updateProjectBudgetAtCompletion (int projectId);
 }

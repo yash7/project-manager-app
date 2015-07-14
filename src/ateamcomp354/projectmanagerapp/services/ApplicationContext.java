@@ -27,4 +27,6 @@ public interface ApplicationContext {
     ProjectMemberService getProjectMemberService( int userId );
     
     UserService getUserService();
+
+	CreateUserService getCreateUserService();
 }

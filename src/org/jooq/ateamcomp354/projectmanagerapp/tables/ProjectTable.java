@@ -34,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ProjectTable extends TableImpl<ProjectRecord> {
 
-	private static final long serialVersionUID = -1077187507;
+	private static final long serialVersionUID = -776595420;
 
 	/**
 	 * The reference instance of <code>project</code>
@@ -68,6 +68,11 @@ public class ProjectTable extends TableImpl<ProjectRecord> {
 	 * The column <code>project.completed</code>.
 	 */
 	public final TableField<ProjectRecord, Boolean> COMPLETED = createField("completed", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "", new C_BooleanConverter());
+
+	/**
+	 * The column <code>project.budget_at_completion</code>.
+	 */
+	public final TableField<ProjectRecord, Integer> BUDGET_AT_COMPLETION = createField("budget_at_completion", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
 
 	/**
 	 * Create a <code>project</code> table reference

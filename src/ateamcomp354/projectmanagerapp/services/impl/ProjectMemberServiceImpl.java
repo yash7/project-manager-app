@@ -60,4 +60,19 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
             throw new ServiceFunctionalityException("failed to get member's assigned projects", e);
         }
 	}
+
+    @Override
+    public List<Users> getOtherAssigneesForActivity(int activityId)
+    {
+        try {
+            return create.select(Tables.USERS.fields())
+                    .from(Tables.USERS)
+                    .join(Tables.USERACTIVITIES).on(Tables.USERACTIVITIES.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.USERACTIVITIES.ACTIVITY_ID.equal(activityId))
+                    .and(Tables.USERACTIVITIES.USER_ID.notEqual(projectMemberId))
+                    .fetchInto(Users.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get project members for activity " + activityId, e);
+        }
+    }
 }

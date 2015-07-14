@@ -141,7 +141,83 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		assertEquals(2, acts.size());
 	}
 	
-	@Test (expected = UnsupportedOperationException.class)
+	@Test
+	public void testgetAssigneesForActivity() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(ase.getProject().getId());
+		ase.addActivity(a);
+		
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		
+		pjs.addUserToProject(ase.getProject().getId(), u);
+
+		assertEquals("Tester", ase.getProjectMember(u.getId()).getFirstName());
+		
+		ase.addUserToActivity(a.getId(), u);
+		
+		assertEquals(1, ase.getAssigneesForActivity(a.getId()).size());
+	}
+	
+	@Test
+	public void testgetAssigneesForActivity_notinproject() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(ase.getProject().getId());
+		ase.addActivity(a);
+		
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		
+		assertEquals(0, ase.getProjectMembers().size());
+
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
+		
+		try { //should throw error, catch and ignore
+			ase.addUserToActivity(a.getId(), u);
+		}
+		catch(IllegalStateException e) {}
+		
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
+	}
+	
+	@Test
+	public void testgetUnassignedMembersForActivity() {
+		Activity a = new Activity();
+		a.setId(0);
+		a.setProjectId(ase.getProject().getId());
+		ase.addActivity(a);
+		
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+			
+		assertEquals(0, ase.getUnassignedMembersForActivity(a.getId()).size());
+		
+		pjs.addUserToProject(ase.getProject().getId(), u);
+	
+		assertEquals(1, ase.getUnassignedMembersForActivity(a.getId()).size());
+	}
+	
+	@Test
 	public void testAddUserToActivity() {
 		Activity a = new Activity();
 		a.setId(0);
@@ -149,13 +225,22 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
 		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		pjs.addUserToProject(ase.getProject().getId(), u);
+		
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
 		
 		ase.addUserToActivity(0, u);
-		
-		
+
+		assertEquals(1, ase.getAssigneesForActivity(a.getId()).size());
 	}
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testDeleteUserFromActivity()   {
 
 		Activity a = new Activity();
@@ -164,9 +249,16 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(a);
 		
 		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
 		u.setFirstName("Tester");
-
+		u.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
 		ase.deleteUserFromActivity(0, u);
+		
+		assertEquals(0, ase.getAssigneesForActivity(a.getId()).size());
 	}
 	
 	@Test(expected=ServiceFunctionalityException.class)
@@ -235,11 +327,36 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addActivity(c);
 		
 		ase.addDependency(0, 1);
-		ase.addDependency(0, 2);
-		
+		ase.addDependency(0, 2);		
 		
 		assertEquals(2,ase.getDependents(0).size());
 		assertEquals(1,ase.getDependencies(1).size());
+	}
+	
+	@Test(expected=ServiceFunctionalityException.class)
+	public void testAddDependency_noCircular(){
+		Activity a = new Activity();
+		Activity b = new Activity();
+		Activity c = new Activity();
+		
+		a.setId(0);
+		a.setProjectId(0);
+		b.setId(1);
+		b.setProjectId(0);
+		c.setId(2);
+		c.setProjectId(0);
+		
+		ase.addActivity(a);
+		ase.addActivity(b);
+		ase.addActivity(c);
+		
+		ase.addDependency(0, 1);
+		ase.addDependency(1, 2);		
+		
+		assertEquals(1,ase.getDependents(1).size());
+		assertEquals(1,ase.getDependencies(2).size());
+		
+		ase.addDependency(2, 0); //circular dependency
 	}
 	
 	/**
@@ -267,6 +384,57 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		
 		assertEquals(1,ase.getDependents(0).size());
 		assertEquals(0,ase.getDependencies(1).size());
+	}
+	
+	@Test
+	public void testgetProjectMember() {
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		Users u2 = new Users();
+		u2.setId(3);
+		u2.setUsername("ttt2");
+		u2.setPassword("ttt2");
+		u2.setFirstName("Tester2");
+		u2.setLastName("Testington2");
+		
+		appCtx.getUserService().addUser(u);
+		appCtx.getUserService().addUser(u2);
+		
+		pjs.addUserToProject(0, u);
+		pjs.addUserToProject(0, u2);
+		
+		assertEquals("ttt", ase.getProjectMember(2).getUsername());
+		assertEquals("ttt2", ase.getProjectMember(3).getUsername());
+	}
+	
+	@Test
+	public void testgetProjectMembers() {
+		Users u = new Users();
+		u.setId(2);
+		u.setUsername("ttt");
+		u.setPassword("ttt");
+		u.setFirstName("Tester");
+		u.setLastName("Testington");
+		
+		Users u2 = new Users();
+		u2.setId(3);
+		u2.setUsername("ttt2");
+		u2.setPassword("ttt2");
+		u2.setFirstName("Tester");
+		u2.setLastName("Testington");
+		
+		appCtx.getUserService().addUser(u);
+		appCtx.getUserService().addUser(u2);
+		
+		pjs.addUserToProject(0, u);
+		pjs.addUserToProject(0, u2);
+		
+		assertEquals(2, ase.getProjectMembers().size());
 	}
 	
 	@Before

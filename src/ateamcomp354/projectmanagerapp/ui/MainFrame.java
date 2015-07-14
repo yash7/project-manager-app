@@ -1,12 +1,18 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.CreateUserService;
+import ateamcomp354.projectmanagerapp.services.UserService;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 
 import java.awt.*;
+import java.util.Stack;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame implements SwapInterface{
 
@@ -15,47 +21,48 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final String ACTIVITIES_PANEL = "ACTIVITIES_PANEL";
 	private static final String MEMBERPROJECT_PANEL = "MEMBERPROJECT_PANEL";
 	private static final String MEMBERACTIVITY_PANEL = "MEMBERACTIVITY_PANEL";
-	
+	private static final String CREATE_USER_PANEL = "CREATE_USER_PANEL";
+
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
 
 
-	private final ApplicationContext appCtx;
-
 	private CardLayout cardLayout;
-
+	
 	private LoginPanel loginPanel;
 	private ProjectsPanel projectsPanel;
 	private ActivitiesPanel activitiesPanel;
 	private MemberProjectPanel memberProjectPanel;
 	private MemberActivityPanel memberActivityPanel;
+	private CreateUserPanel createUserPanel;
+	
+	private static Stack<FrameSaver> menuFrameSaver= new Stack<FrameSaver>();;
 	
 	public MainFrame( ApplicationContext appCtx ) {
-
-		this.appCtx = appCtx;
-
 		init();
 
 		cardLayout = new CardLayout();
-		setLayout( cardLayout );
-		
+		getContentPane().setLayout( cardLayout );
+
 		setResizable(false);
 
-		loginPanel = new LoginPanel( appCtx , MainFrame.this );
+		loginPanel = new LoginPanel( appCtx , MainFrame.this);
 		projectsPanel = new ProjectsPanel( appCtx , MainFrame.this );
 		activitiesPanel = new ActivitiesPanel( appCtx , MainFrame.this );
 		memberProjectPanel = new MemberProjectPanel(appCtx, MainFrame.this );
 		memberActivityPanel = new MemberActivityPanel (appCtx, MainFrame.this);
-		
+		createUserPanel = new CreateUserPanel(appCtx, MainFrame.this);
 		
 		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
 		//buildMenuBar();
+		managerMenuBar();
 
-		add(loginPanel.getComponent(), LOGIN_PANEL);
-		add(projectsPanel.getComponent(), PROJECTS_PANEL);
-		add(activitiesPanel.getComponent(), ACTIVITIES_PANEL);
-		add(memberProjectPanel.getComponent(), MEMBERPROJECT_PANEL);
-		add(memberActivityPanel.getComponent(), MEMBERACTIVITY_PANEL);
+		getContentPane().add(loginPanel.getComponent(), LOGIN_PANEL);
+		getContentPane().add(projectsPanel.getComponent(), PROJECTS_PANEL);
+		getContentPane().add(activitiesPanel.getComponent(), ACTIVITIES_PANEL);
+		getContentPane().add(memberProjectPanel.getComponent(), MEMBERPROJECT_PANEL);
+		getContentPane().add(memberActivityPanel.getComponent(), MEMBERACTIVITY_PANEL);
+		getContentPane().add(createUserPanel.getComponent(), CREATE_USER_PANEL);
 	}
 
 	private void init() {
@@ -80,45 +87,144 @@ public class MainFrame extends JFrame implements SwapInterface{
 		JMenuItem activitiesItm = new JMenuItem( "Activities Panel" );
 		activitiesItm.addActionListener( __ -> showActivitiesView( 0 ) );
 
+		JMenuItem createUserItm = new JMenuItem( "Create User Panel" );
+		createUserItm.addActionListener( __ -> showCreateUserView(  ) );
+
 		JMenu viewMenu = new JMenu( "View" );
 		viewMenu.add( loginItm );
 		viewMenu.add( projectsItm );
 		viewMenu.add( activitiesItm );
+		viewMenu.add( createUserItm );
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add( viewMenu );
-
+	
 		setJMenuBar(menuBar);
 	}
+	
+	@Override
+	public void frameSwitch()
+	{
+		FrameSaver previousFrame = getSaveFrame();
+		String previousFrameName = previousFrame.getFrameName();
+
+		switch(previousFrameName)
+		{
+		case LOGIN_PANEL:
+			showLoginView();
+			break;
+		case PROJECTS_PANEL:
+			showProjectsView();
+			break;
+		case ACTIVITIES_PANEL:		
+			showActivitiesView( previousFrame.getFirstID());
+			break;
+		case MEMBERPROJECT_PANEL:
+			showMemberProjectsView(previousFrame.getFirstID());
+			break;
+		case MEMBERACTIVITY_PANEL:
+			showMemberActivitiesView(previousFrame.getFirstID(), previousFrame.getSecondID());
+			break;
+		case CREATE_USER_PANEL:
+			showCreateUserView();
+			break;
+		}	
+	}
+	
+	// Menu bar designed for managers to be able to access contents
+	// that are made available only for them
+	public void managerMenuBar()
+	{
+		JMenuItem createUserItm = new JMenuItem( "Create A New User" );
+		createUserItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		createUserItm.addActionListener( __->showCreateUserView());
+		
+		JMenuItem logoutItm = new JMenuItem( "Logout" );
+		logoutItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		logoutItm.addActionListener( __ -> showLoginView() );
+
+		JMenu viewMenu = new JMenu( "File" );
+		viewMenu.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		viewMenu.add(createUserItm );
+		
+		JSeparator separator = new JSeparator();
+		viewMenu.add(separator);
+		viewMenu.add(logoutItm);
+		
+		
+		
+		//viewMenu.setBackground(new Color(135, 206, 250));
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		menuBar.add( viewMenu );
+		//menuBar.setBackground(new Color(135, 206, 250));
+		setJMenuBar(menuBar);
+		
+		setMenuBarNotVisible();
+
+	}
+	
+	class viewActionListener implements ActionListener{
+
+		public void actionPerformed(ActionEvent e){
+
+			showCreateUserView();
+		}
+	}
+
+	
+	@Override
+	public void saveFrame (FrameSaver savedFrame )
+	{
+		menuFrameSaver.push(savedFrame);
+	}
+	
+	@Override
+	public FrameSaver removeSaveFrame()
+	{
+		return menuFrameSaver.pop();
+	}
+	
+	@Override
+	public FrameSaver getSaveFrame()
+	{
+		return menuFrameSaver.peek();
+	}
+	
 
 	public void showView( String name ) {
 		cardLayout.show( getContentPane(), name);
 	}
-	
+
 	@Override
 	public void showLoginView() {
 		loginPanel.logout();
 		cardLayout.show( getContentPane(), LOGIN_PANEL);
+		setMenuBarNotVisible();
+		menuFrameSaver.clear();
 	}
-	
+
 	@Override
 	public void showProjectsView() {
 		projectsPanel.refresh();
 		showView( PROJECTS_PANEL );
+		setMenuBarVisible();
 	}
 
 	@Override
 	public void showProjectsView( int preferredProjectId ) {
 		projectsPanel.refresh( preferredProjectId );
-		showView( PROJECTS_PANEL );
+		cardLayout.show( getContentPane(),PROJECTS_PANEL);
+		setMenuBarVisible();
+		
 	}
-	
+
 	@Override
 	public void showActivitiesView( int projectId ) {
 		activitiesPanel.setProjectId( projectId );
 		showView(ACTIVITIES_PANEL);
 	}
-	
+
 	@Override
 	public void showMemberActivitiesView(int projectId, int userId) {
 		memberActivityPanel.setUserId(userId);
@@ -130,18 +236,37 @@ public class MainFrame extends JFrame implements SwapInterface{
 	public void showMemberProjectsView(int userId) {
 		memberProjectPanel.setUserId(userId);
 		showView( MEMBERPROJECT_PANEL );
+		setMenuBarNotVisible();
 	}
-	
+
+	@Override
+	public void showCreateUserView()
+	{
+		createUserPanel.resetComponents();
+		showView(CREATE_USER_PANEL);
+	}
+
 	public static int getAppWidth() {
 		return WIDTH;
 	}
-	
+
 	public static int getAppHeight() {
 		return HEIGHT;
 	}
-	
+
 	public Users getLoggedInUser() {
 		return loginPanel.getLoggedInUser();
 	}
 
+	@Override
+	public void setMenuBarVisible()
+	{
+		getJMenuBar().setVisible(true);	
+	}
+	
+	@Override
+	public void setMenuBarNotVisible()
+	{
+		getJMenuBar().setVisible(false);
+	}
 }

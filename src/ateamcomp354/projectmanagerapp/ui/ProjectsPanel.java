@@ -6,17 +6,23 @@ import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
+import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
+import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +43,7 @@ public class ProjectsPanel {
 	private static final String PROJECT_COMPLETION_FMT = "%s%%";
 
 	private final ProjectService projectService;
+	private final UserService userService;
 	private final SwapInterface swap;
 
 	private final SplitPane1Gen splitPane1Gen;
@@ -50,6 +57,10 @@ public class ProjectsPanel {
 	private ApplicationContext appCtx;
 	private ActivityService ase;
 
+	private int selectedProjectMemberId;
+	private List<Integer> projectMemberComboIndexes;
+	private int[] projectMemberIndexes;
+	
 	/**
 	 * A cache of project info, mapping a project id to its cached info.
 	 * The cache is built every time the list of projects is obtained from projectService.
@@ -88,6 +99,7 @@ public class ProjectsPanel {
 	{
 		this.appCtx = appCtx;
 		projectService = appCtx.getProjectService();
+		userService = appCtx.getUserService();
 		this.swap = swap;
 
 		projectInfos = new HashMap<>();
@@ -95,12 +107,15 @@ public class ProjectsPanel {
 		splitPane1Gen = new SplitPane1Gen();
 
 		us1RightPanelGen = new US1RightPanelGen();
+		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
+		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 102);
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
+		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
 		openProjectsModel = new DefaultListModel<>();
 		closedProjectsModel = new DefaultListModel<>();
 
-		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
+		//splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
 		splitPane1Gen.getBackBtn().setVisible( false );
 
@@ -114,7 +129,7 @@ public class ProjectsPanel {
 				Project::getProjectName,
 				p -> {
 					ProjectInfo pi = projectInfos.get( p.getId() );
-					return String.format(PROJECT_COMPLETION_FMT, pi == null ? "?" : Integer.toString(pi.getCompletion()));
+					return String.format(PROJECT_COMPLETION_FMT, pi == null ? "0" : Integer.toString(pi.getCompletion()));
 				}
 		);
 
@@ -145,6 +160,9 @@ public class ProjectsPanel {
 		
 		splitPane1Gen.getListScrollPane().setColumnHeaderView(new JLabel("Open Projects"));
 		splitPane1Gen.getCompletedScrollPane().setColumnHeaderView(new JLabel("Completed Projects"));
+		
+		us1RightPanelGen.getAddButton().addActionListener ( __ -> addProjectMember() );
+		us1RightPanelGen.getDeleteButton().addActionListener( __ -> removeProjectMember() );
 
 		selectedProject = Optional.empty();
 		displayProject();
@@ -267,7 +285,6 @@ public class ProjectsPanel {
 	// If they choose cancel then we need to undo the selection and reselect
 	// the old project.
 	private void projectSelected( ListSelectionEvent e, JList<Project> list1, JList<Project> list2 ) {
-
 		if ( valueIsAdjusting ) {
 			return;
 		}
@@ -305,6 +322,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getBtnView().setEnabled( true );
 
 		displayProject();
+	
 	}
 
 	// If the form input is dirty then prompt the user if they want to save the changes.
@@ -353,6 +371,11 @@ public class ProjectsPanel {
 
 		Optional.ofNullable( getProject().getId() )
 				.ifPresent( swap::showActivitiesView );
+		
+		FrameSaver activityFrame = new FrameSaver();
+		activityFrame.setFirstID(getProject().getId()); // Saves the project's ID
+		activityFrame.setFrameName("ACTIVITIES_PANEL");
+		swap.saveFrame(activityFrame); // Saves the frame next frame
 	}
 	
 	private void viewProgressClicked(){
@@ -438,8 +461,8 @@ public class ProjectsPanel {
 
 	// fill in the form with the currently selected project ( or newProjectTemplate if creating )
 	private void displayProject() {
-
 		Project p = getProject();
+		
 		us1RightPanelGen.getTitleLabel().setText( p.getId() == null ? ADD_PROJECT_TITLE_LBL_TXT : EDIT_PROJECT_TITLE_LBL_TXT );
 		us1RightPanelGen.getCompletedCheckBox().setVisible(p.getId() != null);
 		us1RightPanelGen.getCompletedCheckBox().setSelected(p.getCompleted());
@@ -447,6 +470,27 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
+		us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
+		
+		
+		if (p.getId() != null) {
+			us1RightPanelGen.getProjectMembersScrollPane().setVisible(true);
+			us1RightPanelGen.getProjectMembersComboBox().setVisible(true);
+			us1RightPanelGen.getProjectMembersLabel().setVisible(true);
+			us1RightPanelGen.getAddButton().setVisible(true);
+			us1RightPanelGen.getDeleteButton().setVisible(true);
+			
+			showProjectMembers(p.getId());
+		}
+		else {
+			us1RightPanelGen.getProjectMembersScrollPane().setVisible(false);
+			us1RightPanelGen.getProjectMembersComboBox().setVisible(false);
+			us1RightPanelGen.getProjectMembersLabel().setVisible(false);
+			us1RightPanelGen.getAddButton().setVisible(false);
+			us1RightPanelGen.getDeleteButton().setVisible(false);
+			
+			us1RightPanelGen.getProjectMembersScrollPane().setViewportView(new JList<String>());
+		}
 	}
 
 	// gather the form input into a project object
@@ -458,6 +502,72 @@ public class ProjectsPanel {
 		p.setDescription( us1RightPanelGen.getDescriptionArea().getText() );
 		p.setCompleted( p.getId() != null && us1RightPanelGen.getCompletedCheckBox().isSelected() );
 		return p;
+	}
+	
+	private void showProjectMembers(int projectId) {
+		
+		List<Users> projectMembers = projectService.getMembersForProject(projectId);
+		
+		selectedProjectMemberId = 0;
+		String projectMemberNames[] = new String[projectMembers.size()];
+		projectMemberIndexes = new int[projectMembers.size()];
+		
+		for (int i = 0; i < projectMembers.size(); i++)
+		{
+			projectMemberNames[i] = projectMembers.get(i).getFirstName() + " " + projectMembers.get(i).getLastName();
+			projectMemberIndexes[i] = projectMembers.get(i).getId();
+		}
+		
+		JList<String> projectMemberList = new JList<String>(projectMemberNames);
+		us1RightPanelGen.getProjectMembersScrollPane().setViewportView(projectMemberList);
+		us1RightPanelGen.getProjectMembersScrollPane().validate();
+		
+		fillProjectMembersComboBox();
+		
+		projectMemberList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if (projectMemberList.locationToIndex(e.getPoint()) == -1) return;
+				selectedProjectMemberId = projectMemberIndexes[projectMemberList.locationToIndex(e.getPoint())];
+			}
+		});
+	}
+	
+	private void fillProjectMembersComboBox() {
+		us1RightPanelGen.getProjectMembersComboBox().removeAllItems();
+		projectMemberComboIndexes = new ArrayList<Integer>();
+		projectMemberComboIndexes.clear();
+		
+		int projectId = getProject().getId();
+		
+		List<Users> notAssigned = projectService.getUnassignedMembersForProject(projectId);
+		
+		for (int i = 0; i < notAssigned.size(); i++) {
+			us1RightPanelGen.getProjectMembersComboBox().addItem(notAssigned.get(i).getFirstName() + " " + notAssigned.get(i).getLastName());
+			projectMemberComboIndexes.add(notAssigned.get(i).getId());
+		}
+	}
+	
+	private void addProjectMember()
+	{	
+		if (us1RightPanelGen.getProjectMembersComboBox().getSelectedIndex() == -1) return;
+		
+		int projectId = getProject().getId();
+		
+		int toAdd = projectMemberComboIndexes.get(us1RightPanelGen.getProjectMembersComboBox().getSelectedIndex());
+		projectService.addUserToProject(projectId, userService.getUser(toAdd));
+		showProjectMembers(projectId);
+	}
+	
+	private void removeProjectMember()
+	{
+		if (selectedProjectMemberId == 0) return;
+		
+		int projectId = getProject().getId();
+		
+		projectService.deleteUserFromProject(projectId, userService.getUser(selectedProjectMemberId));
+		selectedProjectMemberId = 0;
+		showProjectMembers(projectId);
 	}
 
 	// the form is dirty if the selected project does not equal the form inputs values.

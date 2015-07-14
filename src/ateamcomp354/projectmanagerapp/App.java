@@ -100,7 +100,7 @@ public class App {
 		Users cpratt = usersDao.fetchByUsername( "cpratt"  ).get( 0 );
 
 		if ( projectDao.fetchByProjectName( "The Awesome Project" ).isEmpty() ) {
-			projectDao.insert( new Project( null, "The Awesome Project", "This project is awesome.", false ) );
+			projectDao.insert( new Project( null, "The Awesome Project", "This project is awesome.", false, 0 ) );
 		}
 
 		Project project = projectDao.fetchByProjectName( "The Awesome Project" ).get( 0 );
@@ -108,8 +108,8 @@ public class App {
 		ActivityService activityService = appCtx.getActivityService( project.getId() );
 
 		if ( activityService.getActivities().isEmpty() ) {
-			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 0, 0, "The cool activity", 0, 0, 0, 0, "This activity is for cool people to do." ));
-			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 0, 0, "The ugly activity", 0, 0, 0, 0, "This activity that no one wants to do." ));
+			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150721, 20150721, "The cool activity", 20150722, 20150722, 1, 1, "This activity is for cool people to do.", 0));
+			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150721, 20150721, "The ugly activity", 20150722, 20150722, 1, 1, "This activity that no one wants to do.", 0 ));
 		}
 		
 		Activity a1 = activityDao.fetchByLabel("The cool activity").get(0);
