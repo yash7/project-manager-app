@@ -3,6 +3,7 @@ package ateamcomp354.projectmanagerapp.ui;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
+import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
@@ -30,6 +31,7 @@ public class ActivitiesPanel {
 	private final ApplicationContext appCtx;
 	private ActivityService activityService;
 	private UserService userService;
+	private ProjectService projectService;
 	
 	private SwapInterface swap;
 
@@ -100,6 +102,7 @@ public class ActivitiesPanel {
 				clear(true);
 				activityService = appCtx.getActivityService(projectId);
 				userService = appCtx.getUserService();
+				projectService = appCtx.getProjectService();
 				activities = activityService.getActivities();
 				project = activityService.getProject();
 				
@@ -223,6 +226,7 @@ public class ActivitiesPanel {
 			splitPane1Gen.getMaxDurationField().setText("0");
 			splitPane1Gen.getDurationField().setText("0");
 			splitPane1Gen.getDescriptionArea().setText("");
+			splitPane1Gen.getPlannedValueField().setText("0");
 			
 			splitPane1Gen.getDependenciesComboBox().removeAllItems();
 			splitPane1Gen.getAssigneesComboBox().removeAllItems();
@@ -248,7 +252,10 @@ public class ActivitiesPanel {
 		activity.setMaxDuration(Integer.parseInt(splitPane1Gen.getMaxDurationField().getText()));
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField().getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
+		activity.setPlannedValue(Integer.parseInt(splitPane1Gen.getPlannedValueField().getText()));
+		
 		addOrUpdateActivity(activity);
+		projectService.updateProjectBudgetAtCompletion(projectId);
 		
 		boolean found = false;
 		for (int i = 0; i < idIndexes.length; i++)
@@ -273,7 +280,7 @@ public class ActivitiesPanel {
 		}
 		setReadOnly(activity.getStatus() == Status.RESOLVED);
 	}
-	
+
 	private void addOrUpdateActivity(Activity a)
 	{
 		if(activityId < 0)
@@ -314,6 +321,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDurationField().setText(Integer.toString(activity.getDuration()));
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		splitPane1Gen.getDeleteButton().setEnabled(true);
+		splitPane1Gen.getPlannedValueField().setText(Integer.toString(activity.getPlannedValue()));
 		showDependencies(id);
 		showAssignees(id);
 		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
@@ -578,6 +586,7 @@ public class ActivitiesPanel {
 				|| a.getStatus().ordinal() != splitPane1Gen.getStatusComboBox().getSelectedIndex()
 				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
 				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
+				|| a.getPlannedValue() != Integer.parseInt(splitPane1Gen.getPlannedValueField().getText())
 				|| !a.getDescription().equals(splitPane1Gen.getDescriptionArea().getText()));
 	}
 }

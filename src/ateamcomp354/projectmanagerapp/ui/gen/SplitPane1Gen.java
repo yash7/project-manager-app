@@ -82,6 +82,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton delAssignButton;
 	private JButton addAssignButton;
 	private JButton backBtn;
+	private JTextField plannedValueField;
 	
 	/**
 	 * Create the panel.
@@ -154,11 +155,11 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(activityNameLabel);
 		
 		statusLabel = new JLabel("Status:");
-		statusLabel.setBounds(12, 85, 56, 16);
+		statusLabel.setBounds(12, 79, 56, 16);
 		RightPanel.add(statusLabel);
 		
 		statusComboBox = new JComboBox();
-		statusComboBox.setBounds(147, 81, 116, 25);
+		statusComboBox.setBounds(147, 76, 116, 25);
 		RightPanel.add(statusComboBox);
 		
 		earliestStartLabel = new JLabel("Earliest Start:");
@@ -170,7 +171,7 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(latestStartLabel);
 		
 		earliestFinishLabel = new JLabel("Earliest Finish:");
-		earliestFinishLabel.setBounds(12, 192, 89, 16);
+		earliestFinishLabel.setBounds(12, 192, 116, 16);
 		RightPanel.add(earliestFinishLabel);
 		
 		latestFinishLabel = new JLabel("Latest Finish:");
@@ -279,6 +280,15 @@ public class SplitPane1Gen extends JPanel {
 		assigneeScrollPane.setBounds(147, 357, 116, 129);
 		RightPanel.add(assigneeScrollPane);
 		
+		JLabel lblPlannedValue = new JLabel("Planned Value ($):");
+		lblPlannedValue.setBounds(12, 107, 101, 16);
+		RightPanel.add(lblPlannedValue);
+		
+		plannedValueField = new JTextField();
+		plannedValueField.setBounds(147, 107, 116, 22);
+		RightPanel.add(plannedValueField);
+		plannedValueField.setColumns(10);
+		
 	}
 
 	// LeftPanel
@@ -368,5 +378,8 @@ public class SplitPane1Gen extends JPanel {
 	}
 	public JButton getBackBtn() {
 		return backBtn;
+	}
+	public JTextField getPlannedValueField() {
+		return plannedValueField;
 	}
 }

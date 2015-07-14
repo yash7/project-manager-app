@@ -22,12 +22,13 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Project implements Serializable {
 
-	private static final long serialVersionUID = -2003978628;
+	private static final long serialVersionUID = 547289343;
 
 	private Integer id;
 	private String  projectName;
 	private String  description;
 	private Boolean completed;
+	private Integer budgetAtCompletion;
 
 	public Project() {}
 
@@ -36,18 +37,21 @@ public class Project implements Serializable {
 		this.projectName = value.projectName;
 		this.description = value.description;
 		this.completed = value.completed;
+		this.budgetAtCompletion = value.budgetAtCompletion;
 	}
 
 	public Project(
 		Integer id,
 		String  projectName,
 		String  description,
-		Boolean completed
+		Boolean completed,
+		Integer budgetAtCompletion
 	) {
 		this.id = id;
 		this.projectName = projectName;
 		this.description = description;
 		this.completed = completed;
+		this.budgetAtCompletion = budgetAtCompletion;
 	}
 
 	public Integer getId() {
@@ -80,5 +84,13 @@ public class Project implements Serializable {
 
 	public void setCompleted(Boolean completed) {
 		this.completed = completed;
+	}
+
+	public Integer getBudgetAtCompletion() {
+		return this.budgetAtCompletion;
+	}
+
+	public void setBudgetAtCompletion(Integer budgetAtCompletion) {
+		this.budgetAtCompletion = budgetAtCompletion;
 	}
 }

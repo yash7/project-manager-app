@@ -188,4 +188,27 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceFunctionalityException("failed to get project members for project " + projectId, e);
         }
 	}
+
+	@Override
+	public void updateProjectBudgetAtCompletion(int projectId) {
+        try {
+            List<Integer> plannedValues = create.select(Tables.ACTIVITY.PLANNED_VALUE)
+            		.from(Tables.ACTIVITY)
+            		.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+            		.fetchInto(Integer.class);
+            
+            int sum = 0;
+            
+            for (Integer i : plannedValues)
+            	sum += i;
+            
+            create.update(Tables.PROJECT)
+            .set(Tables.PROJECT.BUDGET_AT_COMPLETION, sum)
+            .where(Tables.PROJECT.ID.equal(projectId))
+            .execute();
+            
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("unable to update project's BAC " + projectId, e);
+        }
+	}
 }
