@@ -399,7 +399,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
 		  a.setProjectId(0);
 		  a.setDescription("This was a test");
 		  a.setDuration(3);
-		  a.setPlannedValue(2);
+		  a.setPlannedValue(0);
 		  
 		  activityService.addActivity(a);
 		  
@@ -411,7 +411,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
 		  
 		  b = activityService.getActivity(0);
 		  
-		  b.setStatus(Status.RESOLVED);
+		  b.setPlannedValue(2);
 		  
 		  activityService.updateActivity(b);
 		  
