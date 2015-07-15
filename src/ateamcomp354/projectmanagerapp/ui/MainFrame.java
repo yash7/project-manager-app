@@ -22,6 +22,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final String MEMBERPROJECT_PANEL = "MEMBERPROJECT_PANEL";
 	private static final String MEMBERACTIVITY_PANEL = "MEMBERACTIVITY_PANEL";
 	private static final String CREATE_USER_PANEL = "CREATE_USER_PANEL";
+	private static final String EDIT_USER_PANEL = "EDIT_USER_PANEL";
 
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
@@ -35,6 +36,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private MemberProjectPanel memberProjectPanel;
 	private MemberActivityPanel memberActivityPanel;
 	private CreateUserPanel createUserPanel;
+	private EditUserPanel editUserPanel;
 	
 	private static Stack<FrameSaver> menuFrameSaver= new Stack<FrameSaver>();;
 	
@@ -54,6 +56,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		memberProjectPanel = new MemberProjectPanel(appCtx, MainFrame.this );
 		memberActivityPanel = new MemberActivityPanel (appCtx, MainFrame.this);
 		createUserPanel = new CreateUserPanel(appCtx, MainFrame.this);
+		editUserPanel = new EditUserPanel(appCtx, MainFrame.this);
 		
 		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
 		//buildMenuBar();
@@ -140,6 +143,10 @@ public class MainFrame extends JFrame implements SwapInterface{
 		JMenuItem createUserItm = new JMenuItem( "Create A New User" );
 		createUserItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		createUserItm.addActionListener( __->showCreateUserView());
+		
+		JMenuItem editUserItm = new JMenuItem( "Edit A User" );
+		editUserItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		editUserItm.addActionListener( __->showUserListView());
 		
 		JMenuItem logoutItm = new JMenuItem( "Logout" );
 		logoutItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -247,6 +254,19 @@ public class MainFrame extends JFrame implements SwapInterface{
 		createUserPanel.resetComponents();
 		showView(CREATE_USER_PANEL);
 	}
+	
+	@Override
+	public void showEditUserView(int userId) {
+		editUserPanel.resetComponents();
+		editUserPanel.setUserId(userId);
+		showView(EDIT_USER_PANEL);
+	}
+	
+	@Override
+	public void showUserListView() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public static int getAppWidth() {
 		return WIDTH;
@@ -271,4 +291,6 @@ public class MainFrame extends JFrame implements SwapInterface{
 	{
 		getJMenuBar().setVisible(false);
 	}
+
+
 }

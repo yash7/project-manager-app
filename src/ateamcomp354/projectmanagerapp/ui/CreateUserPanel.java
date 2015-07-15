@@ -141,7 +141,7 @@ public class CreateUserPanel {
 				 }
 				 else
 				 {
-					 createUserPanelGen.getErrorUsernameLabel().setText("Username Already Exist");
+					 createUserPanelGen.getErrorUsernameLabel().setText("Username Already Exists");
 				 }
 			}
 		}

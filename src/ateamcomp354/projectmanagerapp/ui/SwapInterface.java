@@ -17,6 +17,10 @@ public interface SwapInterface {
 	void showMemberProjectsView(int userId);
 
 	void showCreateUserView();
+	
+	void showEditUserView(int userId);
+	
+	void showUserListView();
 
 	/**
 	 * Handles the switching from one frame to another. 
