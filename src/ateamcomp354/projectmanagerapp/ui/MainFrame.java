@@ -26,6 +26,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
 
+
 	private CardLayout cardLayout;
 	
 	private LoginPanel loginPanel;
@@ -35,13 +36,9 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private MemberActivityPanel memberActivityPanel;
 	private CreateUserPanel createUserPanel;
 	
-
-
 	private static Stack<FrameSaver> menuFrameSaver= new Stack<FrameSaver>();;
 	
 	public MainFrame( ApplicationContext appCtx ) {
-
-
 		init();
 
 		cardLayout = new CardLayout();
@@ -68,7 +65,6 @@ public class MainFrame extends JFrame implements SwapInterface{
 		getContentPane().add(memberProjectPanel.getComponent(), MEMBERPROJECT_PANEL);
 		getContentPane().add(memberActivityPanel.getComponent(), MEMBERACTIVITY_PANEL);
 		getContentPane().add(createUserPanel.getComponent(), CREATE_USER_PANEL);
-
 	}
 
 	private void init() {

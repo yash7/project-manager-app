@@ -60,7 +60,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
             throw new ServiceFunctionalityException("failed to get member's assigned projects", e);
         }
 	}
-	
+
     @Override
     public List<Users> getOtherAssigneesForActivity(int activityId)
     {
