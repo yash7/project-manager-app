@@ -42,7 +42,7 @@ public class GanttChartGen extends JPanel {
 
 
         final IntervalCategoryDataset dataset = createDataset(acts);
-        final JFreeChart chart = createChart(dataset);
+        final JFreeChart chart = createChart(dataset, title);
 
         // add the chart to a panel...
         final ChartPanel chartPanel = new ChartPanel(chart);
@@ -62,8 +62,13 @@ public class GanttChartGen extends JPanel {
     	try{
 			Date esdate = format.parse(String.valueOf(a.getEarliestStart()).trim());
 			Date eedate = format.parse(String.valueOf(a.getLatestFinish()).trim());
-    	
-        s1.add(new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate)));
+		
+			Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
+			if(a.getStatus() == Status.RESOLVED) {
+				t.setPercentComplete(1);
+			}
+			
+			s1.add(t);
     	
     	}catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -95,9 +100,9 @@ public class GanttChartGen extends JPanel {
      * 
      * @return The chart.
      */
-    private JFreeChart createChart(final IntervalCategoryDataset dataset) {
+    private JFreeChart createChart(final IntervalCategoryDataset dataset, String title) {
         final JFreeChart chart = ChartFactory.createGanttChart(
-            "Progress",  // chart title
+            title,  // chart title
             "Activity",              // domain axis label
             "Date",              // range axis label
             dataset,             // data
