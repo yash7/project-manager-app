@@ -1,5 +1,7 @@
 package ateamcomp354.projectmanagerapp.ui.gen;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,12 +16,14 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.Layer;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
@@ -43,7 +47,8 @@ public class GanttChartGen extends JPanel {
 
         final IntervalCategoryDataset dataset = createDataset(acts);
         final JFreeChart chart = createChart(dataset, title);
-
+        chart.getCategoryPlot().addRangeMarker(new ValueMarker(new Date().getTime(), Color.BLACK, new BasicStroke(1.0F)), Layer.FOREGROUND);
+        
         // add the chart to a panel...
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
@@ -114,8 +119,8 @@ public class GanttChartGen extends JPanel {
             true,                // include legend
             true,                // tooltips
             false                // urls
-        );    
-
+        );  
+        
         return chart;    
     }
     
