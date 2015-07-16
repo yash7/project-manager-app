@@ -54,34 +54,39 @@ public class GanttChartGen extends JPanel {
    
     public IntervalCategoryDataset createDataset(List<Activity> acts) {
     	
-    	final TaskSeries s1 = new TaskSeries("Scheduled");
-       
+    	final TaskSeries s1 = new TaskSeries("Open");
+    	final TaskSeries s2 = new TaskSeries("In Progress");
+    	final TaskSeries s3 = new TaskSeries("Complete");
+        
     	for(Activity a:acts){
                
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-    	try{
-			Date esdate = format.parse(String.valueOf(a.getEarliestStart()).trim());
-			Date eedate = format.parse(String.valueOf(a.getLatestFinish()).trim());
-		
-			Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
-			if(a.getStatus() == Status.RESOLVED) {
-				t.setPercentComplete(1);
-			}
+	        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+	    	try{
+				Date esdate = format.parse(String.valueOf(a.getEarliestStart()).trim());
+				Date eedate = format.parse(String.valueOf(a.getLatestFinish()).trim());
 			
-			s1.add(t);
-    	
-    	}catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-       
+				Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
+				if(a.getStatus() == Status.RESOLVED) {
+					t.setPercentComplete(1);
+					s3.add(t);
+				}
+				else if(a.getStatus() == Status.IN_PROGRESS) {
+					s2.add(t);
+				}
+				else {
+					s1.add(t);
+				}
+	    	}catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
         final TaskSeriesCollection collection = new TaskSeriesCollection();
         collection.add(s1);
+        collection.add(s2);
+        collection.add(s3);
 
         return collection;
-    	
     }
 
     private Date date(final int day, final int month, final int year) {
