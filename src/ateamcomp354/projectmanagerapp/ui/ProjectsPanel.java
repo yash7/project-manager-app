@@ -108,7 +108,7 @@ public class ProjectsPanel {
 
 		us1RightPanelGen = new US1RightPanelGen();
 		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
-		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 102);
+		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 103);
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
@@ -470,7 +470,12 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
-		us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
+		if(p.getBudgetAtCompletion() != null) {
+			us1RightPanelGen.getBudgetAtCompletionLabel().setText(p.getBudgetAtCompletion().toString());
+		}
+		else {
+			us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
+		}
 		
 		
 		if (p.getId() != null) {
