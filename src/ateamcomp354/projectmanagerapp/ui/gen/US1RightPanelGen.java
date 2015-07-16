@@ -24,8 +24,10 @@ public class US1RightPanelGen extends JPanel {
 	private JComboBox projectMembersComboBox;
 	private JButton addButton;
 	private JButton deleteButton;
+
 	private JLabel lblBudgetAtCompletion;
 	private JLabel budgetAtCompletionLabel;
+	private JLabel projectMembersLabel;
 
 	/**
 	 * Create the panel.
@@ -50,6 +52,7 @@ public class US1RightPanelGen extends JPanel {
 		projectNameField.setColumns(10);
 		
 		JLabel descriptionLabel = new JLabel("Description:");
+
 		descriptionLabel.setBounds(12, 154, 112, 16);
 		add(descriptionLabel);
 		JScrollPane descriptionScrollPane = new JScrollPane();
@@ -67,7 +70,7 @@ public class US1RightPanelGen extends JPanel {
 		chckbxProjectIsCompleted.setBounds(12, 125, 329, 23);
 		add(chckbxProjectIsCompleted);
 		
-		JLabel projectMembersLabel = new JLabel("Project Members:");
+		projectMembersLabel = new JLabel("Project Members:");
 		projectMembersLabel.setBounds(12, 390, 132, 16);
 		add(projectMembersLabel);
 		
@@ -86,15 +89,14 @@ public class US1RightPanelGen extends JPanel {
 		deleteButton = new JButton("Delete");
 		deleteButton.setBounds(141, 665, 117, 29);
 		add(deleteButton);
-		
+
 		lblBudgetAtCompletion = new JLabel("Budget at Completion:");
 		lblBudgetAtCompletion.setBounds(12, 101, 141, 16);
 		add(lblBudgetAtCompletion);
 		
 		budgetAtCompletionLabel = new JLabel("$0");
 		budgetAtCompletionLabel.setBounds(123, 101, 218, 16);
-		add(budgetAtCompletionLabel);
-		
+		add(budgetAtCompletionLabel);		
 	}
 	public JTextField getProjectNameField() {
 		return projectNameField;
@@ -110,6 +112,9 @@ public class US1RightPanelGen extends JPanel {
 	}
 	public JCheckBox getCompletedCheckBox() {
 		return chckbxProjectIsCompleted;
+	}
+	public JLabel getProjectMembersLabel() {
+		return projectMembersLabel;
 	}
 	public JScrollPane getProjectMembersScrollPane() {
 		return projectMembersScrollPane;

@@ -2,8 +2,10 @@ package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.ProjectInfo;
+import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
+import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.services.UserService;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
@@ -11,6 +13,7 @@ import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
 import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
 
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
@@ -51,10 +54,12 @@ public class ProjectsPanel {
 	private final JList<Project> closedProjectList;
 	private final DefaultListModel<Project> closedProjectsModel;
 	
+	private ApplicationContext appCtx;
+	private ActivityService ase;
+
 	private int selectedProjectMemberId;
 	private List<Integer> projectMemberComboIndexes;
 	private int[] projectMemberIndexes;
-	
 	
 	/**
 	 * A cache of project info, mapping a project id to its cached info.
@@ -92,6 +97,7 @@ public class ProjectsPanel {
 
 	public ProjectsPanel( ApplicationContext appCtx, SwapInterface swap )
 	{
+		this.appCtx = appCtx;
 		projectService = appCtx.getProjectService();
 		userService = appCtx.getUserService();
 		this.swap = swap;
@@ -101,6 +107,8 @@ public class ProjectsPanel {
 		splitPane1Gen = new SplitPane1Gen();
 
 		us1RightPanelGen = new US1RightPanelGen();
+		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
+		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 102);
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
@@ -115,12 +123,13 @@ public class ProjectsPanel {
 
 		splitPane1Gen.getAddButton().addActionListener( __ -> addProjectClicked() );
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
-
+		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
+		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
 				p -> {
 					ProjectInfo pi = projectInfos.get( p.getId() );
-					return String.format(PROJECT_COMPLETION_FMT, pi == null ? "?" : Integer.toString(pi.getCompletion()));
+					return String.format(PROJECT_COMPLETION_FMT, pi == null ? "0" : Integer.toString(pi.getCompletion()));
 				}
 		);
 
@@ -136,10 +145,12 @@ public class ProjectsPanel {
 		closedProjectList.getSelectionModel().addListSelectionListener( this::closedProjectSelected );
 		splitPane1Gen.getCompletedScrollPane().setViewportView( closedProjectList );
 
-		splitPane1Gen.getBtnManage().setVisible( false );
+		splitPane1Gen.getBtnManage().setVisible( true );
 		splitPane1Gen.getBtnView().setText(VIEW_BTN_TXT);
 		splitPane1Gen.getBtnView().addActionListener( __ -> viewActivitiesClicked() );
 
+		
+		
 		us1RightPanelGen.getSaveButton().addActionListener( __ -> saveProjectClicked() );
 
 		newProjectTemplate = new Project();
@@ -274,7 +285,6 @@ public class ProjectsPanel {
 	// If they choose cancel then we need to undo the selection and reselect
 	// the old project.
 	private void projectSelected( ListSelectionEvent e, JList<Project> list1, JList<Project> list2 ) {
-
 		if ( valueIsAdjusting ) {
 			return;
 		}
@@ -283,6 +293,7 @@ public class ProjectsPanel {
 		if ( i == -1 ) {
 			splitPane1Gen.getDeleteButton().setEnabled( false );
 			splitPane1Gen.getBtnView().setEnabled( false );
+			
 			return;
 		}
 
@@ -366,6 +377,23 @@ public class ProjectsPanel {
 		activityFrame.setFrameName("ACTIVITIES_PANEL");
 		swap.saveFrame(activityFrame); // Saves the frame next frame
 	}
+	
+	private void viewProgressClicked(){
+		//if(openProjectList.)
+		if(openProjectList.getSelectedValue()!= null)
+		{
+			List<Activity> acts = appCtx.getActivityService(openProjectList.getSelectedValue().getId()).getActivities();
+			
+			if(acts.size()>0){
+			GanttChartGen chart = new GanttChartGen(openProjectList.getSelectedValue().getProjectName()
+					 + " Progress",acts); 
+			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
+			}
+			else
+				JOptionPane.showMessageDialog (null, "There are no activities for this project"
+						, "No Report", JOptionPane.PLAIN_MESSAGE);
+		}
+	}
 
 	// Btn to create new project is clicked, clear list selections and
 	// fill the form with the default project template.
@@ -433,8 +461,8 @@ public class ProjectsPanel {
 
 	// fill in the form with the currently selected project ( or newProjectTemplate if creating )
 	private void displayProject() {
-
 		Project p = getProject();
+		
 		us1RightPanelGen.getTitleLabel().setText( p.getId() == null ? ADD_PROJECT_TITLE_LBL_TXT : EDIT_PROJECT_TITLE_LBL_TXT );
 		us1RightPanelGen.getCompletedCheckBox().setVisible(p.getId() != null);
 		us1RightPanelGen.getCompletedCheckBox().setSelected(p.getCompleted());
@@ -442,10 +470,27 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
-		us1RightPanelGen.getBudgetAtCompletionLabel().setText("$" + p.getBudgetAtCompletion());
+		us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
 		
-		if (p.getId() != null)
+		
+		if (p.getId() != null) {
+			us1RightPanelGen.getProjectMembersScrollPane().setVisible(true);
+			us1RightPanelGen.getProjectMembersComboBox().setVisible(true);
+			us1RightPanelGen.getProjectMembersLabel().setVisible(true);
+			us1RightPanelGen.getAddButton().setVisible(true);
+			us1RightPanelGen.getDeleteButton().setVisible(true);
+			
 			showProjectMembers(p.getId());
+		}
+		else {
+			us1RightPanelGen.getProjectMembersScrollPane().setVisible(false);
+			us1RightPanelGen.getProjectMembersComboBox().setVisible(false);
+			us1RightPanelGen.getProjectMembersLabel().setVisible(false);
+			us1RightPanelGen.getAddButton().setVisible(false);
+			us1RightPanelGen.getDeleteButton().setVisible(false);
+			
+			us1RightPanelGen.getProjectMembersScrollPane().setViewportView(new JList<String>());
+		}
 	}
 
 	// gather the form input into a project object

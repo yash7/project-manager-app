@@ -68,7 +68,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         projectService.addProject(p);
 
         Project test = projectService.getProject(0);
-
+        
         assertNotNull(test);
         assertEquals("Test project", test.getProjectName());
         assertEquals("Test project", test.getDescription());
@@ -377,5 +377,46 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         assertEquals(0, (int) finalTest.getId());
         assertEquals("New description", finalTest.getDescription());
         assertEquals("New project name", finalTest.getProjectName());
+    }
+    
+    @Test
+    public void testUpdateProjectBudgetAtCompletion() throws Exception {
+    	  ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+          ProjectService projectService = appCtx.getProjectService();
+         
+          
+          Project p = new Project();
+          p.setId(0);
+          p.setProjectName("Test project");
+          p.setDescription("Test project");
+
+          projectService.addProject(p);
+
+          ActivityService activityService = appCtx.getActivityService(0);
+          
+          Activity a = new Activity();
+          a.setId(0);
+		  a.setProjectId(0);
+		  a.setDescription("This was a test");
+		  a.setDuration(3);
+		  a.setPlannedValue(0);
+		  
+		  activityService.addActivity(a);
+		  
+		  projectService.updateProjectBudgetAtCompletion(0);
+		  
+		  assertEquals(0, (int)projectService.getProject(0).getBudgetAtCompletion());   
+		  
+		  Activity b = new Activity();
+		  
+		  b = activityService.getActivity(0);
+		  
+		  b.setPlannedValue(2);
+		  
+		  activityService.updateActivity(b);
+		  
+		  projectService.updateProjectBudgetAtCompletion(0);
+		  
+		  assertEquals(2, (int)projectService.getProject(0).getBudgetAtCompletion());
     }
 }

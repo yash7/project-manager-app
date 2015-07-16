@@ -82,6 +82,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton delAssignButton;
 	private JButton addAssignButton;
 	private JButton backBtn;
+	private JButton btnChart;
 	private JTextField plannedValueField;
 	
 	/**
@@ -132,7 +133,7 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(deleteButton);
 		
 		btnManage = new JButton("Manage Activity");
-		btnManage.setBounds(153, 342, 148, 30);
+		btnManage.setBounds(170, 342, 131, 30);
 		LeftPanel.add(btnManage);
 		
 		scrollPane = new JScrollPane();
@@ -146,16 +147,20 @@ public class SplitPane1Gen extends JPanel {
 		backBtn = new JButton("< Back");
 		backBtn.setBounds(12, 49, 90, 30);
 		LeftPanel.add(backBtn);
+		
+		btnChart = new JButton("Progress Chart");
+		btnChart.setBounds(43, 342, 120, 30);
+		LeftPanel.add(btnChart);
 
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
 		
 		activityNameLabel = new JLabel("Name:");
-		activityNameLabel.setBounds(12, 51, 39, 16);
+		activityNameLabel.setBounds(12, 51, 128, 16);
 		RightPanel.add(activityNameLabel);
 		
 		statusLabel = new JLabel("Status:");
-		statusLabel.setBounds(12, 79, 56, 16);
+		statusLabel.setBounds(12, 79, 128, 16);
 		RightPanel.add(statusLabel);
 		
 		statusComboBox = new JComboBox();
@@ -163,27 +168,27 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(statusComboBox);
 		
 		earliestStartLabel = new JLabel("Earliest Start:");
-		earliestStartLabel.setBounds(12, 134, 89, 16);
+		earliestStartLabel.setBounds(12, 134, 128, 16);
 		RightPanel.add(earliestStartLabel);
 		
 		latestStartLabel = new JLabel("Latest Start:");
-		latestStartLabel.setBounds(12, 163, 89, 16);
+		latestStartLabel.setBounds(12, 163, 128, 16);
 		RightPanel.add(latestStartLabel);
 		
 		earliestFinishLabel = new JLabel("Earliest Finish:");
-		earliestFinishLabel.setBounds(12, 192, 116, 16);
+		earliestFinishLabel.setBounds(12, 192, 128, 16);
 		RightPanel.add(earliestFinishLabel);
 		
 		latestFinishLabel = new JLabel("Latest Finish:");
-		latestFinishLabel.setBounds(12, 221, 89, 16);
+		latestFinishLabel.setBounds(12, 221, 128, 16);
 		RightPanel.add(latestFinishLabel);
 		
 		maxDurationLabel = new JLabel("Max Duration:");
-		maxDurationLabel.setBounds(12, 250, 89, 16);
+		maxDurationLabel.setBounds(12, 250, 128, 16);
 		RightPanel.add(maxDurationLabel);
 		
 		durationLabel = new JLabel("Duration:");
-		durationLabel.setBounds(12, 279, 89, 16);
+		durationLabel.setBounds(12, 279, 128, 16);
 		RightPanel.add(durationLabel);
 		
 		earliestStartField = new JTextField();
@@ -281,7 +286,7 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(assigneeScrollPane);
 		
 		JLabel lblPlannedValue = new JLabel("Planned Value ($):");
-		lblPlannedValue.setBounds(12, 107, 101, 16);
+		lblPlannedValue.setBounds(12, 107, 128, 16);
 		RightPanel.add(lblPlannedValue);
 		
 		plannedValueField = new JTextField();
@@ -310,6 +315,10 @@ public class SplitPane1Gen extends JPanel {
 
 	public JButton getBtnManage() {
 		return btnManage;
+	}
+	
+	public JButton getChartButton(){
+		return btnChart;
 	}
 	
 	// RightPanel
@@ -382,4 +391,63 @@ public class SplitPane1Gen extends JPanel {
 	public JTextField getPlannedValueField() {
 		return plannedValueField;
 	}
+	public JLabel getStatusLabel() {
+		return statusLabel;
+	}
+
+	public JLabel getEarliestStartLabel() {
+		return earliestStartLabel;
+	}
+
+	public JLabel getLatestStartLabel() {
+		return latestStartLabel;
+	}
+
+	public JLabel getEarliestFinishLabel() {
+		return earliestFinishLabel;
+	}
+
+	public JLabel getMaxDurationLabel() {
+		return maxDurationLabel;
+	}
+
+	public JLabel getDurationLabel() {
+		return durationLabel;
+	}
+
+	public JScrollPane getDescriptionScrollPane() {
+		return descriptionScrollPane;
+	}
+
+	public JLabel getDescriptionLabel() {
+		return descriptionLabel;
+	}
+
+	public JLabel getDependenciesLabel() {
+		return dependenciesLabel;
+	}
+
+	public JTextField getTextField() {
+		return textField;
+	}
+
+	public JButton getDelDepButton() {
+		return delDepButton;
+	}
+
+	public JScrollPane getScrollPane() {
+		return scrollPane;
+	}
+
+	public JButton getDelAssignButton() {
+		return delAssignButton;
+	}
+
+	public JButton getBtnChart() {
+		return btnChart;
+	}
+	public JLabel getAssigneesLabel() {
+		return assigneesLabel;
+	}
+
 }
