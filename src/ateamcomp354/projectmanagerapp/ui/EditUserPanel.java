@@ -2,8 +2,11 @@ package ateamcomp354.projectmanagerapp.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JComponent;
+
 
 
 
@@ -40,13 +43,22 @@ public class EditUserPanel {
 		editUserPanelGen.getSaveButton().addActionListener(new saveActionListener());
 		editUserPanelGen.getCancelButton().addActionListener(new cancelActionListener());
 		
-		Users user = appCtx.getUserService().getUser(userId);
-		
-		editUserPanelGen.getFirstNameTextField().setText(user.getFirstName());
-		editUserPanelGen.getLastNameTextField().setText(user.getLastName());
-		editUserPanelGen.getUsernameTextField().setText(user.getUsername());
-		editUserPanelGen.getPasswordField().setText(user.getPassword());
-		editUserPanelGen.getManagerRoleComboBox().setSelectedItem("Yes");	
+		editUserPanelGen.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				Users user = appCtx.getUserService().getUser(userId);
+				
+				editUserPanelGen.getFirstNameTextField().setText(user.getFirstName());
+				editUserPanelGen.getLastNameTextField().setText(user.getLastName());
+				editUserPanelGen.getUsernameTextField().setText(user.getUsername());
+				editUserPanelGen.getPasswordField().setText(user.getPassword());
+				
+				if (user.getManagerRole())
+					editUserPanelGen.getManagerRoleComboBox().setSelectedItem("Yes");
+				else
+					editUserPanelGen.getManagerRoleComboBox().setSelectedItem("No");
+			}
+		});
 	}
 	
 	public JComponent getComponent() {
@@ -103,7 +115,7 @@ public class EditUserPanel {
 			editUserPanelGen.getErrorUsernameLabel().setText("");
 		
 		// Verifies if the pass word is at least 4 characters long
-		if (editUserPanelGen.getPasswordField().getPassword().length < passwordSize )
+		if (editUserPanelGen.getPasswordField().getText().length() < passwordSize )
 		{
 			editUserPanelGen.getErrorPasswordLabel().setText("Please Enter A Password Of At Least 4 characters");
 			 validFieldNumber--;
@@ -142,23 +154,15 @@ public class EditUserPanel {
 				newUser.setFirstName(editUserPanelGen.getFirstNameTextField().getText());
 				newUser.setLastName(editUserPanelGen.getLastNameTextField().getText());  
 				newUser.setUsername(editUserPanelGen.getUsernameTextField().getText());
-				newUser.setPassword(new String(editUserPanelGen.getPasswordField().getPassword())); 
+				newUser.setPassword(new String(editUserPanelGen.getPasswordField().getText())); 
 				String managerRole = editUserPanelGen.getManagerRoleComboBox().getSelectedItem().toString();
 				cus.setNewMember(newUser);
 				cus.ProjectMemberRole(managerRole);
-			
-				 boolean duplicateResult = cus.duplicateUsername();
-				
-				 if (duplicateResult == false)
-				 {
-					us.updateUser(newUser);
-					resetComponents();
-					swap.frameSwitch();
-				 }
-				 else
-				 {
-					 editUserPanelGen.getErrorUsernameLabel().setText("Username Already Exists");
-				 }
+
+				us.updateUser(newUser);
+				resetComponents();
+				swap.removeSaveFrame();
+				swap.frameSwitch();
 			}
 		}
 	}

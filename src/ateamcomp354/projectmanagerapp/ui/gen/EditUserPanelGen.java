@@ -28,7 +28,7 @@ public class EditUserPanelGen extends JPanel{
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
 	private JTextField usernameTextField;
-	private JPasswordField passwordField;
+	private JTextField passwordField;
 	private JComboBox<String> managerRoleComboBox;
 	
 	
@@ -93,7 +93,7 @@ public class EditUserPanelGen extends JPanel{
 		passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		add(passwordLabel);
 		
-		passwordField = new JPasswordField();
+		passwordField = new JTextField();
 		passwordField.setBounds(275, 393, 244, 26);
 		passwordField.setCaretColor(new Color(0, 0, 0));
 		add(passwordField);
@@ -160,7 +160,7 @@ public class EditUserPanelGen extends JPanel{
 	}
 
 
-	public JPasswordField getPasswordField() {
+	public JTextField getPasswordField() {
 		return passwordField;
 	}
 
