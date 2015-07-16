@@ -298,7 +298,7 @@ public class ActivitiesPanel {
 		
 		if(!b) {
 			oldYPos = splitPane1Gen.getSaveActivityButton().getLocation().y;
-			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, splitPane1Gen.getSaveActivityButton().getLocation().y - 300);
+			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, splitPane1Gen.getSaveActivityButton().getLocation().y - 275);
 		}
 		else {
 			
