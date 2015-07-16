@@ -39,6 +39,14 @@ public class EditUserPanel {
 		editUserPanelGen = new EditUserPanelGen();
 		editUserPanelGen.getSaveButton().addActionListener(new saveActionListener());
 		editUserPanelGen.getCancelButton().addActionListener(new cancelActionListener());
+		
+		Users user = appCtx.getUserService().getUser(userId);
+		
+		editUserPanelGen.getFirstNameTextField().setText(user.getFirstName());
+		editUserPanelGen.getLastNameTextField().setText(user.getLastName());
+		editUserPanelGen.getUsernameTextField().setText(user.getUsername());
+		editUserPanelGen.getPasswordField().setText(user.getPassword());
+		editUserPanelGen.getManagerRoleComboBox().setSelectedItem("Yes");	
 	}
 	
 	public JComponent getComponent() {
@@ -51,8 +59,7 @@ public class EditUserPanel {
 	
 	// Sets all the registration field to default
 	public void resetComponents()
-	{
-		
+	{		
 		editUserPanelGen.getFirstNameTextField().setText("");
 		editUserPanelGen.getLastNameTextField().setText("");
 		editUserPanelGen.getUsernameTextField().setText("");
@@ -115,7 +122,8 @@ public class EditUserPanel {
 	
 		public void actionPerformed(ActionEvent e){
 			
-			resetComponents();			
+			resetComponents();
+			swap.removeSaveFrame();
 			swap.frameSwitch(); //Returns the application to the previous frame
 		}
 	}

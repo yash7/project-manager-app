@@ -20,7 +20,7 @@ public interface SwapInterface {
 	
 	void showEditUserView(int userId);
 	
-	void showUserListView();
+	void showEditUserListView();
 
 	/**
 	 * Handles the switching from one frame to another. 

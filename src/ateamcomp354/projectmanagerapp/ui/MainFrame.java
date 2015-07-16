@@ -23,6 +23,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private static final String MEMBERACTIVITY_PANEL = "MEMBERACTIVITY_PANEL";
 	private static final String CREATE_USER_PANEL = "CREATE_USER_PANEL";
 	private static final String EDIT_USER_PANEL = "EDIT_USER_PANEL";
+	private static final String EDIT_USER_LIST_PANEL = "EDIT_USER_LIST_PANEL";
 
 	private static final int WIDTH = 1000;
 	private static final int HEIGHT = 800;
@@ -37,6 +38,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private MemberActivityPanel memberActivityPanel;
 	private CreateUserPanel createUserPanel;
 	private EditUserPanel editUserPanel;
+	private EditUserListPanel editUserListPanel;
 	
 	private static Stack<FrameSaver> menuFrameSaver= new Stack<FrameSaver>();;
 	
@@ -57,6 +59,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		memberActivityPanel = new MemberActivityPanel (appCtx, MainFrame.this);
 		createUserPanel = new CreateUserPanel(appCtx, MainFrame.this);
 		editUserPanel = new EditUserPanel(appCtx, MainFrame.this);
+		editUserListPanel = new EditUserListPanel(appCtx, MainFrame.this);
 		
 		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
 		//buildMenuBar();
@@ -68,6 +71,8 @@ public class MainFrame extends JFrame implements SwapInterface{
 		getContentPane().add(memberProjectPanel.getComponent(), MEMBERPROJECT_PANEL);
 		getContentPane().add(memberActivityPanel.getComponent(), MEMBERACTIVITY_PANEL);
 		getContentPane().add(createUserPanel.getComponent(), CREATE_USER_PANEL);
+		getContentPane().add(editUserPanel.getComponent(), EDIT_USER_PANEL);
+		getContentPane().add(editUserListPanel.getComponent(), EDIT_USER_LIST_PANEL);
 	}
 
 	private void init() {
@@ -133,6 +138,12 @@ public class MainFrame extends JFrame implements SwapInterface{
 		case CREATE_USER_PANEL:
 			showCreateUserView();
 			break;
+		case EDIT_USER_PANEL:
+			showEditUserView(previousFrame.getFirstID());
+			break;
+		case EDIT_USER_LIST_PANEL:
+			showEditUserListView();
+			break;
 		}	
 	}
 	
@@ -146,7 +157,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		
 		JMenuItem editUserItm = new JMenuItem( "Edit A User" );
 		editUserItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		editUserItm.addActionListener( __->showUserListView());
+		editUserItm.addActionListener( __->showEditUserListView());
 		
 		JMenuItem logoutItm = new JMenuItem( "Logout" );
 		logoutItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -155,6 +166,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		JMenu viewMenu = new JMenu( "File" );
 		viewMenu.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		viewMenu.add(createUserItm );
+		viewMenu.add(editUserItm);
 		
 		JSeparator separator = new JSeparator();
 		viewMenu.add(separator);
@@ -263,9 +275,8 @@ public class MainFrame extends JFrame implements SwapInterface{
 	}
 	
 	@Override
-	public void showUserListView() {
-		// TODO Auto-generated method stub
-		
+	public void showEditUserListView() {
+		showView(EDIT_USER_LIST_PANEL);
 	}
 
 	public static int getAppWidth() {

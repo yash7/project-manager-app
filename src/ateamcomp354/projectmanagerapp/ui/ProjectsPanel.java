@@ -107,8 +107,6 @@ public class ProjectsPanel {
 		splitPane1Gen = new SplitPane1Gen();
 
 		us1RightPanelGen = new US1RightPanelGen();
-		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
-		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 102);
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
