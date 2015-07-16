@@ -144,8 +144,6 @@ public class ProjectsPanel {
 		closedProjectList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		closedProjectList.getSelectionModel().addListSelectionListener( this::closedProjectSelected );
 		splitPane1Gen.getCompletedScrollPane().setViewportView( closedProjectList );
-
-		splitPane1Gen.getBtnManage().setVisible( true );
 		splitPane1Gen.getBtnView().setText(VIEW_BTN_TXT);
 		splitPane1Gen.getBtnView().addActionListener( __ -> viewActivitiesClicked() );
 
@@ -383,6 +381,10 @@ public class ProjectsPanel {
 		if(openProjectList.getSelectedValue()!= null)
 		{
 			List<Activity> acts = appCtx.getActivityService(openProjectList.getSelectedValue().getId()).getActivities();
+			
+			for(Activity a : acts) {
+				System.out.println(a.getId());
+			}
 			
 			if(acts.size()>0){
 			GanttChartGen chart = new GanttChartGen(openProjectList.getSelectedValue().getProjectName()
