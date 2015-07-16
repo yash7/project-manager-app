@@ -381,11 +381,7 @@ public class ProjectsPanel {
 		if(openProjectList.getSelectedValue()!= null)
 		{
 			List<Activity> acts = appCtx.getActivityService(openProjectList.getSelectedValue().getId()).getActivities();
-			
-			for(Activity a : acts) {
-				System.out.println(a.getId());
-			}
-			
+					
 			if(acts.size()>0){
 			GanttChartGen chart = new GanttChartGen(openProjectList.getSelectedValue().getProjectName()
 					 + " Progress",acts); 
