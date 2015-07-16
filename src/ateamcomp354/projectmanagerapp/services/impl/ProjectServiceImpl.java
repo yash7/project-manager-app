@@ -195,7 +195,6 @@ public class ProjectServiceImpl implements ProjectService {
             List<Integer> plannedValues = create.select(Tables.ACTIVITY.PLANNED_VALUE)
             		.from(Tables.ACTIVITY)
             		.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
-            		.and(Tables.ACTIVITY.STATUS.equal(Status.RESOLVED))
             		.fetchInto(Integer.class);
             
             int sum = 0;
