@@ -107,6 +107,10 @@ public class ProjectsPanel {
 		splitPane1Gen = new SplitPane1Gen();
 
 		us1RightPanelGen = new US1RightPanelGen();
+
+		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
+		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 103);
+
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
 		splitPane1Gen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 
@@ -142,8 +146,6 @@ public class ProjectsPanel {
 		closedProjectList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		closedProjectList.getSelectionModel().addListSelectionListener( this::closedProjectSelected );
 		splitPane1Gen.getCompletedScrollPane().setViewportView( closedProjectList );
-
-		splitPane1Gen.getBtnManage().setVisible( true );
 		splitPane1Gen.getBtnView().setText(VIEW_BTN_TXT);
 		splitPane1Gen.getBtnView().addActionListener( __ -> viewActivitiesClicked() );
 
@@ -381,7 +383,7 @@ public class ProjectsPanel {
 		if(openProjectList.getSelectedValue()!= null)
 		{
 			List<Activity> acts = appCtx.getActivityService(openProjectList.getSelectedValue().getId()).getActivities();
-			
+					
 			if(acts.size()>0){
 			GanttChartGen chart = new GanttChartGen(openProjectList.getSelectedValue().getProjectName()
 					 + " Progress",acts); 
@@ -468,7 +470,12 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
-		us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
+		if(p.getBudgetAtCompletion() != null) {
+			us1RightPanelGen.getBudgetAtCompletionLabel().setText(p.getBudgetAtCompletion().toString());
+		}
+		else {
+			us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
+		}
 		
 		
 		if (p.getId() != null) {

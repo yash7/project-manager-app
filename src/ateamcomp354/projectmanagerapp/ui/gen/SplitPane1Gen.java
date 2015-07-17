@@ -34,8 +34,13 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 
 import ateamcomp354.projectmanagerapp.ui.MainFrame;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.freixas.jcalendar.JCalendarCombo;
 
 public class SplitPane1Gen extends JPanel {
 	private JButton logoutButton;
@@ -84,6 +89,10 @@ public class SplitPane1Gen extends JPanel {
 	private JButton backBtn;
 	private JButton btnChart;
 	private JTextField plannedValueField;
+	private JCalendarCombo earliestStartDatePicker;
+	private JCalendarCombo latestStartDatePicker;
+	private JCalendarCombo earliestFinishDatePicker;
+	private JCalendarCombo latestFinishDatePicker;
 	
 	/**
 	 * Create the panel.
@@ -134,6 +143,7 @@ public class SplitPane1Gen extends JPanel {
 		
 		btnManage = new JButton("Manage Activity");
 		btnManage.setBounds(170, 342, 131, 30);
+		btnManage.setVisible(false);
 		LeftPanel.add(btnManage);
 		
 		scrollPane = new JScrollPane();
@@ -167,58 +177,44 @@ public class SplitPane1Gen extends JPanel {
 		statusComboBox.setBounds(147, 76, 116, 25);
 		RightPanel.add(statusComboBox);
 		
-		earliestStartLabel = new JLabel("Earliest Start:");
+		earliestStartLabel = new JLabel("Start Date:");
 		earliestStartLabel.setBounds(12, 134, 128, 16);
 		RightPanel.add(earliestStartLabel);
 		
 		latestStartLabel = new JLabel("Latest Start:");
-		latestStartLabel.setBounds(12, 163, 128, 16);
+		latestStartLabel.setBounds(273, 316, 128, 16);
+		latestStartLabel.setVisible(false);
 		RightPanel.add(latestStartLabel);
 		
 		earliestFinishLabel = new JLabel("Earliest Finish:");
-		earliestFinishLabel.setBounds(12, 192, 128, 16);
+		earliestFinishLabel.setBounds(273, 345, 128, 16);
+		earliestFinishLabel.setVisible(false);
 		RightPanel.add(earliestFinishLabel);
 		
-		latestFinishLabel = new JLabel("Latest Finish:");
-		latestFinishLabel.setBounds(12, 221, 128, 16);
+		latestFinishLabel = new JLabel("End Date:");
+		latestFinishLabel.setBounds(11, 166, 128, 16);
 		RightPanel.add(latestFinishLabel);
 		
 		maxDurationLabel = new JLabel("Max Duration:");
-		maxDurationLabel.setBounds(12, 250, 128, 16);
+		maxDurationLabel.setBounds(273, 372, 128, 16);
+		maxDurationLabel.setVisible(false);
 		RightPanel.add(maxDurationLabel);
 		
 		durationLabel = new JLabel("Duration:");
-		durationLabel.setBounds(12, 279, 128, 16);
+		durationLabel.setBounds(273, 401, 128, 16);
+		durationLabel.setVisible(false);
 		RightPanel.add(durationLabel);
-		
-		earliestStartField = new JTextField();
-		earliestStartField.setBounds(147, 134, 116, 22);
-		RightPanel.add(earliestStartField);
-		earliestStartField.setColumns(10);
-		
-		latestStartField = new JTextField();
-		latestStartField.setColumns(10);
-		latestStartField.setBounds(147, 163, 116, 22);
-		RightPanel.add(latestStartField);
-		
-		earliestFinishField = new JTextField();
-		earliestFinishField.setColumns(10);
-		earliestFinishField.setBounds(147, 192, 116, 22);
-		RightPanel.add(earliestFinishField);
-		
-		latestFinishField = new JTextField();
-		latestFinishField.setColumns(10);
-		latestFinishField.setBounds(147, 221, 116, 22);
-		RightPanel.add(latestFinishField);
-		
+				
 		maxDurationField = new JTextField();
 		maxDurationField.setColumns(10);
-		maxDurationField.setBounds(147, 250, 116, 22);
+		maxDurationField.setBounds(408, 372, 116, 22);
+		maxDurationField.setVisible(false);
 		RightPanel.add(maxDurationField);
 		
 		durationField = new JTextField();
 		durationField.setColumns(10);
-		durationField.setBounds(147, 276, 116, 22);
+		durationField.setBounds(409, 398, 116, 22);
+		durationField.setVisible(false);
 		RightPanel.add(durationField);
 		
 		descriptionArea = new JTextArea();
@@ -233,23 +229,23 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(descriptionLabel);
 		
 		dependenciesLabel = new JLabel("Dependencies:");
-		dependenciesLabel.setBounds(12, 328, 89, 16);
+		dependenciesLabel.setBounds(12, 197, 89, 16);
 		RightPanel.add(dependenciesLabel);
 		
 		dependenciesComboBox = new JComboBox();
-		dependenciesComboBox.setBounds(12, 493, 116, 25);
+		dependenciesComboBox.setBounds(12, 362, 116, 25);
 		RightPanel.add(dependenciesComboBox);
 		
 		assigneesLabel = new JLabel("Assignees:");
-		assigneesLabel.setBounds(147, 328, 89, 16);
+		assigneesLabel.setBounds(147, 197, 89, 16);
 		RightPanel.add(assigneesLabel);
 		
 		assigneesComboBox = new JComboBox();
-		assigneesComboBox.setBounds(147, 493, 116, 25);
+		assigneesComboBox.setBounds(147, 362, 116, 25);
 		RightPanel.add(assigneesComboBox);
 		
 		saveActivityButton = new JButton("Save Activity");
-		saveActivityButton.setBounds(86, 617, 116, 30);
+		saveActivityButton.setBounds(86, 486, 116, 30);
 		RightPanel.add(saveActivityButton);
 		
 		textField = new JTextField();
@@ -259,30 +255,30 @@ public class SplitPane1Gen extends JPanel {
 		
 		addDepButton = new JButton("Add");
 		addDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addDepButton.setBounds(31, 531, 70, 30);
+		addDepButton.setBounds(31, 400, 70, 30);
 		RightPanel.add(addDepButton);
 		
 		delDepButton = new JButton("Delete");
 		delDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		delDepButton.setBounds(31, 569, 70, 30);
+		delDepButton.setBounds(31, 438, 70, 30);
 		RightPanel.add(delDepButton);
 		
 		addAssignButton = new JButton("Add");
 		addAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addAssignButton.setBounds(166, 531, 70, 30);
+		addAssignButton.setBounds(166, 400, 70, 30);
 		RightPanel.add(addAssignButton);
 		
 		delAssignButton = new JButton("Delete");
 		delAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		delAssignButton.setBounds(166, 569, 70, 30);
+		delAssignButton.setBounds(166, 438, 70, 30);
 		RightPanel.add(delAssignButton);
 		
 		dependencyScrollPane = new JScrollPane();
-		dependencyScrollPane.setBounds(12, 357, 116, 129);
+		dependencyScrollPane.setBounds(12, 226, 116, 129);
 		RightPanel.add(dependencyScrollPane);
 		
 		assigneeScrollPane = new JScrollPane();
-		assigneeScrollPane.setBounds(147, 357, 116, 129);
+		assigneeScrollPane.setBounds(147, 226, 116, 129);
 		RightPanel.add(assigneeScrollPane);
 		
 		JLabel lblPlannedValue = new JLabel("Planned Value ($):");
@@ -294,6 +290,47 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(plannedValueField);
 		plannedValueField.setColumns(10);
 		
+		earliestStartDatePicker = new JCalendarCombo();
+		earliestStartDatePicker.setBounds(147, 135, 117, 20);
+		RightPanel.add(earliestStartDatePicker);
+		
+		latestStartDatePicker = new JCalendarCombo();
+		latestStartDatePicker.setBounds(407, 317, 117, 20);
+		latestStartDatePicker.setVisible(false);
+		RightPanel.add(latestStartDatePicker);
+		
+		earliestFinishDatePicker = new JCalendarCombo();
+		earliestFinishDatePicker.setBounds(408, 346, 117, 20);
+		earliestFinishDatePicker.setVisible(false);
+		RightPanel.add(earliestFinishDatePicker);
+		
+		latestFinishDatePicker = new JCalendarCombo();
+		latestFinishDatePicker.setBounds(146, 166, 117, 20);
+		RightPanel.add(latestFinishDatePicker);
+		
+		earliestStartField = new JTextField();
+		earliestStartField.setBounds(147, 134, 116, 22);
+		RightPanel.add(earliestStartField);
+		earliestStartField.setColumns(10);
+		earliestStartField.setVisible(false);
+		
+		latestStartField = new JTextField();
+		latestStartField.setColumns(10);
+		latestStartField.setBounds(411, 316, 116, 22);
+		RightPanel.add(latestStartField);
+		latestStartField.setVisible(false);
+		
+		earliestFinishField = new JTextField();
+		earliestFinishField.setColumns(10);
+		earliestFinishField.setBounds(411, 345, 116, 22);
+		RightPanel.add(earliestFinishField);
+		earliestFinishField.setVisible(false);
+		
+		latestFinishField = new JTextField();
+		latestFinishField.setColumns(10);
+		latestFinishField.setBounds(147, 163, 116, 22);
+		RightPanel.add(latestFinishField);
+		latestFinishField.setVisible(false);	
 	}
 
 	// LeftPanel
@@ -450,4 +487,39 @@ public class SplitPane1Gen extends JPanel {
 		return assigneesLabel;
 	}
 
+	public JCalendarCombo getEarliestStartDatePicker() {
+		return earliestStartDatePicker;
+	}
+
+	public JCalendarCombo getLatestStartDatePicker() {
+		return latestStartDatePicker;
+	}
+
+	public JCalendarCombo getEarliestFinishDatePicker() {
+		return earliestFinishDatePicker;
+	}
+
+	public JCalendarCombo getLatestFinishDatePicker() {
+		return latestFinishDatePicker;
+	}
+	
+	public void resetDatePickers() {
+		int yearInt = Calendar.getInstance().get(Calendar.YEAR);
+		int monthInt = Calendar.getInstance().get(Calendar.MONTH);
+		int dateInt = Calendar.getInstance().get(Calendar.DATE);
+		
+		String year = yearInt+"";
+		String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
+		String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
+		
+		earliestStartDatePicker.setDate(new Date());
+		latestStartDatePicker.setDate(new Date());
+		earliestFinishDatePicker.setDate(new Date());
+		latestFinishDatePicker.setDate(new Date());
+		
+		earliestStartField.setText(year+month+day);
+		latestStartField.setText(year+month+day);
+		earliestFinishField.setText(year+month+day);
+		latestFinishField.setText(year+month+day);
+	}
 }

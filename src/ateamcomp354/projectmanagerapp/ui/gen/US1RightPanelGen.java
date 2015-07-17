@@ -91,13 +91,14 @@ public class US1RightPanelGen extends JPanel {
 		add(deleteButton);
 
 		lblBudgetAtCompletion = new JLabel("Budget at Completion:");
-		lblBudgetAtCompletion.setBounds(12, 101, 141, 16);
+		lblBudgetAtCompletion.setBounds(12, 102, 141, 16);
 		add(lblBudgetAtCompletion);
 		
 		budgetAtCompletionLabel = new JLabel("$0");
-		budgetAtCompletionLabel.setBounds(123, 101, 218, 16);
+		budgetAtCompletionLabel.setBounds(123, 102, 218, 16);
 		budgetAtCompletionLabel.setSize(200, 16);
 		budgetAtCompletionLabel.setLocation(141, 102);
+
 		add(budgetAtCompletionLabel);		
 	}
 	public JTextField getProjectNameField() {
