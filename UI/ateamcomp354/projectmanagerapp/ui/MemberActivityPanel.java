@@ -155,7 +155,6 @@ public class MemberActivityPanel {
 		Activity activity = activityService.getActivity(selectedActivityId);
 		if(memberActivityPanelGen.getNameTextField().getText().trim().equals("")) {
 			errorString += "Activity Must Have a Name\n";
-			System.out.println("Activity");
 		}
 		else {
 			activity.setLabel(memberActivityPanelGen.getNameTextField().getText());

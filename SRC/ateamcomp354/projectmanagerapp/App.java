@@ -36,7 +36,9 @@ public class App {
 
 		ApplicationContext appCtx = getApplicationContext( c );
 
-		sampleData( c, appCtx );
+		if(appCtx.getUserService().getUsers().size() <= 1) {
+			sampleData( c, appCtx );
+		}
 
 		EventQueue.invokeLater( () -> {
 				try {

@@ -346,9 +346,16 @@ public class ActivitiesPanel {
 	}
 
 	private void saveActivity() {
+		String errorString = "";
 		Activity activity = new Activity();
 		activity.setId(activityId);
-		activity.setLabel(splitPane1Gen.getActivityNameField().getText());
+		if(splitPane1Gen.getActivityNameField().getText().trim().equals("")) {
+			errorString += "Activity Must Have a Name\n";
+		}
+		else {
+			activity.setLabel(splitPane1Gen.getActivityNameField().getText());
+		}
+
 		activity.setProjectId(projectId);
 		activity.setStatus(Status.values()[splitPane1Gen.getStatusComboBox()
 				.getSelectedIndex()]);
@@ -365,29 +372,46 @@ public class ActivitiesPanel {
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField()
 				.getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
-		activity.setPlannedValue(Integer.parseInt(splitPane1Gen.getPlannedValueField().getText()));
-		
-		addOrUpdateActivity(activity);
-
-		projectService.updateProjectBudgetAtCompletion(projectId);
-		
-		boolean found = false;
-		for (int i = 0; i < idIndexes.length; i++) {
-			if (idIndexes[i] == activityId) {
-				found = true;
-				activityList.setSelectedIndex(i);
-				break;
+		Integer iVal = 0;
+		try {
+			iVal = Integer.parseInt(splitPane1Gen.getPlannedValueField().getText());
+			if(iVal < 0) {
+				errorString += "Planned Value must be a valid non-negative whole number\n";
+			}
+			else {
+				activity.setPlannedValue(iVal);
 			}
 		}
-		if (!found) {
-			for (int i = 0; i < completedIdIndexes.length; i++) {
-				if (completedIdIndexes[i] == activityId) {
-					completedActivityList.setSelectedIndex(i);
+		catch(NumberFormatException e) {
+			errorString += "Planned Value must be a valid non-negative whole number\n";
+		}
+
+		if(errorString.equals("")) {
+			addOrUpdateActivity(activity);
+
+			projectService.updateProjectBudgetAtCompletion(projectId);
+			
+			boolean found = false;
+			for (int i = 0; i < idIndexes.length; i++) {
+				if (idIndexes[i] == activityId) {
+					found = true;
+					activityList.setSelectedIndex(i);
 					break;
 				}
 			}
+			if (!found) {
+				for (int i = 0; i < completedIdIndexes.length; i++) {
+					if (completedIdIndexes[i] == activityId) {
+						completedActivityList.setSelectedIndex(i);
+						break;
+					}
+				}
+			}
+			setReadOnly(activity.getStatus() == Status.RESOLVED);
 		}
-		setReadOnly(activity.getStatus() == Status.RESOLVED);
+		else {
+			JOptionPane.showMessageDialog(null, errorString);
+		}
 	}
 
 	private void addOrUpdateActivity(Activity a) {
