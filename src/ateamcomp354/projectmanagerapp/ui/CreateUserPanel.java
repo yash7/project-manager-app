@@ -88,7 +88,7 @@ public class CreateUserPanel {
 			createUserPanelGen.getErrorUsernameLabel().setText("");
 		
 		// Verifies if the pass word is at least 4 characters long
-		if (createUserPanelGen.getPasswordField().getPassword().length < passwordSize )
+		if (createUserPanelGen.getPasswordField().getText().length() < passwordSize )
 		{
 			createUserPanelGen.getErrorPasswordLabel().setText("Please Enter A Password Of At Least 4 characters");
 			 validFieldNumber--;
@@ -126,7 +126,7 @@ public class CreateUserPanel {
 				newUser.setFirstName(createUserPanelGen.getFirstNameTextField().getText());
 				newUser.setLastName(createUserPanelGen.getLastNameTextField().getText());  
 				newUser.setUsername(createUserPanelGen.getUsernameTextField().getText());
-				newUser.setPassword(new String(createUserPanelGen.getPasswordField().getPassword())); 
+				newUser.setPassword(new String(createUserPanelGen.getPasswordField().getText())); 
 				String managerRole = createUserPanelGen.getManagerRoleComboBox().getSelectedItem().toString();
 				cus.setNewMember(newUser);
 				cus.ProjectMemberRole(managerRole);
@@ -141,7 +141,7 @@ public class CreateUserPanel {
 				 }
 				 else
 				 {
-					 createUserPanelGen.getErrorUsernameLabel().setText("Username Already Exist");
+					 createUserPanelGen.getErrorUsernameLabel().setText("Username Already Exists");
 				 }
 			}
 		}

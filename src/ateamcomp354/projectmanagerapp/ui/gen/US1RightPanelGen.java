@@ -96,6 +96,9 @@ public class US1RightPanelGen extends JPanel {
 		
 		budgetAtCompletionLabel = new JLabel("$0");
 		budgetAtCompletionLabel.setBounds(123, 102, 218, 16);
+		budgetAtCompletionLabel.setSize(200, 16);
+		budgetAtCompletionLabel.setLocation(141, 102);
+
 		add(budgetAtCompletionLabel);		
 	}
 	public JTextField getProjectNameField() {
