@@ -11,6 +11,7 @@ import org.jooq.exception.DataAccessException;
 public class LoginServiceImpl implements LoginService {
 
     private final DSLContext create;
+    private Users loggedInUser;
 
     public LoginServiceImpl(DSLContext create) {
         this.create = create;
@@ -35,6 +36,11 @@ public class LoginServiceImpl implements LoginService {
             throw new LoginFailedException();
         }
 
+        loggedInUser = user;
         return user;
     }
+
+	public Users getLoggedInUser() {
+		return loggedInUser;
+	}
 }

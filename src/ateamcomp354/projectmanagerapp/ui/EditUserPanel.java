@@ -11,7 +11,6 @@ import javax.swing.JComponent;
 
 
 
-
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;

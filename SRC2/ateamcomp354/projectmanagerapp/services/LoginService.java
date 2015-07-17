@@ -14,4 +14,6 @@ public interface LoginService {
      * @throws LoginFailedException If the login failed.
      */
     Users login( String username, String password ) throws LoginFailedException;
+    
+    Users getLoggedInUser();
 }

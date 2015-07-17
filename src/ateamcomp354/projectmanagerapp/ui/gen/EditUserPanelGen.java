@@ -9,16 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
 import ateamcomp354.projectmanagerapp.ui.MainFrame;
 
 import javax.swing.DefaultComboBoxModel;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-
 import javax.swing.JSeparator;
-
 import java.awt.Panel;
 
 public class EditUserPanelGen extends JPanel{
