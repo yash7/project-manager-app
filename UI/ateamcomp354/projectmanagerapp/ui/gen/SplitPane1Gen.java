@@ -44,7 +44,6 @@ import java.util.Date;
 import org.freixas.jcalendar.JCalendarCombo;
 
 public class SplitPane1Gen extends JPanel {
-	private JButton logoutButton;
 	private JLabel topLabel;
 	private JScrollPane listScrollPane;
 	private JButton addButton;
@@ -117,10 +116,6 @@ public class SplitPane1Gen extends JPanel {
 		splitPane.setLeftComponent(LeftPanel);
 		LeftPanel.setLayout(null);
 		
-		logoutButton = new JButton("Logout");
-		logoutButton.setBounds(12, 13, 90, 30);
-		LeftPanel.add(logoutButton);
-		
 		topLabel = new JLabel("TopLabel");
 		topLabel.setBackground(Color.BLACK);
 		topLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -156,7 +151,7 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
-		backBtn.setBounds(12, 49, 90, 30);
+		backBtn.setBounds(17, 36, 90, 30);
 		LeftPanel.add(backBtn);
 		
 		btnChart = new JButton("Progress Chart");
@@ -340,10 +335,6 @@ public class SplitPane1Gen extends JPanel {
 		getLatestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 	}
 
-	// LeftPanel
-	public JButton getLogoutButton() {
-		return logoutButton;
-	}
 	public JLabel getTopLabel() {
 		return topLabel;
 	}

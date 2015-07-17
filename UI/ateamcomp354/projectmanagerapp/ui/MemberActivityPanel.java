@@ -81,8 +81,6 @@ public class MemberActivityPanel {
 			}
 		});
 		
-		memberActivityPanelGen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
-		
 		memberActivityPanelGen.getBackButton().addActionListener( new backActionListener());
 	}
 	

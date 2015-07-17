@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 
 public class MemberProjectPanelGen extends JPanel {
 
-	private JButton logoutButton;
 	private JScrollPane projectScrollPane;
 	private JButton viewActivitiesButton;
 	
@@ -18,10 +17,6 @@ public class MemberProjectPanelGen extends JPanel {
 	 */
 	public MemberProjectPanelGen() {
 		setLayout(null);
-		
-		logoutButton = new JButton("Logout");
-		logoutButton.setBounds(10, 11, 89, 33);
-		add(logoutButton);
 		
 		projectScrollPane = new JScrollPane();
 		projectScrollPane.setBounds(20, 86, 661, 284);
@@ -36,9 +31,6 @@ public class MemberProjectPanelGen extends JPanel {
 		add(viewActivitiesButton);
 	}
 
-	public JButton getLogoutButton() {
-		return logoutButton;
-	}
 	public JScrollPane getProjectScrollPane() {
 		return projectScrollPane;
 	}

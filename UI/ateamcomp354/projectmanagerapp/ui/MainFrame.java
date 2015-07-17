@@ -40,6 +40,9 @@ public class MainFrame extends JFrame implements SwapInterface{
 	private EditUserPanel editUserPanel;
 	private EditUserListPanel editUserListPanel;
 	
+	private JMenuBar managerMenuBar;
+	private JMenuBar memberMenuBar;
+	
 	private static Stack<FrameSaver> menuFrameSaver= new Stack<FrameSaver>();;
 	
 	public MainFrame( ApplicationContext appCtx ) {
@@ -64,6 +67,7 @@ public class MainFrame extends JFrame implements SwapInterface{
 		//USE THIS TO ENABLE QUICK AND EASY ACCESS TO VIEWS
 		//buildMenuBar();
 		managerMenuBar();
+		memberMenuBar();
 
 		getContentPane().add(loginPanel.getComponent(), LOGIN_PANEL);
 		getContentPane().add(projectsPanel.getComponent(), PROJECTS_PANEL);
@@ -175,14 +179,29 @@ public class MainFrame extends JFrame implements SwapInterface{
 		
 		
 		//viewMenu.setBackground(new Color(135, 206, 250));
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		menuBar.add( viewMenu );
+		managerMenuBar = new JMenuBar();
+		managerMenuBar.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		managerMenuBar.add( viewMenu );
 		//menuBar.setBackground(new Color(135, 206, 250));
-		setJMenuBar(menuBar);
-		
-		setMenuBarNotVisible();
 
+	}
+	
+	public void memberMenuBar()
+	{	
+		JMenuItem logoutItm = new JMenuItem( "Logout" );
+		logoutItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		logoutItm.addActionListener( __ -> showLoginView() );
+
+		JMenu viewMenu = new JMenu( "File" );
+		viewMenu.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+		viewMenu.add(logoutItm);
+		
+		//viewMenu.setBackground(new Color(135, 206, 250));
+		memberMenuBar = new JMenuBar();
+		memberMenuBar.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		memberMenuBar.add( viewMenu );
+		//menuBar.setBackground(new Color(135, 206, 250));
 	}
 	
 	class viewActionListener implements ActionListener{
@@ -221,29 +240,31 @@ public class MainFrame extends JFrame implements SwapInterface{
 	public void showLoginView() {
 		loginPanel.logout();
 		cardLayout.show( getContentPane(), LOGIN_PANEL);
-		setMenuBarNotVisible();
+		
 		menuFrameSaver.clear();
+		
+		this.getJMenuBar().setVisible(false);
 	}
 
 	@Override
 	public void showProjectsView() {
 		projectsPanel.refresh();
 		showView( PROJECTS_PANEL );
-		setMenuBarVisible();
+		displayManagerMenuBar();
 	}
 
 	@Override
 	public void showProjectsView( int preferredProjectId ) {
 		projectsPanel.refresh( preferredProjectId );
 		cardLayout.show( getContentPane(),PROJECTS_PANEL);
-		setMenuBarVisible();
-		
+		displayManagerMenuBar();
 	}
 
 	@Override
 	public void showActivitiesView( int projectId ) {
 		activitiesPanel.setProjectId( projectId );
 		showView(ACTIVITIES_PANEL);
+		displayManagerMenuBar();
 	}
 
 	@Override
@@ -251,13 +272,14 @@ public class MainFrame extends JFrame implements SwapInterface{
 		memberActivityPanel.setUserId(userId);
 		memberActivityPanel.setProjectId(projectId);
 		showView(MEMBERACTIVITY_PANEL);
+		displayMemberMenuBar();
 	}
 
 	@Override
 	public void showMemberProjectsView(int userId) {
 		memberProjectPanel.setUserId(userId);
 		showView( MEMBERPROJECT_PANEL );
-		setMenuBarNotVisible();
+		displayMemberMenuBar();
 	}
 
 	@Override
@@ -265,6 +287,9 @@ public class MainFrame extends JFrame implements SwapInterface{
 	{
 		createUserPanel.resetComponents();
 		showView(CREATE_USER_PANEL);
+		
+
+		displayManagerMenuBar();
 	}
 	
 	@Override
@@ -272,11 +297,15 @@ public class MainFrame extends JFrame implements SwapInterface{
 		editUserPanel.resetComponents();
 		editUserPanel.setUserId(userId);
 		showView(EDIT_USER_PANEL);
+
+		displayManagerMenuBar();
 	}
 	
 	@Override
 	public void showEditUserListView() {
 		showView(EDIT_USER_LIST_PANEL);
+
+		displayManagerMenuBar();
 	}
 
 	public static int getAppWidth() {
@@ -292,16 +321,16 @@ public class MainFrame extends JFrame implements SwapInterface{
 	}
 
 	@Override
-	public void setMenuBarVisible()
+	public void displayManagerMenuBar()
 	{
-		getJMenuBar().setVisible(true);	
+		setJMenuBar(managerMenuBar);
+		this.getJMenuBar().setVisible(true);
 	}
 	
 	@Override
-	public void setMenuBarNotVisible()
+	public void displayMemberMenuBar()
 	{
-		getJMenuBar().setVisible(false);
+		setJMenuBar(memberMenuBar);	
+		this.getJMenuBar().setVisible(true);
 	}
-
-
 }

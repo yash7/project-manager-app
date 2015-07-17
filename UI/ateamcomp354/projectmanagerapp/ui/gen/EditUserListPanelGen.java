@@ -20,11 +20,11 @@ public class EditUserListPanelGen extends JPanel {
 		add(userScrollPane);
 		
 		editButton = new JButton("Edit");
-		editButton.setBounds(269, 317, 117, 29);
+		editButton.setBounds(30, 310, 117, 29);
 		add(editButton);
 		
 		cancelButton = new JButton("Cancel");
-		cancelButton.setBounds(60, 317, 117, 29);
+		cancelButton.setBounds(289, 310, 117, 29);
 		add(cancelButton);
 
 	}

@@ -11,7 +11,6 @@ import javax.swing.JTextArea;
 import javax.swing.JComboBox;
 
 public class MemberActivityPanelGen extends JPanel {
-	private JButton logoutButton;
 	private JButton backButton;
 	private JScrollPane activityScrollPane;
 	
@@ -35,12 +34,8 @@ public class MemberActivityPanelGen extends JPanel {
 		setSize(appWidth,appHeight);
 		setLayout(null);
 		
-		logoutButton = new JButton("Logout");
-		logoutButton.setBounds(26, 6, 117, 29);
-		add(logoutButton);
-		
 		backButton = new JButton("< Back");
-		backButton.setBounds(26, 47, 117, 29);
+		backButton.setBounds(25, 34, 117, 29);
 		add(backButton);
 		
 		activityScrollPane = new JScrollPane();
@@ -108,10 +103,7 @@ public class MemberActivityPanelGen extends JPanel {
 		add(endDate);
 
 	}
-
-	public JButton getLogoutButton() {
-		return logoutButton;
-	}
+	
 	public JButton getBackButton() {
 		return backButton;
 	}

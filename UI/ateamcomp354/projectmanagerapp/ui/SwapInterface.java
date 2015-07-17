@@ -48,16 +48,8 @@ public interface SwapInterface {
 	 */
 	FrameSaver getSaveFrame();
 
-	/**
-	 * Displays the manager menubar on the app only if the member is
-	 * a manager 
-	 */
-	void setMenuBarVisible();
-
-	/**
-	 * Removes the manager menubar from the app if the member is not
-	 * a manager
-	 */
-	void setMenuBarNotVisible();
+	void displayManagerMenuBar();
+	
+	void displayMemberMenuBar();
 	
 }

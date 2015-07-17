@@ -216,9 +216,6 @@ public class ActivitiesPanel {
 					}
 				});
 
-		splitPane1Gen.getLogoutButton().addActionListener(
-				__ -> this.swap.showLoginView());
-
 		splitPane1Gen.getBackBtn().addActionListener(
 				__ -> this.swap.showProjectsView(projectId));
 		

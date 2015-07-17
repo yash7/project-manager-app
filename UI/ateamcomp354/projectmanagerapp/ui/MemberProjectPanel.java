@@ -72,8 +72,6 @@ public class MemberProjectPanel {
 				}
 			}
 		});
-		
-		memberProjectPanelGen.getLogoutButton().addActionListener( __ -> this.swap.showLoginView() );
 	}
 	
 	public JComponent getComponent()
