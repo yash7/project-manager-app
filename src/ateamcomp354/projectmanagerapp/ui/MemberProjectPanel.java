@@ -1,5 +1,6 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -57,14 +58,18 @@ public class MemberProjectPanel {
 		memberProjectPanelGen.getViewActivitiesButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
-				FrameSaver memberActivityFrame = new FrameSaver();
-				
-				memberActivityFrame.setFirstID(selectedProjectId);
-				memberActivityFrame.setSecondID(userId);
-				memberActivityFrame.setFrameName("MEMBERACTIVITY_PANEL");
-				swap.saveFrame(memberActivityFrame); // Saves the next frame
-				swap.frameSwitch(); 
+				Component[] comp = memberProjectPanelGen.getProjectScrollPane().getViewport().getComponents();
+				if(comp.length > 0) {
+					if(((JList<String>) comp[0]).getSelectedIndex() != -1) {
+						FrameSaver memberActivityFrame = new FrameSaver();
+						
+						memberActivityFrame.setFirstID(selectedProjectId);
+						memberActivityFrame.setSecondID(userId);
+						memberActivityFrame.setFrameName("MEMBERACTIVITY_PANEL");
+						swap.saveFrame(memberActivityFrame); // Saves the next frame
+						swap.frameSwitch(); 
+					}
+				}
 			}
 		});
 		

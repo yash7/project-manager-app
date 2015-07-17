@@ -62,7 +62,7 @@ public class CreateUserPanel {
 		int validFieldNumber = 4;
 		int passwordSize = 4;
 		
-		if (createUserPanelGen.getFirstNameTextField().getText().equals(""))
+		if (createUserPanelGen.getFirstNameTextField().getText().trim().equals(""))
 		{
 			createUserPanelGen.getErrorFirstNameLabel().setText("Please Enter A First Name");
 			 validFieldNumber--;
@@ -71,7 +71,7 @@ public class CreateUserPanel {
 			createUserPanelGen.getErrorFirstNameLabel().setText("");
 		
 			
-		if (createUserPanelGen.getLastNameTextField().getText().equals(""))
+		if (createUserPanelGen.getLastNameTextField().getText().trim().equals(""))
 		{
 			createUserPanelGen.getErrorLastNameLabel().setText("Please Enter A Last Name");
 			 validFieldNumber--;
@@ -79,7 +79,7 @@ public class CreateUserPanel {
 		else
 			createUserPanelGen.getErrorLastNameLabel().setText("");
 		
-		if (createUserPanelGen.getUsernameTextField().getText().equals(""))
+		if (createUserPanelGen.getUsernameTextField().getText().trim().equals(""))
 		{
 			createUserPanelGen.getErrorUsernameLabel().setText("Please Enter A Username");
 			validFieldNumber--;

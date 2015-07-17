@@ -1,5 +1,6 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -22,7 +23,6 @@ import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectMemberService;
 import ateamcomp354.projectmanagerapp.ui.gen.MemberActivityPanelGen;
-
 import ateamcomp354.projectmanagerapp.model.Status;
 
 public class MemberActivityPanel {
@@ -70,7 +70,12 @@ public class MemberActivityPanel {
 		memberActivityPanelGen.getSaveActivityButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveActivity();
+				Component[] comp = memberActivityPanelGen.getActivityScrollPane().getViewport().getComponents();
+				if(comp.length > 0) {
+					if(((JList<String>) comp[0]).getSelectedIndex() != -1) {
+							saveActivity();
+					}
+				}
 			}
 		});
 		
@@ -146,13 +151,25 @@ public class MemberActivityPanel {
 	}
 	
 	private void saveActivity() {
+		String errorString = "";
 		Activity activity = activityService.getActivity(selectedActivityId);
-		activity.setLabel(memberActivityPanelGen.getNameTextField().getText());
+		if(memberActivityPanelGen.getNameTextField().getText().trim().equals("")) {
+			errorString += "Activity Must Have a Name\n";
+			System.out.println("Activity");
+		}
+		else {
+			activity.setLabel(memberActivityPanelGen.getNameTextField().getText());
+		}
 		activity.setProjectId(projectId);
 		activity.setStatus(Status.values()[memberActivityPanelGen.getStatusComboBox().getSelectedIndex()]);
 		activity.setDescription(memberActivityPanelGen.getDescriptionTextArea().getText());
-
-		activityService.updateActivity(activity);
+		
+		if(errorString.equals("")) {
+			activityService.updateActivity(activity);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, errorString);
+		}
 	}
 	
 	private void showAssignees(int activityId) {		

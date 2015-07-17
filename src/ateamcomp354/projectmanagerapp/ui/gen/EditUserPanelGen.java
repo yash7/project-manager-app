@@ -41,6 +41,7 @@ public class EditUserPanelGen extends JPanel{
 
 	JButton saveButton;
 	JButton cancelButton;
+	private JLabel errorManagerRole;
 
 		
 	public EditUserPanelGen() {
@@ -147,6 +148,12 @@ public class EditUserPanelGen extends JPanel{
 		errorPasswordLabel.setForeground(new Color(255, 0, 0));
 		errorPasswordLabel.setBounds(555, 393, 430, 20);
 		add(errorPasswordLabel);
+		
+		errorManagerRole = new JLabel("");
+		errorManagerRole.setForeground(Color.RED);
+		errorManagerRole.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		errorManagerRole.setBounds(555, 485, 430, 20);
+		add(errorManagerRole);
 	}
 	
 	
@@ -200,5 +207,8 @@ public class EditUserPanelGen extends JPanel{
 
 	public JLabel getErrorPasswordLabel() {
 		return errorPasswordLabel;
+	}
+	public JLabel getErrorManagerRole() {
+		return errorManagerRole;
 	}
 }

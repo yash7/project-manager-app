@@ -86,10 +86,10 @@ public class EditUserPanel {
 	// Verifies if the form has been correctly filled
 	public boolean completedFormValidation()
 	{
-		int validFieldNumber = 4;
+		int validFieldNumber = 5;
 		int passwordSize = 4;
 		
-		if (editUserPanelGen.getFirstNameTextField().getText().equals(""))
+		if (editUserPanelGen.getFirstNameTextField().getText().trim().equals(""))
 		{
 			editUserPanelGen.getErrorFirstNameLabel().setText("Please Enter A First Name");
 			 validFieldNumber--;
@@ -98,7 +98,7 @@ public class EditUserPanel {
 			editUserPanelGen.getErrorFirstNameLabel().setText("");
 		
 			
-		if (editUserPanelGen.getLastNameTextField().getText().equals(""))
+		if (editUserPanelGen.getLastNameTextField().getText().trim().equals(""))
 		{
 			editUserPanelGen.getErrorLastNameLabel().setText("Please Enter A Last Name");
 			 validFieldNumber--;
@@ -106,7 +106,7 @@ public class EditUserPanel {
 		else
 			editUserPanelGen.getErrorLastNameLabel().setText("");
 		
-		if (editUserPanelGen.getUsernameTextField().getText().equals(""))
+		if (editUserPanelGen.getUsernameTextField().getText().trim().equals(""))
 		{
 			editUserPanelGen.getErrorUsernameLabel().setText("Please Enter A Username");
 			validFieldNumber--;
@@ -123,8 +123,16 @@ public class EditUserPanel {
 		else
 			editUserPanelGen.getErrorPasswordLabel().setText("");
 		
+		if(editUserPanelGen.getManagerRoleComboBox().getSelectedItem() == "No" && userId == appCtx.getLoginService().getLoggedInUser().getId()) {
+			editUserPanelGen.getErrorManagerRole().setText("You can't change your own Role");
+			validFieldNumber--;
+		}
+		else {
+			editUserPanelGen.getErrorManagerRole().setText("");
+		}
 		
-		if (validFieldNumber < 4) // Fields have not been filled correctly
+		
+		if (validFieldNumber < 5) // Fields have not been filled correctly
 			return false;
 		else 
 			return true;
