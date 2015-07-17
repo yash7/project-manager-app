@@ -1,7 +1,9 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -75,12 +77,18 @@ public class EditUserListPanel {
 	}
 	
 	private void editUser() {
-		FrameSaver editUserFrame = new FrameSaver();
-		
-		editUserFrame.setFirstID(selectedUserId);
-		editUserFrame.setFrameName("EDIT_USER_PANEL");
-		swap.saveFrame(editUserFrame); // Saves the next frame
-		swap.frameSwitch();
+		Component[] comp = editUserListPanel.getUserScrollPane().getViewport().getComponents();
+		if(comp.length > 0) {
+			if(((JList<String>) comp[0]).getSelectedIndex() != -1) {
+				FrameSaver editUserFrame = new FrameSaver();
+				
+				editUserFrame.setFirstID(selectedUserId);
+				editUserFrame.setFrameName("EDIT_USER_PANEL");
+				swap.saveFrame(editUserFrame); // Saves the next frame
+				swap.frameSwitch();
+				
+			}
+		}
 	}
 }
 
