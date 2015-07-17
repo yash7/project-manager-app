@@ -471,7 +471,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getPlannedValueField().setText(Integer.toString(activity.getPlannedValue()));
 		showDependencies(id);
 		showAssignees(id);
-		setReadOnly(activity.getStatus() == Status.RESOLVED || project.getCompleted());
+		setReadOnly(activity.getStatus() == Status.RESOLVED);
 	}
 	private void showDependencies(int id) {
 		dependencyListModel.clear();
@@ -762,20 +762,26 @@ public class ActivitiesPanel {
 	private void setReadOnly(boolean readOnly)
 	{
 		splitPane1Gen.getActivityNameField().setEnabled(!readOnly);
+		splitPane1Gen.getPlannedValueField().setEnabled(!readOnly);
+		splitPane1Gen.getDescriptionArea().setEnabled(!readOnly);
+		splitPane1Gen.getEarliestStartDatePicker().setEnabled(!readOnly);
+		splitPane1Gen.getLatestFinishDatePicker().setEnabled(!readOnly);
 		// splitPane1Gen.getEarliestStartField().setEnabled(!readOnly);
 		// splitPane1Gen.getLatestStartField().setEnabled(!readOnly);
 		// splitPane1Gen.getEarliestFinishField().setEnabled(!readOnly);
 		// splitPane1Gen.getLatestFinishField().setEnabled(!readOnly);
 		splitPane1Gen.getMaxDurationField().setEnabled(!readOnly);
 		splitPane1Gen.getDurationField().setEnabled(!readOnly);
-		splitPane1Gen.getDescriptionArea().setEnabled(!readOnly);
+		
 		splitPane1Gen.getDependenciesComboBox().setEnabled(!readOnly);
 		splitPane1Gen.getDependencyScrollPane().setEnabled(!readOnly);
 		splitPane1Gen.getAddDependencyButton().setEnabled(!readOnly);
 		splitPane1Gen.getRemoveDependencyButton().setEnabled(!readOnly);
-		if (readOnly) {
-			splitPane1Gen.getDependenciesComboBox().removeAllItems();
-		}
+		
+		splitPane1Gen.getAssigneesComboBox().setEnabled(!readOnly);
+		splitPane1Gen.getAssigneeScrollPane().setEnabled(!readOnly);
+		splitPane1Gen.getAddAssigneeButton().setEnabled(!readOnly);
+		splitPane1Gen.getRemoveAssigneeButton().setEnabled(!readOnly);
 	}
 
 	private boolean isDirty() {

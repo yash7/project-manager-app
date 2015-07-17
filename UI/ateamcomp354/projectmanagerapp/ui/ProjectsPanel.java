@@ -444,19 +444,30 @@ public class ProjectsPanel {
 	private void saveProjectClicked() {
 
 		Project p = buildProject();
-
-		saving = true;
-
-		if ( p.getId() == null ) {
-			projectService.addProject( p );
-			refresh();
-			openProjectList.setSelectedIndex( openProjectsModel.getSize() - 1);
-		} else {
-			projectService.updateProject( p );
-			refresh( p.getId() );
+		String errorString = "";
+		
+		if(p.getProjectName().trim().equals("")) {
+			errorString += "Project Name may not be empty\n";
 		}
+		
+		
+		if(errorString.equals("")) {
+			saving = true;
 
-		saving = false;
+			if ( p.getId() == null ) {
+				projectService.addProject( p );
+				refresh();
+				openProjectList.setSelectedIndex( openProjectsModel.getSize() - 1);
+			} else {
+				projectService.updateProject( p );
+				refresh( p.getId() );
+			}
+
+			saving = false;
+		}
+		else {
+			JOptionPane.showMessageDialog(null, errorString);
+		}
 	}
 
 	// fill in the form with the currently selected project ( or newProjectTemplate if creating )

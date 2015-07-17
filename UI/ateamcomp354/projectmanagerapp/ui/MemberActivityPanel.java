@@ -148,8 +148,20 @@ public class MemberActivityPanel {
 		memberActivityPanelGen.getStatusComboBox().setSelectedIndex(activity.getStatus().ordinal());
 		memberActivityPanelGen.getDescriptionTextArea().setText(activity.getDescription());
 		showAssignees(id);
+		
+		if(activity.getStatus() == Status.RESOLVED) {
+			greyOutActivity(false);
+		}
+		else {
+			greyOutActivity(true);
+		}
 	}
 	
+	private void greyOutActivity(boolean enabled) {
+		memberActivityPanelGen.getNameTextField().setEnabled(enabled);
+		memberActivityPanelGen.getDescriptionTextArea().setEnabled(enabled);
+	}
+
 	private void saveActivity() {
 		String errorString = "";
 		Activity activity = activityService.getActivity(selectedActivityId);
@@ -165,6 +177,12 @@ public class MemberActivityPanel {
 		
 		if(errorString.equals("")) {
 			activityService.updateActivity(activity);
+			if(activity.getStatus() == Status.RESOLVED) {
+				greyOutActivity(false);
+			}
+			else {
+				greyOutActivity(true);
+			}
 		}
 		else {
 			JOptionPane.showMessageDialog(null, errorString);
