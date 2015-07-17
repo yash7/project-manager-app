@@ -22,6 +22,10 @@ public class MemberActivityPanelGen extends JPanel {
 	private JScrollPane assigneeScrollPane;
 	private JComboBox statusComboBox;
 	private JButton saveActivityButton;
+	private JLabel lblStartDate;
+	private JLabel lblEndDate;
+	private JLabel startDate;
+	private JLabel endDate;
 
 	/**
 	 * Create the panel.
@@ -57,19 +61,19 @@ public class MemberActivityPanelGen extends JPanel {
 		nameTextField.setColumns(10);
 		
 		JLabel lblDescription = new JLabel("Description:");
-		lblDescription.setBounds(455, 125, 74, 14);
+		lblDescription.setBounds(455, 147, 74, 14);
 		add(lblDescription);
-		
-		JScrollPane descriptionScrollPane = new JScrollPane();
-		descriptionScrollPane.setBounds(455, 150, 335, 130);
-		add(descriptionScrollPane);
-		
-		descriptionTextArea = new JTextArea();
-		descriptionScrollPane.setViewportView(descriptionTextArea);
 		
 		JLabel lblStatus = new JLabel("Status:");
 		lblStatus.setBounds(455, 513, 46, 14);
 		add(lblStatus);
+		
+		JScrollPane descriptionScrollPane = new JScrollPane();
+		descriptionScrollPane.setBounds(455, 172, 335, 130);
+		add(descriptionScrollPane);
+		
+		descriptionTextArea = new JTextArea();
+		descriptionScrollPane.setViewportView(descriptionTextArea);
 		
 		statusComboBox = new JComboBox();
 		statusComboBox.setBounds(496, 510, 150, 20);
@@ -80,12 +84,28 @@ public class MemberActivityPanelGen extends JPanel {
 		add(saveActivityButton);
 		
 		JLabel lblActivityAssignees = new JLabel("Activity Assignees");
-		lblActivityAssignees.setBounds(455, 302, 87, 14);
+		lblActivityAssignees.setBounds(455, 313, 117, 14);
 		add(lblActivityAssignees);
 		
 		assigneeScrollPane = new JScrollPane();
-		assigneeScrollPane.setBounds(455, 327, 335, 164);
+		assigneeScrollPane.setBounds(455, 338, 335, 164);
 		add(assigneeScrollPane);
+		
+		lblStartDate = new JLabel("Start Date:");
+		lblStartDate.setBounds(455, 122, 74, 14);
+		add(lblStartDate);
+		
+		lblEndDate = new JLabel("End Date:");
+		lblEndDate.setBounds(611, 122, 74, 14);
+		add(lblEndDate);
+		
+		startDate = new JLabel("");
+		startDate.setBounds(527, 122, 74, 14);
+		add(startDate);
+		
+		endDate = new JLabel("");
+		endDate.setBounds(679, 122, 74, 14);
+		add(endDate);
 
 	}
 
@@ -112,5 +132,11 @@ public class MemberActivityPanelGen extends JPanel {
 	}
 	public JButton getSaveActivityButton() {
 		return saveActivityButton;
+	}
+	public JLabel getEndDate() {
+		return endDate;
+	}
+	public JLabel getStartDate() {
+		return startDate;
 	}
 }

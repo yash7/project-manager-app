@@ -37,6 +37,7 @@ import ateamcomp354.projectmanagerapp.ui.MainFrame;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -331,6 +332,12 @@ public class SplitPane1Gen extends JPanel {
 		latestFinishField.setBounds(147, 163, 116, 22);
 		RightPanel.add(latestFinishField);
 		latestFinishField.setVisible(false);	
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		getEarliestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+		getLatestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+		getEarliestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+		getLatestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 	}
 
 	// LeftPanel

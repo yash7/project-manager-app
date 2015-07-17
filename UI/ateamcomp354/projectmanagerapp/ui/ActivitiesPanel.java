@@ -385,6 +385,10 @@ public class ActivitiesPanel {
 		catch(NumberFormatException e) {
 			errorString += "Planned Value must be a valid non-negative whole number\n";
 		}
+		
+		if(activity.getEarliestStart() > activity.getLatestFinish()) {
+			errorString += "Start Date may not exceed End Date\n";
+		}
 
 		if(errorString.equals("")) {
 			addOrUpdateActivity(activity);
@@ -456,10 +460,13 @@ public class ActivitiesPanel {
 				Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(
 				Integer.toString(activity.getDuration()));
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		
+	
 		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			splitPane1Gen.getEarliestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+			splitPane1Gen.getLatestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+			splitPane1Gen.getEarliestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+			splitPane1Gen.getLatestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 			splitPane1Gen.getEarliestStartDatePicker().setDate(formatter.parse(activity.getEarliestStart().toString()));
 			splitPane1Gen.getLatestStartDatePicker().setDate(formatter.parse(activity.getLatestStart().toString()));
 			splitPane1Gen.getEarliestFinishDatePicker().setDate(formatter.parse(activity.getEarliestFinish().toString()));

@@ -7,6 +7,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -142,11 +144,18 @@ public class MemberActivityPanel {
 	
 	private void selectActivity(int id)
 	{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat formatterToDisplay = new SimpleDateFormat("yyyy/MM/dd");
 		Activity activity = activityService.getActivity(id);
 		selectedActivityId = id;
 		memberActivityPanelGen.getNameTextField().setText(activity.getLabel());
 		memberActivityPanelGen.getStatusComboBox().setSelectedIndex(activity.getStatus().ordinal());
 		memberActivityPanelGen.getDescriptionTextArea().setText(activity.getDescription());
+		try {
+			memberActivityPanelGen.getStartDate().setText(formatterToDisplay.format(formatter.parse(activity.getEarliestStart().toString())));
+			memberActivityPanelGen.getEndDate().setText(formatterToDisplay.format(formatter.parse(activity.getLatestFinish().toString())));
+		} catch (ParseException e) {
+		}
 		showAssignees(id);
 		
 		if(activity.getStatus() == Status.RESOLVED) {

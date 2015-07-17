@@ -105,6 +105,7 @@ public class ProjectsPanel {
 		projectInfos = new HashMap<>();
 
 		splitPane1Gen = new SplitPane1Gen();
+		splitPane1Gen.getBtnChart().setBounds(43, 344, 257, 30);
 
 		us1RightPanelGen = new US1RightPanelGen();
 
