@@ -260,10 +260,13 @@ public class ActivityServiceImpl implements ActivityService {
 	@Override
 	public List<Users> getUnassignedMembersForActivity(int activityId) {
         try {
-            return create.select(Tables.USERS.fields())
+        	return create.select(Tables.USERS.fields())
                     .from(Tables.USERS)
-                    .join(Tables.PROJECTMEMBERS).on(Tables.USERS.ID.equal(Tables.PROJECTMEMBERS.USER_ID))
-                    .where(Tables.PROJECTMEMBERS.USER_ID.notIn(create.select(Tables.PROJECTMEMBERS.USER_ID)
+                    .join(Tables.PROJECTMEMBERS).on(Tables.PROJECTMEMBERS.USER_ID.equal(Tables.USERS.ID))
+                    .where(Tables.PROJECTMEMBERS.PROJECT_ID.equal(create.select(Tables.ACTIVITY.PROJECT_ID)
+                    		.from(Tables.ACTIVITY)
+                    		.where(Tables.ACTIVITY.ID.equal(activityId))))
+                    .and(Tables.PROJECTMEMBERS.USER_ID.notIn(create.select(Tables.PROJECTMEMBERS.USER_ID)
                     		.from(Tables.PROJECTMEMBERS)
                     		.join(Tables.USERACTIVITIES)
                     		.on(Tables.USERACTIVITIES.USER_ID.equal(Tables.PROJECTMEMBERS.USER_ID))

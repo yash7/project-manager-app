@@ -531,6 +531,7 @@ public class ProjectsPanel {
 		}
 		
 		JList<String> projectMemberList = new JList<String>(projectMemberNames);
+		projectMemberList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		us1RightPanelGen.getProjectMembersScrollPane().setViewportView(projectMemberList);
 		us1RightPanelGen.getProjectMembersScrollPane().validate();
 		
