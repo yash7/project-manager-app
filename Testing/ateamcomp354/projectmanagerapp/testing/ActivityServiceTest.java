@@ -436,6 +436,162 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		
 		assertEquals(2, ase.getProjectMembers().size());
 	}
+
+	@Test
+	public void testGetDependencies_properDependency() {
+		final int linkCount	= 1;
+		int activityFromID 	= 0;
+		int activityToID	= 1;
+		Activity to, from	= null;
+		
+		for (int i = 0; i < linkCount; i++) {
+			activityFromID += 2;
+			activityToID += 2;
+			
+			to = new Activity();
+			to.setId(activityFromID);
+			
+			from = new Activity();
+			from.setId(activityToID);
+
+			this.ase.addActivity(from);
+			this.ase.addActivity(to);
+			this.ase.addDependency(activityFromID, activityToID);
+		}
+		
+		List<Integer> dependencies = this.ase.getDependencies(activityToID);
+		
+		assertEquals(linkCount, dependencies.size());
+	}
+	
+	@Test
+	public void testGetDependencies_noDependency() {
+		final int linkCount		= 0;
+		final int activityID 	= 0;
+		Activity a				= null;
+		
+		a = new Activity();
+		a.setId(activityID);
+			
+		this.ase.addActivity(a);
+		
+		List<Integer> dependencies = this.ase.getDependencies(activityID);
+		
+		assertEquals(linkCount, dependencies.size());
+	}
+	
+	@Test
+	public void testGetDependencies_properlyRemovesDependency() {
+		int linkCount				= 1;
+		int activityFromID 			= 0;
+		int activityToID			= 1;
+		Activity to, from			= null;
+		List<Integer> dependencies	= null;
+
+		for (int i = 0; i < linkCount; i++) {
+			activityFromID += 2;
+			activityToID += 2;
+			
+			to = new Activity();
+			to.setId(activityFromID);
+			
+			from = new Activity();
+			from.setId(activityToID);
+
+			this.ase.addActivity(from);
+			this.ase.addActivity(to);
+			this.ase.addDependency(activityFromID, activityToID);
+		}
+		
+		dependencies = this.ase.getDependencies(activityToID);
+		
+		assertEquals(linkCount, dependencies.size());
+		
+		this.ase.deleteDependency(activityFromID, activityToID);
+		linkCount--;
+		
+		dependencies = this.ase.getDependencies(activityToID);
+		
+		assertEquals(linkCount, dependencies.size());
+	}
+
+	@Test
+	public void testGetDependents_properDependents() {
+		final int linkCount	= 1;
+		int activityFromID 	= 0;
+		int activityToID	= 1;
+		Activity to, from	= null;
+		
+		for (int i = 0; i < linkCount; i++) {
+			activityFromID += 2;
+			activityToID += 2;
+			
+			to = new Activity();
+			to.setId(activityFromID);
+			
+			from = new Activity();
+			from.setId(activityToID);
+
+			this.ase.addActivity(from);
+			this.ase.addActivity(to);
+			this.ase.addDependency(activityFromID, activityToID);
+		}
+		
+		List<Integer> dependents = this.ase.getDependents(activityFromID);
+		
+		assertEquals(linkCount, dependents.size());
+	}
+	
+	@Test
+	public void testGetDependents_noDependents() {
+		final int linkCount		= 0;
+		final int activityID 	= 0;
+		Activity a				= null;
+		
+		a = new Activity();
+		a.setId(activityID);
+			
+		this.ase.addActivity(a);
+		
+		List<Integer> dependents = this.ase.getDependents(activityID);
+		
+		assertEquals(linkCount, dependents.size());
+	}
+	
+	@Test
+	public void testGetDependents_properlyRemovesDependency() {
+		int linkCount				= 1;
+		int activityFromID 			= 0;
+		int activityToID			= 1;
+		Activity to, from			= null;
+		List<Integer> dependents	= null;
+
+		for (int i = 0; i < linkCount; i++) {
+			activityFromID += 2;
+			activityToID += 2;
+			
+			to = new Activity();
+			to.setId(activityFromID);
+			
+			from = new Activity();
+			from.setId(activityToID);
+
+			this.ase.addActivity(from);
+			this.ase.addActivity(to);
+			this.ase.addDependency(activityFromID, activityToID);
+		}
+		
+		dependents = this.ase.getDependents(activityFromID);
+		
+		assertEquals(linkCount, dependents.size());
+		
+		this.ase.deleteDependency(activityFromID, activityToID);
+		linkCount--;
+		
+		dependents = this.ase.getDependents(activityFromID);
+		
+		assertEquals(linkCount, dependents.size());
+	}
 	
 	@Before
 	public void initial(){
