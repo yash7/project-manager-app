@@ -1,6 +1,8 @@
 package ateamcomp354.projectmanagerapp.ui;
 
 import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -42,7 +44,13 @@ public class EditUserListPanel {
 		
 		editUserListPanel.getEditButton().addActionListener(__ -> editUser());
 		
-		showMembers();
+		editUserListPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {		
+				showMembers();
+			}
+		});
+
 	}
 	
 	public JComponent getComponent() {

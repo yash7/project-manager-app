@@ -82,6 +82,7 @@ public class EditUserPanel {
 		editUserPanelGen.getErrorLastNameLabel().setText("");
 		editUserPanelGen.getErrorUsernameLabel().setText("");
 		editUserPanelGen.getErrorPasswordLabel().setText("");
+		editUserPanelGen.getErrorManagerRole().setText("");
 	}
 	
 	// Verifies if the form has been correctly filled
