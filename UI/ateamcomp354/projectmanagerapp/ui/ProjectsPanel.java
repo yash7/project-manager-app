@@ -379,20 +379,16 @@ public class ProjectsPanel {
 	}
 	
 	private void viewProgressClicked(){
-		//if(openProjectList.)
-		if(openProjectList.getSelectedValue()!= null)
-		{
-			List<Activity> acts = appCtx.getActivityService(openProjectList.getSelectedValue().getId()).getActivities();
+			List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
 					
 			if(acts.size()>0){
-			GanttChartGen chart = new GanttChartGen(openProjectList.getSelectedValue().getProjectName()
+			GanttChartGen chart = new GanttChartGen(getProject().getProjectName()
 					 + " Progress",acts); 
 			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
 			}
 			else
 				JOptionPane.showMessageDialog (null, "There are no activities for this project"
 						, "No Report", JOptionPane.PLAIN_MESSAGE);
-		}
 	}
 
 	// Btn to create new project is clicked, clear list selections and
