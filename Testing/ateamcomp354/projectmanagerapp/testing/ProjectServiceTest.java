@@ -6,8 +6,11 @@ import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
+import ateamcomp354.projectmanagerapp.services.UserService;
+
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.junit.Test;
 
 import java.util.List;
@@ -75,6 +78,59 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         assertEquals((int) test.getId(), 0);
     }
 
+    @Test
+  	public void testGetProjectActivitiesCount_noActivities() throws Exception {
+    	final int projectID 		= 0;
+    	final int activitiesCount	= 0;
+    	final String projectInfo 	= "Test project";
+
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+
+        projectService.addProject(p);
+        
+        assertEquals(activitiesCount, projectService.getProjectActivitiesCount(projectID));
+    }
+    
+    @Test
+  	public void testGetProjectActivitiesCount_properCount() throws Exception {
+    	final int projectID 		= 0;
+    	final int activitiesCount	= 2;
+    	final int activity1ID		= 0;
+    	final int activity2ID		= 1;
+    	final String projectInfo 	= "Test project";
+
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+
+        projectService.addProject(p);
+        
+        ActivityService activityService = appCtx.getActivityService(projectID);
+        
+        Activity a1 = new Activity();
+        Activity a2 = new Activity();
+        
+        a1.setId(activity1ID);
+        a2.setId(activity2ID);
+        a1.setProjectId(projectID);
+        a2.setProjectId(projectID);
+
+		activityService.addActivity(a1);
+		activityService.addActivity(a2);
+        
+        assertEquals(activitiesCount, projectService.getProjectActivitiesCount(projectID));
+    }
+    
     @Test
     public void testGetProjectCompletion_halfComplete() throws Exception {
 
@@ -381,6 +437,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     
     @Test
     public void testUpdateProjectBudgetAtCompletion() throws Exception {
+
     	  ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
           ProjectService projectService = appCtx.getProjectService();
          
@@ -418,5 +475,322 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
 		  projectService.updateProjectBudgetAtCompletion(0);
 		  
 		  assertEquals(2, (int)projectService.getProject(0).getBudgetAtCompletion());
+    }
+
+    @Test(expected=Exception.class)
+    public void testUpdateProjectBudgetAtCompletion_noNegativeBudget() throws Exception {
+    	final int projectID 		= 0;
+    	final int activityID 		= 0;
+    	final int duration			= -3;
+    	final int plannedValue		= 0;
+        final String projectInfo 	= "Test project";
+        final String activityInfo	= "This was a test";
+        
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+       
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(projectID);
+        
+        Activity a = new Activity();
+        a.setId(activityID);
+        a.setProjectId(projectID);
+		a.setDescription(activityInfo);
+		a.setDuration(duration);
+		a.setPlannedValue(plannedValue);
+		  
+		activityService.addActivity(a);
+		  
+		projectService.updateProjectBudgetAtCompletion(projectID);
+  }
+
+    @Test
+    public void testAddUserToProject_properlyAddUser() throws Exception {
+    	final int projectID 		= 0;
+    	final int memberCount		= 1;
+    	final boolean manager		= false;
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";
+    	final String projectInfo 	= "Test project";
+    	int userID					= 0;
+    	Users u						= null;
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        p = projectService.getProject(projectID);
+        
+        for(int i = 0; i < memberCount; i++) {
+	        u = new Users(userID++, firstName, lastName, userName, password, manager);
+	        userService.addUser(u);
+	        projectService.addUserToProject(projectID, u);
+        }
+        
+        List<Users> users = projectService.getMembersForProject(projectID);
+        assertEquals(memberCount, users.size());
+    }
+    
+    @Test(expected=ServiceFunctionalityException.class)
+    public void testAddUserToProject_cantAddUserTwice() throws Exception {
+    	final int projectID 		= 0;
+    	final int userID			= 0;
+    	final boolean manager		= false;
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";
+    	final String projectInfo 	= "Test project";
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        p = projectService.getProject(projectID);
+        
+        Users u = new Users(userID, firstName, lastName, userName, password, manager);
+        userService.addUser(u);
+        
+        projectService.addUserToProject(projectID, u);
+        projectService.addUserToProject(projectID, u);
+    }
+    
+    @Test
+    public void testGetUnassignedMembersForProject_getUnassignedMember() throws Exception {
+    	final int projectID 		= 0;
+    	final int membersCount 		= 1;
+    	final boolean manager		= false;
+    	final String projectInfo 	= "Test project";
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";	
+    	int userID					= 0;
+    	Users u						= null;
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        for (int i = 0; i < membersCount; i++) {
+        	 u = new Users(userID++, firstName, lastName, userName, password, manager);
+        	 userService.addUser(u);
+        }
+          
+        List<Users> users = projectService.getUnassignedMembersForProject(projectID);
+        
+        assertEquals(membersCount, users.size());
+    }
+    
+    @Test
+    public void testGetUnassignedMembersForProject_noUnassignedMember() throws Exception {
+    	final int projectID 		= 0;
+    	final int membersCount 		= 0;
+    	final String projectInfo 	= "Test project";
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+          
+        List<Users> users = projectService.getUnassignedMembersForProject(projectID);
+        
+        assertEquals(membersCount, users.size());
+    }
+
+    @Test(expected=Exception.class)
+    public void testDeleteUserFromProject_userNotInProject() throws Exception {
+    	final int projectID 		= 0;
+    	final int membersCount 		= 1;
+    	final boolean manager		= false;
+    	final String projectInfo 	= "Test project";
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";
+    	int userID					= 0;
+    	Users u						= null;
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        for (int i = 0; i < membersCount; i++) {
+        	 u = new Users(userID++, firstName, lastName, userName, password, manager);
+        	 userService.addUser(u);
+        }
+        
+        projectService.deleteUserFromProject(projectID, u);
+    }
+    
+    @Test
+    public void testDeleteUserFromProject_properlyDeletes() throws Exception {
+    	final int projectID 		= 0;
+    	final int membersCount 		= 1;
+    	final boolean manager		= false;
+    	final String projectInfo 	= "Test project";
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";
+    	int userID					= 0;
+    	Users u						= null;
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        for (int i = 0; i < membersCount; i++) {
+        	 u = new Users(userID++, firstName, lastName, userName, password, manager);
+        	 userService.addUser(u);
+        	 projectService.addUserToProject(projectID, u);
+        }
+        
+        projectService.deleteUserFromProject(projectID, u);
+        
+        List<Users> users = projectService.getMembersForProject(projectID);
+        
+        assertEquals(membersCount - 1, users.size());
+    }
+    
+    @Test
+    public void testGetMembersForProject_noMembers() throws Exception {
+    	final int projectID 		= 0;
+    	final int membersCount		= 0;
+    	final String projectInfo 	= "Test project";
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        List<Users> users = projectService.getMembersForProject(projectID);
+        
+        assertEquals(membersCount, users.size());
+    }
+
+    @Test
+    public void testGetMembersForProject_properMembers() throws Exception {
+    	final int projectID 		= 0;
+    	final int membersCount		= 1;
+    	final boolean manager		= false;
+    	final String projectInfo 	= "Test project";
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";
+    	int userID					= 0;
+    	Users u						= null;
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        for (int i = 0; i < membersCount; i++) {
+       	 u = new Users(userID++, firstName, lastName, userName, password, manager);
+       	 userService.addUser(u);
+       	 projectService.addUserToProject(projectID, u);
+       }
+        
+        List<Users> users = projectService.getMembersForProject(projectID);
+        
+        assertEquals(membersCount, users.size());
+    }
+
+    @Test
+    public void testGetMembersForProject_properMembersAfterDeletion() throws Exception {
+    	final int projectID 		= 0;
+    	final String projectInfo 	= "Test project";
+    	final int membersCount		= 2;
+    	int userID					= 0;
+    	final String firstName		= "test";
+    	final String lastName		= "test";
+    	final String userName		= "test";
+    	final String password		= "test";
+    	final boolean manager		= false;
+    	Users u						= null;
+    	
+    	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+        UserService userService = appCtx.getUserService();
+        
+        Project p = new Project();
+        p.setId(projectID);
+        p.setProjectName(projectInfo);
+        p.setDescription(projectInfo);
+        
+        projectService.addProject(p);
+        
+        for (int i = 0; i < membersCount; i++) {
+       	 	u = new Users(userID++, firstName + userID, lastName+ userID, userName + userID, password, manager);
+       	 	userService.addUser(u);
+       	 	projectService.addUserToProject(projectID, u);
+        }
+        
+        projectService.deleteUserFromProject(projectID, u);
+        
+        List<Users> users = projectService.getMembersForProject(projectID);
+        
+        assertEquals(membersCount - 1, users.size());
     }
 }
