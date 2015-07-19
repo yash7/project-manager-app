@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
@@ -123,6 +124,7 @@ public class MemberActivityPanel {
 		}
 		
 		assignedActivitiesList = new JList<>(activityNames);
+		assignedActivitiesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		memberActivityPanelGen.getActivityScrollPane().setViewportView(assignedActivitiesList);
 		memberActivityPanelGen.getActivityScrollPane().validate();
@@ -208,6 +210,7 @@ public class MemberActivityPanel {
 		}
 		
 		JList<String> assigneeList = new JList<String>(assigneeListModel);
+		assigneeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		memberActivityPanelGen.getAssigneeScrollPane().setViewportView(assigneeList);
 		memberActivityPanelGen.getAssigneeScrollPane().validate();
 	}

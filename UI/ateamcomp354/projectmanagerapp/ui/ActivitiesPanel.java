@@ -77,10 +77,12 @@ public class ActivitiesPanel {
 		splitPane1Gen.getBtnChart().setVisible(false);
 
 		activityList = new JList<>();
+		activityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		completedActivityList = new JList<>();
+		completedActivityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		assigneeListModel = new DefaultListModel();
-		dependencyListModel = new DefaultListModel();
+		assigneeListModel = new DefaultListModel<String>();
+		dependencyListModel = new DefaultListModel<String>();
 
 		splitPane1Gen.getStatusComboBox().addItem("Open");
 		splitPane1Gen.getStatusComboBox().addItem("In Progress");
@@ -198,24 +200,6 @@ public class ActivitiesPanel {
 			}
 		});
 
-		// adds a dependency to the selected project
-		splitPane1Gen.getAddDependencyButton().addActionListener(
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						addDependency();
-					}
-				});
-
-		// removes selected dependency from selected project
-		splitPane1Gen.getRemoveDependencyButton().addActionListener(
-				new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						removeDependency();
-					}
-				});
-
 		splitPane1Gen.getBackBtn().addActionListener(
 				__ -> this.swap.showProjectsView(projectId));
 		
@@ -293,13 +277,18 @@ public class ActivitiesPanel {
 		splitPane1Gen.getAddAssigneeButton().setVisible(b);
 		splitPane1Gen.getDelAssignButton().setVisible(b);
 		
-		if(!b) {
-			oldYPos = splitPane1Gen.getSaveActivityButton().getLocation().y;
-			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, splitPane1Gen.getSaveActivityButton().getLocation().y - 275);
+		if(!b) { //small view
+			if(oldYPos == -1) {
+				oldYPos = splitPane1Gen.getSaveActivityButton().getLocation().y;
+				splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, splitPane1Gen.getSaveActivityButton().getLocation().y - 275);
+			}
+			else {
+				splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, oldYPos - 275);
+			}
 		}
 		else {
-			
 			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, oldYPos == -1 ? splitPane1Gen.getSaveActivityButton().getLocation().y : oldYPos);
+			oldYPos = -1;
 		}
 	}
 
@@ -386,6 +375,18 @@ public class ActivitiesPanel {
 		if(activity.getEarliestStart() > activity.getLatestFinish()) {
 			errorString += "Start Date may not exceed End Date\n";
 		}
+		
+		String endDateAfterStartDate = anyEndDateAfterStartDate(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()), activity.getId());
+		
+		if(!endDateAfterStartDate.equals("")) {
+			errorString += endDateAfterStartDate+"\n";
+		}
+		
+		String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()), activity.getId());
+		
+		if(!startDateAfterEndDate.equals("")) {
+			errorString += startDateAfterEndDate+"\n";
+		}
 
 		if(errorString.equals("")) {
 			addOrUpdateActivity(activity);
@@ -413,6 +414,52 @@ public class ActivitiesPanel {
 		else {
 			JOptionPane.showMessageDialog(null, errorString);
 		}
+	}
+
+	private String anyStartDateAfterEndDate(Integer finishDate, Integer ID) {
+		List<Integer> activities = activityService.getDependents(ID);
+		Integer earliestDate = -1;
+		String earliestActivity = "";
+		
+		for(Integer a : activities) {
+			if(activityService.getActivity(a).getEarliestStart() < finishDate) {
+				earliestDate = activityService.getActivity(a).getEarliestStart();
+				earliestActivity = activityService.getActivity(a).getLabel();
+			}
+		}
+		
+		if(earliestDate != -1) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			try {
+				return "End Date must be before "+new SimpleDateFormat("yyyy/MM/dd").format(formatter.parse(earliestDate.toString()))+" to not overlap activity "+earliestActivity;
+			} catch (ParseException e) {
+				return "End Date must be before any overlapping activities";
+			}
+		}
+		return "";
+	}
+
+	private String anyEndDateAfterStartDate(Integer startDate, Integer ID) {
+		List<Integer> activities = activityService.getDependencies(ID);
+		Integer latestDate = -1;
+		String latestActivity = "";
+		
+		for(Integer a : activities) {
+			if(activityService.getActivity(a).getEarliestStart() > startDate) {
+				latestDate = activityService.getActivity(a).getEarliestStart();
+				latestActivity = activityService.getActivity(a).getLabel();
+			}
+		}
+		
+		if(latestDate != -1) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			try {
+				return "Start Date must be after "+new SimpleDateFormat("yyyy/MM/dd").format(formatter.parse(latestDate.toString()))+" to not overlap activity "+latestActivity;
+			} catch (ParseException e) {
+				return "Start Date must be after any overlapping activities";
+			}
+		}
+		return "";
 	}
 
 	private void addOrUpdateActivity(Activity a) {
@@ -490,6 +537,7 @@ public class ActivitiesPanel {
 		}
 		
 		dependencyList = new JList<String>(dependencyListModel);
+		dependencyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
 		splitPane1Gen.getDependencyScrollPane().validate();
 		fillDependencyComboBox();
@@ -540,93 +588,32 @@ public class ActivitiesPanel {
 	{	
 		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1) return;
 		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
+		
 		try {
 			activityService.addDependency(toAdd, activityId);
+			
+			String errorString = "";
+			String endDateAfterStartDate = anyEndDateAfterStartDate(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()), activityId);
+			
+			if(!endDateAfterStartDate.equals("")) {
+				errorString += endDateAfterStartDate+"\n";
+			}
+			
+			String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()), activityId);
+			
+			if(!startDateAfterEndDate.equals("")) {
+				errorString += startDateAfterEndDate+"\n";
+			}
+					
+			if(!errorString.equals("")) {
+				JOptionPane.showMessageDialog(null, errorString);
+				activityService.deleteDependency(toAdd, activityId);
+			}
 		}
 		catch(ServiceFunctionalityException e) {
 			JOptionPane.showMessageDialog(null, "Adding this Dependency would create a circular dependency chain. Unfortunately this is not allowed.");
 		}
 		showDependencies(activityId);
-		//forwardPass(activityId);
-	//	backwardPass(toAdd);
-		//selectActivity(activityId);
-	}
-
-	/**
-	 * doesnt work right now
-	 * @param activityId
-	 */
-	private void forwardPass(int activityId) {
-		/**
-		for(Activity a:activityService.getActivities()){
-			
-		}
-		**/
-		try {
-			Activity a = activityService.getActivity(activityId);
-			List<Activity> dep = activityService.getActivities(activityService
-					.getDependencies(activityId));
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd",
-					Locale.ENGLISH);
-			if (dep.size() > 0) {
-				Date time;
-
-				time = format.parse(String.valueOf(dep.remove(0)
-						.getEarliestFinish()));
-
-				for (Activity act : dep) {
-					Date timeToCheck = format.parse(String.valueOf(act
-							.getEarliestFinish()));
-					if (time.before(timeToCheck))
-						time = timeToCheck;
-				}
-				a.setEarliestStart(Integer.parseInt(format.format(time)));
-				a.setEarliestFinish(Integer.parseInt(format.format(time))
-						+ a.getDuration());
-				activityService.updateActivity(a);
-				backwardPass(activityId);
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	/**
-	 * Doesnt work right now
-	 * @param activityId
-	 */
-	private void backwardPass(int activityId){
-		try{
-			Activity a = activityService.getActivity(activityId);
-			List<Activity> dep = activityService.getActivities(activityService.getDependents(activityId));
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-			if(dep.size() > 0){
-				Date time;
-				
-				time = format.parse(String.valueOf(dep.remove(0).getEarliestStart()));
-				for(Activity act:dep){
-					Date timeToCheck = format.parse(String.valueOf(act.getEarliestStart()));
-						if(time.before(timeToCheck))
-							time = timeToCheck;
-					}
-				a.setLatestStart(Integer.parseInt(format.format(time)));
-				a.setLatestFinish(Integer.parseInt(format.format(time)) - a.getDuration());
-				a.setMaxDuration(a.getLatestFinish()-a.getEarliestStart());
-				activityService.updateActivity(a);
-			}
-			else{
-				a.setLatestFinish(a.getLatestFinish());
-				a.setLatestStart(a.getEarliestStart());
-				a.setMaxDuration(a.getDuration());
-				activityService.updateActivity(a);
-			}
-			
-	} catch (ParseException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
 	}
 
 	private void removeDependency() {
@@ -668,9 +655,11 @@ public class ActivitiesPanel {
 				Activity::getLabel, a -> a.getStatus().getPrettyString());
 
 		activityList = new JList<>(activitiesModel);
+		activityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		activityList.setCellRenderer(renderer);
 
 		completedActivityList = new JList<>(completedActivitiesModel);
+		completedActivityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		completedActivityList.setCellRenderer(renderer);
 
 		splitPane1Gen.getListScrollPane().setViewportView(activityList);
@@ -720,6 +709,7 @@ public class ActivitiesPanel {
 		}
 		
 		JList<String> assigneeList = new JList<String>(assigneeListModel);
+		assigneeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
 		splitPane1Gen.getAssigneeScrollPane().validate();
 		

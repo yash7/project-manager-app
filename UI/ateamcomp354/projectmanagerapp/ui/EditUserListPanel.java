@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
@@ -72,6 +73,7 @@ public class EditUserListPanel {
 		}
 		
 		JList<String> userList = new JList<String>(userNames);
+		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		editUserListPanel.getUserScrollPane().setViewportView(userList);
 		editUserListPanel.getUserScrollPane().validate();
 		

@@ -14,6 +14,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
@@ -98,6 +99,7 @@ public class MemberProjectPanel {
 		}
 		
 		assignedProjectsList = new JList<>(projectNames);
+		assignedProjectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		memberProjectPanelGen.getProjectScrollPane().setViewportView(assignedProjectsList);
 		memberProjectPanelGen.getProjectScrollPane().validate();
