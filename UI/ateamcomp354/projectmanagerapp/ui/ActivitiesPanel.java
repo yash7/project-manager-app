@@ -200,8 +200,14 @@ public class ActivitiesPanel {
 			}
 		});
 
-		splitPane1Gen.getBackBtn().addActionListener(
-				__ -> this.swap.showProjectsView(projectId));
+		splitPane1Gen.getBackBtn().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				swap.removeSaveFrame();
+				swap.showProjectsView(projectId);
+				
+			}
+		});
 		
 		splitPane1Gen.getEarliestStartDatePicker().addDateListener(new DateListener() {
 			@Override
