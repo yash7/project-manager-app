@@ -477,6 +477,8 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
+		
+		
 		if(p.getBudgetAtCompletion() != null) {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText(p.getBudgetAtCompletion().toString());
 		}
@@ -513,6 +515,7 @@ public class ProjectsPanel {
 		p.setProjectName( us1RightPanelGen.getProjectNameField().getText() );
 		p.setDescription( us1RightPanelGen.getDescriptionArea().getText() );
 		p.setCompleted( p.getId() != null && us1RightPanelGen.getCompletedCheckBox().isSelected() );
+		p.setBudgetAtCompletion( Integer.valueOf(us1RightPanelGen.getBudgetAtCompletionLabel().getText()));
 		return p;
 	}
 	
