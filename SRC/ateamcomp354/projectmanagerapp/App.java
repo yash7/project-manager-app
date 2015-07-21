@@ -118,11 +118,8 @@ public class App {
 		Activity a2 = activityDao.fetchByLabel("The ugly activity").get(0);
 		
 		if ( userActivitiesDao.findAll().isEmpty()) {
-			userActivitiesDao.insert(new Useractivities ( null, a1.getId(), jdoe.getId()));
 			userActivitiesDao.insert(new Useractivities ( null, a1.getId(), ssmith.getId()));
 			userActivitiesDao.insert(new Useractivities ( null, a1.getId(), cpratt.getId()));
-			userActivitiesDao.insert(new Useractivities ( null, a2.getId(), ssmith.getId()));
-			userActivitiesDao.insert(new Useractivities ( null, a2.getId(), cpratt.getId()));
 		}
 		
 		if (projectMembersDao.findAll().isEmpty()) {
