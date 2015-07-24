@@ -142,7 +142,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw new ServiceFunctionalityException("failed to delete a dependency from " + fromActivityId + " to " + toActivityId , e);
         }
     }
-
+	
     private void checkCircularDependency(int fromActivityId, int toActivityId, String string) {
 		if(addActivityToList(fromActivityId, toActivityId, new ArrayList<Integer>()) == null) {
 			throw new ServiceFunctionalityException(string);
@@ -305,4 +305,136 @@ public class ActivityServiceImpl implements ActivityService {
             throw new ServiceFunctionalityException("failed to get project members for project", e);
         }
     }
+	
+	@Override
+	public List<Integer> calculateNumberOfStartingNodes(List<Integer> startingNodes, int activityId) {
+		List<Integer> acts = this.getDependencies(activityId);
+		
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				List<Integer> nodes = calculateNumberOfStartingNodes(startingNodes, aId);
+				for(Integer newId : nodes) {
+					if(!startingNodes.contains(newId)) {
+						startingNodes.add(newId);
+					}
+				}
+			}
+			
+		}
+		else {
+			if(!startingNodes.contains(activityId)) {
+				startingNodes.add(activityId);
+			}
+		}
+		
+		return startingNodes;
+	}
+	
+	@Override
+	public List<Integer> calculateNumberOfEndingNodes(List<Integer> endingNodes, int activityId) {
+		List<Integer> acts = this.getDependents(activityId);
+		
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				List<Integer> nodes = calculateNumberOfEndingNodes(endingNodes, aId);
+				for(Integer newId : nodes) {
+					if(!endingNodes.contains(newId)) {
+						endingNodes.add(newId);
+					}
+				}
+			}
+			
+		}
+		else {
+			if(!endingNodes.contains(activityId)) {
+				endingNodes.add(activityId);
+			}
+		}
+		
+		return endingNodes;
+	}
+
+	@Override
+	public List<Integer> calculateSizeOfChain(List<Integer> nodes, int activityId) {
+		if(!nodes.contains(activityId)) { //always try to add current activityId
+			nodes.add(activityId);
+		}
+		
+		List<Integer> actsBackward = this.getDependencies(activityId);
+		List<Integer> actsForward = this.getDependents(activityId);
+		
+		if(actsBackward.size() > 0) { //middle/end
+			for(Integer aId : actsBackward) {
+				List<Integer> newNodes = calculateAllBackward(nodes, aId);
+				for(Integer newId : newNodes) {
+					if(!nodes.contains(newId)) {
+						nodes.add(newId);
+					}
+				}
+			}
+		}
+		
+		if(actsForward.size() > 0) { //middle/end
+			for(Integer aId : actsForward) {
+				List<Integer> newNodes = calculateAllForward(nodes, aId);
+				for(Integer newId : newNodes) {
+					if(!nodes.contains(newId)) {
+						nodes.add(newId);
+					}
+				}
+			}
+		}
+		return nodes;
+	}
+	
+	private List<Integer> calculateAllForward(List<Integer> activities, int activityId) {
+		if(!activities.contains(activityId)) {
+			activities.add(activityId);
+		}
+		
+		List<Integer> acts = this.getDependents(activityId);
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				if(!activities.contains(aId)) {
+					activities.add(aId);
+				}
+				List<Integer> nodes = calculateAllForward(activities, aId);
+				for(Integer newId : nodes) {
+					if(!activities.contains(newId)) {
+						activities.add(newId);
+					}
+				}
+			}
+		}
+		
+		return activities;
+	}
+	
+	private List<Integer> calculateAllBackward(List<Integer> activities, int activityId) {
+		if(!activities.contains(activityId)) {
+			activities.add(activityId);
+		}
+		
+		List<Integer> acts = this.getDependencies(activityId);
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				if(!activities.contains(aId)) {
+					activities.add(aId);
+				}
+				List<Integer> nodes = calculateAllBackward(activities, aId);
+				for(Integer newId : nodes) {
+					if(!activities.contains(newId)) {
+						activities.add(newId);
+					}
+				}
+			}
+		}
+		
+		return activities;
+	}
+	
+	@Override
+	public boolean calculateAllParamsOfChain(int activityId) {
+		return false;
+	}
 }

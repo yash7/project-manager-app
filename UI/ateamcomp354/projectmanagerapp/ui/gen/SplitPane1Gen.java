@@ -42,13 +42,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.freixas.jcalendar.JCalendarCombo;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SplitPane1Gen extends JPanel {
 	private JLabel topLabel;
 	private JScrollPane listScrollPane;
 	private JButton addButton;
 	private JButton deleteButton;
-	private JButton btnManage;
+	private JButton btnCriticalPath;
 	private JLabel activityNameLabel;
 
 	private int appWidth = MainFrame.getAppWidth();
@@ -137,10 +139,9 @@ public class SplitPane1Gen extends JPanel {
 		deleteButton.setBounds(149, 91, 70, 30);
 		LeftPanel.add(deleteButton);
 		
-		btnManage = new JButton("Manage Activity");
-		btnManage.setBounds(170, 342, 131, 30);
-		btnManage.setVisible(false);
-		LeftPanel.add(btnManage);
+		btnCriticalPath = new JButton("Critical Path");
+		btnCriticalPath.setBounds(170, 342, 131, 30);
+		LeftPanel.add(btnCriticalPath);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(43, 385, 256, 197);
@@ -348,8 +349,8 @@ public class SplitPane1Gen extends JPanel {
 		return deleteButton;
 	}
 
-	public JButton getBtnManage() {
-		return btnManage;
+	public JButton getBtnCriticalPath() {
+		return btnCriticalPath;
 	}
 	
 	public JButton getChartButton(){

@@ -118,4 +118,12 @@ public interface ActivityService {
 	List<Users> getProjectMembers();
 
 	Users getProjectMember(int memberId);
+
+	boolean calculateAllParamsOfChain(int i);
+
+	List<Integer> calculateNumberOfStartingNodes(List<Integer> startingNodes, int activityId);
+
+	List<Integer> calculateSizeOfChain(List<Integer> nodes, int id);
+
+	List<Integer> calculateNumberOfEndingNodes(List<Integer> endingNodes,	int activityId);
 }
