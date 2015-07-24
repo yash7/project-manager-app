@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,7 @@ public class ProjectsPanel {
 		projectInfos = new HashMap<>();
 
 		splitPane1Gen = new SplitPane1Gen();
-		splitPane1Gen.getBtnChart().setBounds(43, 344, 257, 30);
+		splitPane1Gen.getBtnChart().setBounds(44, 345, 116, 30);
 
 		us1RightPanelGen = new US1RightPanelGen();
 
@@ -126,6 +127,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getAddButton().addActionListener( __ -> addProjectClicked() );
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
 		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
+		splitPane1Gen.getBtnCriticalPath().addActionListener(__ -> viewCriticalPath());
 		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
@@ -167,7 +169,7 @@ public class ProjectsPanel {
 		selectedProject = Optional.empty();
 		displayProject();
 	}
-	
+
 	public JComponent getComponent()
 	{
 		return splitPane1Gen;
@@ -389,6 +391,39 @@ public class ProjectsPanel {
 			else
 				JOptionPane.showMessageDialog (null, "There are no activities for this project"
 						, "No Report", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	private void viewCriticalPath() {
+		ase = appCtx.getActivityService(getProject().getId());
+		
+		List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
+		
+		if(acts.size() > 0) {
+			List<Integer> x = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), acts.get(0).getId());
+			if(x.size() == 1) {
+				List<Integer> y = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), acts.get(0).getId());
+				if(y.size() == 1) {
+					List<Integer> sizeArray = ase.calculateSizeOfChain(new ArrayList<Integer>(), acts.get(0).getId());
+					if(acts.size() == sizeArray.size()) {
+						System.out.println("Good to calculate all params");
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "There are loose activities not linked to any others, all activities must be linked in order to create a working Critical Path Analysis");
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "There are multiple ending activities (or dangles), there must be only a single end activity to create a working Critical Path Analysis");
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "There are multiple starting activities, there must be only a single start activity to create a working Critical Path Analysis");
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog (null, "There are no activities for this project", "No Report", JOptionPane.PLAIN_MESSAGE);
+		}
+		
+		ase = null;
 	}
 
 	// Btn to create new project is clicked, clear list selections and
