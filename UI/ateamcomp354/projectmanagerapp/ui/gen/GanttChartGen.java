@@ -68,7 +68,7 @@ public class GanttChartGen extends JPanel {
 	        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
 	    	try{
 				Date esdate = format.parse(String.valueOf(a.getEarliestStart()).trim());
-				Date eedate = format.parse(String.valueOf(a.getLatestFinish()).trim());
+				Date eedate = format.parse(String.valueOf(a.getEarliestFinish()).trim());
 			
 				Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
 				if(a.getStatus() == Status.RESOLVED) {

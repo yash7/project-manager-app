@@ -16,7 +16,11 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -434,7 +438,96 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 	
 	@Override
-	public boolean calculateAllParamsOfChain(int activityId) {
+	public boolean calculateAllParamsOfChain(int startActivityId, int endActivityId) {
+		Activity startActivity = this.getActivity(startActivityId);
+		calculateNextForward(startActivity);
+		
+		Activity lastActivity = this.getActivity(endActivityId);
+		lastActivity.setLatestFinish(lastActivity.getEarliestFinish());
+		lastActivity.setLatestStart(lastActivity.getEarliestStart());
+		lastActivity.setFloat(0);
+		lastActivity.setMaxDuration(lastActivity.getDuration());
+		
+		this.updateActivity(lastActivity);
+		
+		System.out.println("Activity "+lastActivity.getLabel());
+		System.out.println("    Earliest Start - "+lastActivity.getEarliestStart());
+		System.out.println("    Earliest Finish - "+lastActivity.getEarliestFinish());
+		System.out.println("    Latest Start - "+lastActivity.getLatestStart());
+		System.out.println("    Latest Finish - "+lastActivity.getLatestFinish());
+		System.out.println("    Float - "+lastActivity.getFloat());
+		System.out.println("    Duration - "+lastActivity.getDuration());
+		System.out.println("    Max Duration - "+lastActivity.getMaxDuration());
+		
+		calculatePrevBackward(lastActivity);
+		
 		return false;
+	}
+	
+	private void calculatePrevBackward(Activity a) {
+		Integer lastActivityLatestStart = -1;
+		for(int i : this.getDependents(a.getId())) {
+			if(lastActivityLatestStart == -1 || this.getActivity(i).getLatestStart() < lastActivityLatestStart) {
+				lastActivityLatestStart = this.getActivity(i).getLatestStart();
+			}
+		}
+		
+		if(lastActivityLatestStart != -1) {
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+				Calendar cal = Calendar.getInstance();
+				
+				a.setLatestFinish(lastActivityLatestStart);
+				
+				cal.setTime(formatter.parse(a.getLatestFinish().toString()));
+				cal.add(Calendar.DATE, -1 * a.getDuration());
+				
+				Integer currentActivityLatestStart = Integer.parseInt(formatter.format(cal.getTime()));
+				
+				a.setLatestStart(currentActivityLatestStart);
+				
+				Date ES = formatter.parse(a.getEarliestStart().toString());
+				Date LS = formatter.parse(a.getLatestStart().toString());
+				int floatVal = (int) (LS.getTime() - ES.getTime()) / (1000 * 60 * 60 * 24);
+				a.setFloat(floatVal);
+				
+				Date LF = formatter.parse(a.getLatestFinish().toString());
+				int maxDuration = (int) (LF.getTime() - ES.getTime()) / (1000 * 60 * 60 * 24);
+				a.setMaxDuration(maxDuration);
+				this.updateActivity(a);
+						
+				System.out.println("Activity "+a.getLabel());
+				System.out.println("    Earliest Start - "+a.getEarliestStart());
+				System.out.println("    Earliest Finish - "+a.getEarliestFinish());
+				System.out.println("    Latest Start - "+a.getLatestStart());
+				System.out.println("    Latest Finish - "+a.getLatestFinish());
+				System.out.println("    Float - "+a.getFloat());
+				System.out.println("    Duration - "+a.getDuration());
+				System.out.println("    Max Duration - "+a.getMaxDuration());
+			} catch (ParseException e) {}
+		}
+		
+		for(int i : this.getDependencies(a.getId())) {
+			calculatePrevBackward(this.getActivity(i));
+		}	
+	}
+
+	private void calculateNextForward(Activity a) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		try {
+			Date startDate = formatter.parse(a.getEarliestStart().toString());
+			Date endDate = formatter.parse(a.getEarliestFinish().toString());
+			int duration = (int) (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+			a.setDuration(duration);
+			this.updateActivity(a);
+			
+			for(int i : this.getDependents(a.getId())) {
+				calculateNextForward(this.getActivity(i));
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -406,6 +406,7 @@ public class ProjectsPanel {
 					List<Integer> sizeArray = ase.calculateSizeOfChain(new ArrayList<Integer>(), acts.get(0).getId());
 					if(acts.size() == sizeArray.size()) {
 						System.out.println("Good to calculate all params");
+						ase.calculateAllParamsOfChain(x.get(0), y.get(0));
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "There are loose activities not linked to any others, all activities must be linked in order to create a working Critical Path Analysis");

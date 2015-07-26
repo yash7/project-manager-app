@@ -130,6 +130,13 @@ public class ActivityDao extends DAOImpl<ActivityRecord, Activity, Integer> {
 	}
 
 	/**
+	 * Fetch records that have <code>float IN (values)</code>
+	 */
+	public List<Activity> fetchByFloat(Integer... values) {
+		return fetch(ActivityTable.ACTIVITY.FLOAT, values);
+	}
+
+	/**
 	 * Fetch records that have <code>description IN (values)</code>
 	 */
 	public List<Activity> fetchByDescription(String... values) {

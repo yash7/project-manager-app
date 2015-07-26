@@ -265,7 +265,7 @@ public class ActivitiesPanel {
 				String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
 				String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
 				
-				splitPane1Gen.getLatestFinishField().setText(year+month+day);
+				splitPane1Gen.getEarliestFinishField().setText(year+month+day);
 			}
 		});
 	}
@@ -357,8 +357,8 @@ public class ActivitiesPanel {
 				.getLatestStartField().getText()));
 		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen
 				.getEarliestFinishField().getText()));
-		activity.setLatestFinish(Integer.parseInt(splitPane1Gen
-				.getLatestFinishField().getText()));
+		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen
+				.getEarliestFinishField().getText()));
 		activity.setMaxDuration(Integer.parseInt(splitPane1Gen
 				.getMaxDurationField().getText()));
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField()
@@ -378,7 +378,7 @@ public class ActivitiesPanel {
 			errorString += "Planned Value must be a valid non-negative whole number\n";
 		}
 		
-		if(activity.getEarliestStart() > activity.getLatestFinish()) {
+		if(activity.getEarliestStart() > activity.getEarliestFinish()) {
 			errorString += "Start Date may not exceed End Date\n";
 		}
 		
@@ -388,7 +388,7 @@ public class ActivitiesPanel {
 			errorString += endDateAfterStartDate+"\n";
 		}
 		
-		String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()), activity.getId());
+		String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()), activity.getId());
 		
 		if(!startDateAfterEndDate.equals("")) {
 			errorString += startDateAfterEndDate+"\n";
@@ -505,7 +505,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getEarliestFinishField().setText(
 				Integer.toString(activity.getEarliestFinish()));
 		splitPane1Gen.getLatestFinishField().setText(
-				Integer.toString(activity.getLatestFinish()));
+				Integer.toString(activity.getEarliestFinish()));
 		splitPane1Gen.getMaxDurationField().setText(
 				Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(
@@ -520,7 +520,7 @@ public class ActivitiesPanel {
 			splitPane1Gen.getEarliestStartDatePicker().setDate(formatter.parse(activity.getEarliestStart().toString()));
 			splitPane1Gen.getLatestStartDatePicker().setDate(formatter.parse(activity.getLatestStart().toString()));
 			splitPane1Gen.getEarliestFinishDatePicker().setDate(formatter.parse(activity.getEarliestFinish().toString()));
-			splitPane1Gen.getLatestFinishDatePicker().setDate(formatter.parse(activity.getLatestFinish().toString()));
+			splitPane1Gen.getLatestFinishDatePicker().setDate(formatter.parse(activity.getEarliestFinish().toString()));
 		} catch (ParseException e) {}
 		
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
@@ -605,7 +605,7 @@ public class ActivitiesPanel {
 				errorString += endDateAfterStartDate+"\n";
 			}
 			
-			String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getLatestFinishField().getText()), activityId);
+			String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()), activityId);
 			
 			if(!startDateAfterEndDate.equals("")) {
 				errorString += startDateAfterEndDate+"\n";

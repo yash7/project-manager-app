@@ -9,6 +9,7 @@ CREATE TABLE activity (
 	latest_finish INTEGER,
 	duration INTEGER,
 	max_duration INTEGER,
+	float INTEGER,
 	description TEXT,
 	planned_value INTEGER
 );

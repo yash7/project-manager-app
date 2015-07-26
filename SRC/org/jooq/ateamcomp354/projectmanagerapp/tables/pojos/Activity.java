@@ -24,7 +24,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity implements Serializable {
 
-	private static final long serialVersionUID = 1536230009;
+	private static final long serialVersionUID = -91338448;
 
 	private Integer id;
 	private Integer projectId;
@@ -36,6 +36,7 @@ public class Activity implements Serializable {
 	private Integer latestFinish;
 	private Integer duration;
 	private Integer maxDuration;
+	private Integer float_;
 	private String  description;
 	private Integer plannedValue;
 
@@ -52,6 +53,7 @@ public class Activity implements Serializable {
 		this.latestFinish = value.latestFinish;
 		this.duration = value.duration;
 		this.maxDuration = value.maxDuration;
+		this.float_ = value.float_;
 		this.description = value.description;
 		this.plannedValue = value.plannedValue;
 	}
@@ -67,6 +69,7 @@ public class Activity implements Serializable {
 		Integer latestFinish,
 		Integer duration,
 		Integer maxDuration,
+		Integer float_,
 		String  description,
 		Integer plannedValue
 	) {
@@ -80,6 +83,7 @@ public class Activity implements Serializable {
 		this.latestFinish = latestFinish;
 		this.duration = duration;
 		this.maxDuration = maxDuration;
+		this.float_ = float_;
 		this.description = description;
 		this.plannedValue = plannedValue;
 	}
@@ -162,6 +166,14 @@ public class Activity implements Serializable {
 
 	public void setMaxDuration(Integer maxDuration) {
 		this.maxDuration = maxDuration;
+	}
+
+	public Integer getFloat() {
+		return this.float_;
+	}
+
+	public void setFloat(Integer float_) {
+		this.float_ = float_;
 	}
 
 	public String getDescription() {
