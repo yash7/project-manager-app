@@ -438,9 +438,9 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 	
 	@Override
-	public boolean calculateAllParamsOfChain(int startActivityId, int endActivityId) {
+	public List<Integer> calculateAllParamsOfChain(int startActivityId, int endActivityId) {
 		Activity startActivity = this.getActivity(startActivityId);
-		calculateNextForward(startActivity);
+		List<Integer> activities = calculateNextForward(startActivity);
 		
 		Activity lastActivity = this.getActivity(endActivityId);
 		lastActivity.setLatestFinish(lastActivity.getEarliestFinish());
@@ -461,7 +461,7 @@ public class ActivityServiceImpl implements ActivityService {
 		
 		calculatePrevBackward(lastActivity);
 		
-		return false;
+		return activities;
 	}
 	
 	private void calculatePrevBackward(Activity a) {
@@ -512,8 +512,11 @@ public class ActivityServiceImpl implements ActivityService {
 		}	
 	}
 
-	private void calculateNextForward(Activity a) {
+	private List<Integer> calculateNextForward(Activity a) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		List<Integer> activities = new ArrayList<Integer>();
+		activities.add(a.getId());
+		
 		try {
 			Date startDate = formatter.parse(a.getEarliestStart().toString());
 			Date endDate = formatter.parse(a.getEarliestFinish().toString());
@@ -522,12 +525,16 @@ public class ActivityServiceImpl implements ActivityService {
 			this.updateActivity(a);
 			
 			for(int i : this.getDependents(a.getId())) {
-				calculateNextForward(this.getActivity(i));
+				List<Integer> newActs = calculateNextForward(this.getActivity(i));
+				for(Integer na : newActs) {
+					if(!activities.contains(na)) {
+						activities.add(na);
+					}
+				}
 			}
-			
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+						
+		} catch (ParseException e) {}
 		
+		return activities;
 	}
 }

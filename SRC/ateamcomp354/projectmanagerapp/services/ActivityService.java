@@ -119,7 +119,7 @@ public interface ActivityService {
 
 	Users getProjectMember(int memberId);
 
-	boolean calculateAllParamsOfChain(int i, int ii);
+	List<Integer> calculateAllParamsOfChain(int i, int ii);
 
 	List<Integer> calculateNumberOfStartingNodes(List<Integer> startingNodes, int activityId);
 

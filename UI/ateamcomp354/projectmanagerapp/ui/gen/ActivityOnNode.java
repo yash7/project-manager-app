@@ -1,10 +1,7 @@
 package ateamcomp354.projectmanagerapp.ui.gen;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,23 +19,19 @@ import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 import org.jfree.ui.Layer;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
+
 import ateamcomp354.projectmanagerapp.model.Status;
 
-public class GanttChartGen extends JPanel {
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
 
-    /**
-	 * 
-	 */
+public class ActivityOnNode extends JPanel {
+
 	private static final long serialVersionUID = 1L;
-
-	/**
-     * Creates a new demo.
-     *
-     * @param title  the frame title.
-     */
-    public GanttChartGen(String title, List<Activity> acts) {
-
-
+	
+	public ActivityOnNode(String title, List<Activity> acts) {
+		
         final IntervalCategoryDataset dataset = createDataset(acts);
         final JFreeChart chart = createChart(dataset, title);
         chart.getCategoryPlot().addRangeMarker(new ValueMarker(new Date().getTime(), Color.BLACK, new BasicStroke(1.0F)), Layer.FOREGROUND);
@@ -49,13 +42,11 @@ public class GanttChartGen extends JPanel {
         add(chartPanel);
 
     }
-
-   
-    public IntervalCategoryDataset createDataset(List<Activity> acts) {
+	
+	public IntervalCategoryDataset createDataset(List<Activity> acts) {
     	
-    	final TaskSeries s1 = new TaskSeries("Open");
-    	final TaskSeries s2 = new TaskSeries("In Progress");
-    	final TaskSeries s3 = new TaskSeries("Complete");
+    	final TaskSeries s1 = new TaskSeries("Critical Path");
+    	final TaskSeries s2 = new TaskSeries("Non-Critical");
         
     	for(Activity a:acts){
                
@@ -65,15 +56,12 @@ public class GanttChartGen extends JPanel {
 				Date eedate = format.parse(String.valueOf(a.getEarliestFinish()).trim());
 			
 				Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
-				if(a.getStatus() == Status.RESOLVED) {
-					t.setPercentComplete(1);
-					s3.add(t);
-				}
-				else if(a.getStatus() == Status.IN_PROGRESS) {
-					s2.add(t);
+				if(a.getFloat() == 0) {
+					//t.setPercentComplete(1);
+					s1.add(t);
 				}
 				else {
-					s1.add(t);
+					s2.add(t);
 				}
 	    	}catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -83,28 +71,10 @@ public class GanttChartGen extends JPanel {
         final TaskSeriesCollection collection = new TaskSeriesCollection();
         collection.add(s1);
         collection.add(s2);
-        collection.add(s3);
-
         return collection;
     }
 
-    private Date date(final int day, final int month, final int year) {
-
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-        final Date result = calendar.getTime();
-        return result;
-
-    }
-        
-    /**
-     * Creates a chart.
-     * 
-     * @param dataset  the dataset.
-     * 
-     * @return The chart.
-     */
-    private JFreeChart createChart(final IntervalCategoryDataset dataset, String title) {
+	private JFreeChart createChart(final IntervalCategoryDataset dataset, String title) {
         final JFreeChart chart = ChartFactory.createGanttChart(
             title,  // chart title
             "Activity",              // domain axis label
@@ -117,6 +87,4 @@ public class GanttChartGen extends JPanel {
         
         return chart;    
     }
-    
-
 }
