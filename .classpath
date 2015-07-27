@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="lib/jcalendar.jar"/>
 	<classpathentry kind="lib" path="lib/jcommon-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jgraphx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

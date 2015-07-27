@@ -406,8 +406,8 @@ public class ProjectsPanel {
 				if(y.size() == 1) {
 					List<Integer> sizeArray = ase.calculateSizeOfChain(new ArrayList<Integer>(), acts.get(0).getId());
 					if(acts.size() == sizeArray.size()) {
-						List<Integer> finalActs = ase.calculateAllParamsOfChain(x.get(0), y.get(0));
-						openCriticalPaths(finalActs);
+						ase.calculateAllParamsOfChain(x.get(0), y.get(0));
+						openCriticalPaths(ase, y.get(0));
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "There are loose activities not linked to any others, all activities must be linked in order to create a working Critical Path Analysis");
@@ -428,14 +428,8 @@ public class ProjectsPanel {
 		ase = null;
 	}
 	
-	private void openCriticalPaths(List<Integer> acts) {
-		System.out.println(Arrays.toString(acts.toArray()));
-		List<Activity> activities = new ArrayList<Activity>();
-		for(Integer i : acts) {
-			activities.add(ase.getActivity(i));
-		}
-		
-		ActivityOnNode chart = new ActivityOnNode(getProject().getProjectName()+ " Critical Path Analysis", activities); 
+	private void openCriticalPaths(ActivityService ase, Integer act) {		
+		ActivityOnNode chart = new ActivityOnNode(ase, getProject().getProjectName()+ " Critical Path Analysis", ase.getActivity(act)); 
 		JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
 	}
 

@@ -450,14 +450,14 @@ public class ActivityServiceImpl implements ActivityService {
 		
 		this.updateActivity(lastActivity);
 		
-		System.out.println("Activity "+lastActivity.getLabel());
-		System.out.println("    Earliest Start - "+lastActivity.getEarliestStart());
-		System.out.println("    Earliest Finish - "+lastActivity.getEarliestFinish());
-		System.out.println("    Latest Start - "+lastActivity.getLatestStart());
-		System.out.println("    Latest Finish - "+lastActivity.getLatestFinish());
-		System.out.println("    Float - "+lastActivity.getFloat());
-		System.out.println("    Duration - "+lastActivity.getDuration());
-		System.out.println("    Max Duration - "+lastActivity.getMaxDuration());
+//		System.out.println("Activity "+lastActivity.getLabel());
+//		System.out.println("    Earliest Start - "+lastActivity.getEarliestStart());
+//		System.out.println("    Earliest Finish - "+lastActivity.getEarliestFinish());
+//		System.out.println("    Latest Start - "+lastActivity.getLatestStart());
+//		System.out.println("    Latest Finish - "+lastActivity.getLatestFinish());
+//		System.out.println("    Float - "+lastActivity.getFloat());
+//		System.out.println("    Duration - "+lastActivity.getDuration());
+//		System.out.println("    Max Duration - "+lastActivity.getMaxDuration());
 		
 		calculatePrevBackward(lastActivity);
 		
@@ -496,14 +496,14 @@ public class ActivityServiceImpl implements ActivityService {
 				a.setMaxDuration(maxDuration);
 				this.updateActivity(a);
 						
-				System.out.println("Activity "+a.getLabel());
-				System.out.println("    Earliest Start - "+a.getEarliestStart());
-				System.out.println("    Earliest Finish - "+a.getEarliestFinish());
-				System.out.println("    Latest Start - "+a.getLatestStart());
-				System.out.println("    Latest Finish - "+a.getLatestFinish());
-				System.out.println("    Float - "+a.getFloat());
-				System.out.println("    Duration - "+a.getDuration());
-				System.out.println("    Max Duration - "+a.getMaxDuration());
+//				System.out.println("Activity "+a.getLabel());
+//				System.out.println("    Earliest Start - "+a.getEarliestStart());
+//				System.out.println("    Earliest Finish - "+a.getEarliestFinish());
+//				System.out.println("    Latest Start - "+a.getLatestStart());
+//				System.out.println("    Latest Finish - "+a.getLatestFinish());
+//				System.out.println("    Float - "+a.getFloat());
+//				System.out.println("    Duration - "+a.getDuration());
+//				System.out.println("    Max Duration - "+a.getMaxDuration());
 			} catch (ParseException e) {}
 		}
 		
