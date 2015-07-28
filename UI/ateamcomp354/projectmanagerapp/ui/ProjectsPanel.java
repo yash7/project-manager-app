@@ -2,33 +2,25 @@ package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.ProjectInfo;
-import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
-import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.services.UserService;
-import ateamcomp354.projectmanagerapp.ui.gen.ActivityOnNode;
+import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
+import ateamcomp354.projectmanagerapp.ui.util.Charts;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
 import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
-
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The projects panel displays a list of all the projects in the system.
@@ -57,7 +49,6 @@ public class ProjectsPanel {
 	private final DefaultListModel<Project> closedProjectsModel;
 	
 	private ApplicationContext appCtx;
-	private ActivityService ase;
 
 	private int selectedProjectMemberId;
 	private List<Integer> projectMemberComboIndexes;
@@ -395,42 +386,8 @@ public class ProjectsPanel {
 	}
 	
 	private void viewCriticalPath() {
-		ase = appCtx.getActivityService(getProject().getId());
-		
-		List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
-		
-		if(acts.size() > 0) {
-			List<Integer> x = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), acts.get(0).getId());
-			if(x.size() == 1) {
-				List<Integer> y = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), acts.get(0).getId());
-				if(y.size() == 1) {
-					List<Integer> sizeArray = ase.calculateSizeOfChain(new ArrayList<Integer>(), acts.get(0).getId());
-					if(acts.size() == sizeArray.size()) {
-						ase.calculateAllParamsOfChain(x.get(0), y.get(0));
-						openCriticalPaths(ase, y.get(0));
-					}
-					else {
-						JOptionPane.showMessageDialog(null, "There are loose activities not linked to any others, all activities must be linked in order to create a working Critical Path Analysis");
-					}
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "There are multiple ending activities (or dangles), there must be only a single end activity to create a working Critical Path Analysis");
-				}
-			}
-			else {
-				JOptionPane.showMessageDialog(null, "There are multiple starting activities, there must be only a single start activity to create a working Critical Path Analysis");
-			}
-		}
-		else {
-			JOptionPane.showMessageDialog (null, "There are no activities for this project", "No Report", JOptionPane.PLAIN_MESSAGE);
-		}
-		
-		ase = null;
-	}
-	
-	private void openCriticalPaths(ActivityService ase, Integer act) {		
-		ActivityOnNode chart = new ActivityOnNode(ase, getProject().getProjectName()+ " Critical Path Analysis", ase.getActivity(act)); 
-		JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
+
+		Charts.viewCriticalPathsChart( appCtx, getProject() );
 	}
 
 	// Btn to create new project is clicked, clear list selections and
