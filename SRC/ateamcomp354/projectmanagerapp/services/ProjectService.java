@@ -75,4 +75,6 @@ public interface ProjectService {
     List<Users> getMembersForProject(int projectId);
     
     void updateProjectBudgetAtCompletion (int projectId);
+    
+    void ernedValueAnalysis (int projectId);
 }

@@ -285,6 +285,7 @@ public class ProjectsPanel {
 	// If they choose cancel then we need to undo the selection and reselect
 	// the old project.
 	private void projectSelected( ListSelectionEvent e, JList<Project> list1, JList<Project> list2 ) {
+				
 		if ( valueIsAdjusting ) {
 			return;
 		}
@@ -302,7 +303,14 @@ public class ProjectsPanel {
 		valueIsAdjusting = false;
 
 		Project project = list1.getModel().getElementAt( i );
-
+		
+		//TESTING
+//-------------------------------------------------------------------------------------------------//		
+		System.out.println("Here ProjectPanel.java");
+		projectService.ernedValueAnalysis(project.getId());
+//--------------------------------------------------------------------------------------------------//		
+		
+		
 		int r = checkDirty();
 		if ( r == JOptionPane.YES_OPTION ) {
 			valueIsAdjusting = true;
@@ -477,7 +485,8 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
-		
+		us1RightPanelGen.getActualCostField().setEnabled(!p.getCompleted());
+		//us1RightPanelGen.getActualCostField().setText(p.getActualCost().toString());
 		
 		if(p.getBudgetAtCompletion() != null) {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText(p.getBudgetAtCompletion().toString());
@@ -486,6 +495,10 @@ public class ProjectsPanel {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
 		}
 		
+		if(p.getActualCost() != null)
+			us1RightPanelGen.getActualCostField().setText(p.getActualCost().toString());
+		else
+			us1RightPanelGen.getActualCostField().setText("0");
 		
 		if (p.getId() != null) {
 			us1RightPanelGen.getProjectMembersScrollPane().setVisible(true);
@@ -516,6 +529,7 @@ public class ProjectsPanel {
 		p.setDescription( us1RightPanelGen.getDescriptionArea().getText() );
 		p.setCompleted( p.getId() != null && us1RightPanelGen.getCompletedCheckBox().isSelected() );
 		p.setBudgetAtCompletion( Integer.valueOf(us1RightPanelGen.getBudgetAtCompletionLabel().getText()));
+		p.setActualCost(Integer.valueOf(us1RightPanelGen.getActualCostField().getText()));
 		return p;
 	}
 	

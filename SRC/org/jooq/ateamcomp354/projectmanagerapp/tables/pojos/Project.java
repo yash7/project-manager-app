@@ -29,6 +29,7 @@ public class Project implements Serializable {
 	private String  description;
 	private Boolean completed;
 	private Integer budgetAtCompletion;
+	private Integer actualCost;
 
 	public Project() {}
 
@@ -38,20 +39,16 @@ public class Project implements Serializable {
 		this.description = value.description;
 		this.completed = value.completed;
 		this.budgetAtCompletion = value.budgetAtCompletion;
+		this.actualCost = value.actualCost;
 	}
 
-	public Project(
-		Integer id,
-		String  projectName,
-		String  description,
-		Boolean completed,
-		Integer budgetAtCompletion
-	) {
+	public Project(Integer id, String  projectName,	String  description, Boolean completed, Integer budgetAtCompletion, Integer actualCost) {
 		this.id = id;
 		this.projectName = projectName;
 		this.description = description;
 		this.completed = completed;
 		this.budgetAtCompletion = budgetAtCompletion;
+		this.actualCost = actualCost;
 	}
 
 	public Integer getId() {
@@ -92,5 +89,13 @@ public class Project implements Serializable {
 
 	public void setBudgetAtCompletion(Integer budgetAtCompletion) {
 		this.budgetAtCompletion = budgetAtCompletion;
+	}
+	
+	public Integer getActualCost(){
+		return this.actualCost;
+	}
+	
+	public void setActualCost(Integer actualCost){
+		this.actualCost = actualCost;
 	}
 }

@@ -15,7 +15,19 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Date;
 
 public class ProjectServiceImpl implements ProjectService {
 
@@ -210,5 +222,42 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (DataAccessException e) {
             throw new ServiceFunctionalityException("unable to update project's BAC " + projectId, e);
         }
+	}
+
+	@Override
+	public void ernedValueAnalysis(int projectId) {
+		try{
+			LocalDate localDate = new LocalDate();
+			
+			System.out.println(localDate.toString()+ "  localDate");			
+			
+			List<Integer> dates = create.select(Tables.ACTIVITY.EARLIEST_START)
+					.from(Tables.ACTIVITY)
+					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+					.fetchInto(Integer.class);
+			
+			for (Integer i: dates){
+				
+				org.joda.time.format.DateTimeFormatter format = org.joda.time.format.DateTimeFormat.forPattern("yyyyMMdd");
+				LocalDate iDate = org.joda.time.LocalDate.parse(i.toString(), format);
+				
+				int days =  Days.daysBetween(iDate, localDate).getDays();
+				
+				if(days >7)
+				{
+					System.out.println(iDate + " its been a week! Days: " + days);
+				}
+				else
+				{
+					System.out.println(iDate + " it hasn't been a week yet! Days: " + days);
+				}
+			}
+				
+		}
+		catch(Exception e)
+		{
+			throw new ServiceFunctionalityException("" + projectId ,e);
+		}
+		
 	}
 }

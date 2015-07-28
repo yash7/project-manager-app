@@ -73,6 +73,11 @@ public class ProjectTable extends TableImpl<ProjectRecord> {
 	 * The column <code>project.budget_at_completion</code>.
 	 */
 	public final TableField<ProjectRecord, Integer> BUDGET_AT_COMPLETION = createField("budget_at_completion", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
+	
+	/**
+	 * The column <code>project.actual_cost</code>.
+	 */
+	public final TableField<ProjectRecord, Integer> ACTUAL_COST = createField("actual_cost", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
 
 	/**
 	 * Create a <code>project</code> table reference
