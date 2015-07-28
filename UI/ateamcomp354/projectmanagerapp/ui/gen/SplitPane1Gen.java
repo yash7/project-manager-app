@@ -48,7 +48,7 @@ public class SplitPane1Gen extends JPanel {
 	private JScrollPane listScrollPane;
 	private JButton addButton;
 	private JButton deleteButton;
-	private JButton btnManage;
+	private JButton btnEVanalysis;
 	private JLabel activityNameLabel;
 
 	private int appWidth = MainFrame.getAppWidth();
@@ -124,7 +124,7 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(topLabel);
 		
 		listScrollPane = new JScrollPane();
-		listScrollPane.setBounds(45, 132, 256, 197);
+		listScrollPane.setBounds(43, 132, 258, 197);
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("Add");
@@ -137,26 +137,30 @@ public class SplitPane1Gen extends JPanel {
 		deleteButton.setBounds(149, 91, 70, 30);
 		LeftPanel.add(deleteButton);
 		
-		btnManage = new JButton("Manage Activity");
-		btnManage.setBounds(170, 342, 131, 30);
-		btnManage.setVisible(false);
-		LeftPanel.add(btnManage);
+		btnEVanalysis = new JButton("Earned-Value");
+		btnEVanalysis.setBounds(170, 365, 131, 34);
+		LeftPanel.add(btnEVanalysis);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(43, 385, 256, 197);
+		scrollPane.setBounds(43, 410, 258, 197);
 		LeftPanel.add(scrollPane);
 		
 		btnView = new JButton("View Activity");
-		btnView.setBounds(149, 617, 148, 30);
+		btnView.setBounds(149, 642, 148, 30);
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
 		backBtn.setBounds(17, 36, 90, 30);
 		LeftPanel.add(backBtn);
 		
-		btnChart = new JButton("Progress Chart");
-		btnChart.setBounds(43, 342, 120, 30);
+		btnChart = new JButton("GANTT Chart");
+		btnChart.setBounds(43, 365, 120, 34);
 		LeftPanel.add(btnChart);
+		
+		JLabel lblAnalysis = new JLabel("Analysis:");
+		lblAnalysis.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblAnalysis.setBounds(47, 340, 73, 26);
+		LeftPanel.add(lblAnalysis);
 
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
@@ -348,8 +352,8 @@ public class SplitPane1Gen extends JPanel {
 		return deleteButton;
 	}
 
-	public JButton getBtnManage() {
-		return btnManage;
+	public JButton getEVanalysisButton(){
+		return btnEVanalysis;
 	}
 	
 	public JButton getChartButton(){
@@ -476,6 +480,10 @@ public class SplitPane1Gen extends JPanel {
 
 	public JButton getDelAssignButton() {
 		return delAssignButton;
+	}
+	
+	public JButton getBtnEVanalysis() {
+		return btnEVanalysis;
 	}
 
 	public JButton getBtnChart() {

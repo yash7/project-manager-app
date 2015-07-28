@@ -105,8 +105,12 @@ public class ProjectsPanel {
 		projectInfos = new HashMap<>();
 
 		splitPane1Gen = new SplitPane1Gen();
-		splitPane1Gen.getBtnChart().setBounds(43, 344, 257, 30);
+		splitPane1Gen.getBtnChart().setText("GANTT Chart");
+		splitPane1Gen.getBtnChart().setBounds(43, 365, 120, 34);
 
+		splitPane1Gen.getBtnEVanalysis().setText("Earned-Value");
+		splitPane1Gen.getBtnEVanalysis().setBounds(170, 365, 131, 34);
+		
 		us1RightPanelGen = new US1RightPanelGen();
 
 		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
@@ -126,6 +130,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getAddButton().addActionListener( __ -> addProjectClicked() );
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
 		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
+		splitPane1Gen.getEVanalysisButton().addActionListener(__-> viewEVanalysisClicked());
 		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
@@ -386,6 +391,8 @@ public class ProjectsPanel {
 		swap.saveFrame(activityFrame); // Saves the frame next frame
 	}
 	
+	//Gantt CHart button clicked
+	
 	private void viewProgressClicked(){
 			List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
 					
@@ -397,6 +404,12 @@ public class ProjectsPanel {
 			else
 				JOptionPane.showMessageDialog (null, "There are no activities for this project"
 						, "No Report", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	//Earned-Value Analysis clicked
+	
+	private void viewEVanalysisClicked(){
+		
 	}
 
 	// Btn to create new project is clicked, clear list selections and

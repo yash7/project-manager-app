@@ -1,4 +1,4 @@
-package ateamcomp354.projectmanagerapp.ui.gen;
+/*package ateamcomp354.projectmanagerapp.ui.gen;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -32,5 +32,10 @@ import ateamcomp354.projectmanagerapp.App;
 import ateamcomp354.projectmanagerapp.model.Status;
 
 public class EarnedValueChartGen extends JPanel {
-
-}
+	
+	public EarnedValueChartGenn(String title, List<Integer> ev, List<Integer> ac, List<Integer> pv){
+		
+		final 
+		final JFreeChart chart = createChart(dataset, title);
+	}
+}*/

@@ -89,7 +89,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getStatusComboBox().addItem("Resolved");
 
 		// REMOVE THINGS FROM SPLITPANE THAT ARE NOT NEEDED IN ACTIVITY VIEW
-		splitPane1Gen.getBtnManage().setVisible(false);
+		splitPane1Gen.getBtnEVanalysis().setVisible(false);
 		splitPane1Gen.getBtnView().setVisible(false);
 		splitPane1Gen.getTopLabel().setVisible(false);
 

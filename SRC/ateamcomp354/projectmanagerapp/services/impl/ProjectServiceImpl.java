@@ -15,17 +15,7 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
 
@@ -227,9 +217,13 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void ernedValueAnalysis(int projectId) {
 		try{
-			LocalDate localDate = new LocalDate();
+			//LocalDate localDate = new LocalDate();
 			
-			System.out.println(localDate.toString()+ "  localDate");			
+			//System.out.println(localDate.toString()+ "  localDate");	
+			
+			Date todayDate = new Date();
+			
+			System.out.println((todayDate.getTime() / (1000 * 60 * 60 * 24)));
 			
 			List<Integer> dates = create.select(Tables.ACTIVITY.EARLIEST_START)
 					.from(Tables.ACTIVITY)
@@ -238,18 +232,18 @@ public class ProjectServiceImpl implements ProjectService {
 			
 			for (Integer i: dates){
 				
-				org.joda.time.format.DateTimeFormatter format = org.joda.time.format.DateTimeFormat.forPattern("yyyyMMdd");
-				LocalDate iDate = org.joda.time.LocalDate.parse(i.toString(), format);
+				SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+				Date iDate = format.parse(i.toString());
 				
-				int days =  Days.daysBetween(iDate, localDate).getDays();
+				int daysBetween = (int) Math.abs( (todayDate.getTime() - iDate.getTime()) / (1000*60*60*24) );
 				
-				if(days >7)
+				if( Math.abs(daysBetween) >=7)
 				{
-					System.out.println(iDate + " its been a week! Days: " + days);
+					System.out.println(iDate + " its been a week! Days: " + daysBetween);
 				}
 				else
 				{
-					System.out.println(iDate + " it hasn't been a week yet! Days: " + days);
+					System.out.println(iDate + " it hasn't been a week yet! Days: " + daysBetween);
 				}
 			}
 				
