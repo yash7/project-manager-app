@@ -34,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ProjectTable extends TableImpl<ProjectRecord> {
 
-	private static final long serialVersionUID = -776595420;
+	private static final long serialVersionUID = 1138742510;
 
 	/**
 	 * The reference instance of <code>project</code>
@@ -73,11 +73,11 @@ public class ProjectTable extends TableImpl<ProjectRecord> {
 	 * The column <code>project.budget_at_completion</code>.
 	 */
 	public final TableField<ProjectRecord, Integer> BUDGET_AT_COMPLETION = createField("budget_at_completion", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
-	
+
 	/**
-	 * The column <code>project.actual_cost</code>.
+	 * The column <code>project.actual_cost_at_completion</code>.
 	 */
-	public final TableField<ProjectRecord, Integer> ACTUAL_COST = createField("actual_cost", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
+	public final TableField<ProjectRecord, Integer> ACTUAL_COST_AT_COMPLETION = createField("actual_cost_at_completion", org.jooq.impl.SQLDataType.INTEGER.defaulted(true), this, "");
 
 	/**
 	 * Create a <code>project</code> table reference

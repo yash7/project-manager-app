@@ -28,7 +28,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements Record6<Integer, String, String, Boolean, Integer, Integer> {
 
-	private static final long serialVersionUID = 1251342010;
+	private static final long serialVersionUID = 104294250;
 
 	/**
 	 * Setter for <code>project.id</code>.
@@ -99,18 +99,18 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
 	public Integer getBudgetAtCompletion() {
 		return (Integer) getValue(4);
 	}
-	
+
 	/**
-	 * Setter for <code>project.actual_cost</code>.
+	 * Setter for <code>project.actual_cost_at_completion</code>.
 	 */
-	public void setActualCost(Integer value) {
+	public void setActualCostAtCompletion(Integer value) {
 		setValue(5, value);
 	}
 
 	/**
-	 * Getter for <code>project.actual_cost</code>.
+	 * Getter for <code>project.actual_cost_at_completion</code>.
 	 */
-	public Integer getActualCost() {
+	public Integer getActualCostAtCompletion() {
 		return (Integer) getValue(5);
 	}
 
@@ -185,15 +185,14 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
 	public Field<Integer> field5() {
 		return ProjectTable.PROJECT.BUDGET_AT_COMPLETION;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Field<Integer> field6() {
-		return ProjectTable.PROJECT.ACTUAL_COST;
+		return ProjectTable.PROJECT.ACTUAL_COST_AT_COMPLETION;
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -240,8 +239,9 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
 	 */
 	@Override
 	public Integer value6() {
-		return getActualCost();
+		return getActualCostAtCompletion();
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -286,13 +286,13 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
 		setBudgetAtCompletion(value);
 		return this;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public ProjectRecord value6(Integer value) {
-		setActualCost(value);
+		setActualCostAtCompletion(value);
 		return this;
 	}
 
@@ -322,9 +322,9 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
 	}
 
 	/**
-	 * Create a detached, initialized ProjectRecord
+	 * Create a detached, initialised ProjectRecord
 	 */
-	public ProjectRecord(Integer id, String projectName, String description, Boolean completed, Integer budgetAtCompletion, Integer actualCost) {
+	public ProjectRecord(Integer id, String projectName, String description, Boolean completed, Integer budgetAtCompletion, Integer actualCostAtCompletion) {
 		super(ProjectTable.PROJECT);
 
 		setValue(0, id);
@@ -332,6 +332,6 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
 		setValue(2, description);
 		setValue(3, completed);
 		setValue(4, budgetAtCompletion);
-		setValue(5, actualCost);
+		setValue(5, actualCostAtCompletion);
 	}
 }

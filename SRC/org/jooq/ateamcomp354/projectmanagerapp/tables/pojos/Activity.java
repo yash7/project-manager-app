@@ -24,7 +24,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity implements Serializable {
 
-	private static final long serialVersionUID = 1536230009;
+	private static final long serialVersionUID = 1502539;
 
 	private Integer id;
 	private Integer projectId;
@@ -36,8 +36,10 @@ public class Activity implements Serializable {
 	private Integer latestFinish;
 	private Integer duration;
 	private Integer maxDuration;
+	private Integer float_;
 	private String  description;
 	private Integer plannedValue;
+	private Integer actualCost;
 
 	public Activity() {}
 
@@ -52,8 +54,10 @@ public class Activity implements Serializable {
 		this.latestFinish = value.latestFinish;
 		this.duration = value.duration;
 		this.maxDuration = value.maxDuration;
+		this.float_ = value.float_;
 		this.description = value.description;
 		this.plannedValue = value.plannedValue;
+		this.actualCost = value.actualCost;
 	}
 
 	public Activity(
@@ -67,8 +71,10 @@ public class Activity implements Serializable {
 		Integer latestFinish,
 		Integer duration,
 		Integer maxDuration,
+		Integer float_,
 		String  description,
-		Integer plannedValue
+		Integer plannedValue,
+		Integer actualCost
 	) {
 		this.id = id;
 		this.projectId = projectId;
@@ -80,8 +86,10 @@ public class Activity implements Serializable {
 		this.latestFinish = latestFinish;
 		this.duration = duration;
 		this.maxDuration = maxDuration;
+		this.float_ = float_;
 		this.description = description;
 		this.plannedValue = plannedValue;
+		this.actualCost = actualCost;
 	}
 
 	public Integer getId() {
@@ -164,6 +172,14 @@ public class Activity implements Serializable {
 		this.maxDuration = maxDuration;
 	}
 
+	public Integer getFloat() {
+		return this.float_;
+	}
+
+	public void setFloat(Integer float_) {
+		this.float_ = float_;
+	}
+
 	public String getDescription() {
 		return this.description;
 	}
@@ -178,5 +194,13 @@ public class Activity implements Serializable {
 
 	public void setPlannedValue(Integer plannedValue) {
 		this.plannedValue = plannedValue;
+	}
+
+	public Integer getActualCost() {
+		return this.actualCost;
+	}
+
+	public void setActualCost(Integer actualCost) {
+		this.actualCost = actualCost;
 	}
 }

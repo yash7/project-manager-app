@@ -25,7 +25,7 @@ public class ProjectMemberTest extends AbstractDatabaseTest {
 
 	@Test
 	public void testgetAssignedActivities()  {
-		as.addActivity(new Activity(null, as.getProject().getId(), Status.NEW, 0, 5, "Label", 0, 5, 5, 5, "Desc", 0));
+		as.addActivity(new Activity(null, as.getProject().getId(), Status.NEW, 0, 5, "Label", 0, 5, 5, 5, 0, "Desc", 0, 0));
 		
 		assertEquals(1, as.getActivities().size());
 		assertEquals(0, as.getAssigneesForActivity(1).size());
@@ -48,8 +48,8 @@ public class ProjectMemberTest extends AbstractDatabaseTest {
 		
         ActivityService as2 = appCtx.getActivityService(1);
 
-        as.addActivity(new Activity(null, as.getProject().getId(), Status.NEW, 0, 5, "Label", 0, 5, 5, 5, "Desc", 0));
-        as2.addActivity(new Activity(null, as2.getProject().getId(), Status.NEW, 0, 35, "Label3", 0, 35, 35, 35, "Desc3", 0));
+        as.addActivity(new Activity(null, as.getProject().getId(), Status.NEW, 0, 5, "Label", 0, 5, 5, 5, 0, "Desc", 0, 0));
+        as2.addActivity(new Activity(null, as2.getProject().getId(), Status.NEW, 0, 35, "Label3", 0, 35, 35, 35, 0, "Desc3", 0, 0));
 		
         
         ps.addUserToProject(as.getProject().getId(), appCtx.getUserService().getUser(2));

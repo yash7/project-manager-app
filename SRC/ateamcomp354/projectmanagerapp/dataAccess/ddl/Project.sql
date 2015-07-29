@@ -4,5 +4,5 @@ CREATE TABLE project (
 	description TEXT,
 	completed INTEGER DEFAULT 0,
 	budget_at_completion INTEGER DEFAULT 0,
-	actual_cost INTEGER DEFAULT 0
+	actual_cost_at_completion INTEGER DEFAULT 0
 );

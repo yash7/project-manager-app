@@ -7,6 +7,7 @@ import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.services.UserService;
+import ateamcomp354.projectmanagerapp.ui.gen.EarnedValueChartGen;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
@@ -307,14 +308,7 @@ public class ProjectsPanel {
 		list2.clearSelection();
 		valueIsAdjusting = false;
 
-		Project project = list1.getModel().getElementAt( i );
-		
-		//TESTING
-//-------------------------------------------------------------------------------------------------//		
-		System.out.println("Here ProjectPanel.java");
-		projectService.ernedValueAnalysis(project.getId());
-//--------------------------------------------------------------------------------------------------//		
-		
+		Project project = list1.getModel().getElementAt( i );		
 		
 		int r = checkDirty();
 		if ( r == JOptionPane.YES_OPTION ) {
@@ -397,8 +391,7 @@ public class ProjectsPanel {
 			List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
 					
 			if(acts.size()>0){
-			GanttChartGen chart = new GanttChartGen(getProject().getProjectName()
-					 + " Progress",acts); 
+			GanttChartGen chart = new GanttChartGen(getProject().getProjectName() + " Progress",acts); 
 			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
 			}
 			else
@@ -408,8 +401,17 @@ public class ProjectsPanel {
 	
 	//Earned-Value Analysis clicked
 	
-	private void viewEVanalysisClicked(){
+	private void viewEVanalysisClicked(){		
+		List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
 		
+		if(acts.size()>0){
+			List<Integer> dates = projectService.EVdates(getProject().getId());
+			EarnedValueChartGen chart = new EarnedValueChartGen(getProject().getProjectName() + " Earned-Value Analysis",acts, dates); 
+			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
+		}
+		else
+			JOptionPane.showMessageDialog (null, "There are no activities for this project"
+					, "No Report", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	// Btn to create new project is clicked, clear list selections and
@@ -498,8 +500,6 @@ public class ProjectsPanel {
 		us1RightPanelGen.getProjectNameField().setText(p.getProjectName());
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
-		us1RightPanelGen.getActualCostField().setEnabled(!p.getCompleted());
-		//us1RightPanelGen.getActualCostField().setText(p.getActualCost().toString());
 		
 		if(p.getBudgetAtCompletion() != null) {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText(p.getBudgetAtCompletion().toString());
@@ -508,8 +508,8 @@ public class ProjectsPanel {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
 		}
 		
-		if(p.getActualCost() != null)
-			us1RightPanelGen.getActualCostField().setText(p.getActualCost().toString());
+		if(p.getActualCostAtCompletion() != null)
+			us1RightPanelGen.getActualCostField().setText(p.getActualCostAtCompletion().toString());
 		else
 			us1RightPanelGen.getActualCostField().setText("0");
 		
@@ -542,7 +542,7 @@ public class ProjectsPanel {
 		p.setDescription( us1RightPanelGen.getDescriptionArea().getText() );
 		p.setCompleted( p.getId() != null && us1RightPanelGen.getCompletedCheckBox().isSelected() );
 		p.setBudgetAtCompletion( Integer.valueOf(us1RightPanelGen.getBudgetAtCompletionLabel().getText()));
-		p.setActualCost(Integer.valueOf(us1RightPanelGen.getActualCostField().getText()));
+		p.setActualCostAtCompletion(Integer.valueOf(us1RightPanelGen.getActualCostField().getText()));
 		return p;
 	}
 	

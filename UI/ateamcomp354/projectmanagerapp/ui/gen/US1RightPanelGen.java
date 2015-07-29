@@ -27,8 +27,8 @@ public class US1RightPanelGen extends JPanel {
 
 	private JLabel lblBudgetAtCompletion;
 	private JLabel budgetAtCompletionLabel;
-	private JLabel lblActualCost;
-	private JTextField actualCostField;
+	private JLabel lblActualCostAtCompletion;
+	private JLabel actualCostLabel;
 	private JLabel projectMembersLabel;
 	
 	/**
@@ -96,21 +96,21 @@ public class US1RightPanelGen extends JPanel {
 		lblBudgetAtCompletion.setBounds(12, 102, 173, 16);
 		add(lblBudgetAtCompletion);
 		
-		budgetAtCompletionLabel = new JLabel("$0");
-		budgetAtCompletionLabel.setBounds(10, 129, 218, 16);
+		budgetAtCompletionLabel = new JLabel("0");
+		budgetAtCompletionLabel.setBounds(200, 102, 141, 16);
 		budgetAtCompletionLabel.setSize(200, 16);
 		budgetAtCompletionLabel.setLocation(141, 102);
 
 		add(budgetAtCompletionLabel);
 		
-		lblActualCost = new JLabel("Actual Cost:");
-		lblActualCost.setBounds(12, 129, 112, 16);
-		add(lblActualCost);
+		lblActualCostAtCompletion = new JLabel("Actual Cost to Date:");
+		lblActualCostAtCompletion.setBounds(12, 129, 141, 16);
+		add(lblActualCostAtCompletion);
 		
-		actualCostField = new JTextField();
-		actualCostField.setBounds(101, 132, 72, 20);
-		add(actualCostField);
-		actualCostField.setColumns(10);
+		actualCostLabel = new JLabel("0");
+		actualCostLabel.setBounds(141, 129, 200, 20);
+		add(actualCostLabel);
+		
 	}
 	public JTextField getProjectNameField() {
 		return projectNameField;
@@ -145,7 +145,7 @@ public class US1RightPanelGen extends JPanel {
 	public JLabel getBudgetAtCompletionLabel() {
 		return budgetAtCompletionLabel;
 	}
-	public JTextField getActualCostField() {
-		return actualCostField;
+	public JLabel getActualCostField() {
+		return actualCostLabel;
 	}
 }

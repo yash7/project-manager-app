@@ -22,14 +22,14 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Project implements Serializable {
 
-	private static final long serialVersionUID = 547289343;
+	private static final long serialVersionUID = 1887057382;
 
 	private Integer id;
 	private String  projectName;
 	private String  description;
 	private Boolean completed;
 	private Integer budgetAtCompletion;
-	private Integer actualCost;
+	private Integer actualCostAtCompletion;
 
 	public Project() {}
 
@@ -39,16 +39,23 @@ public class Project implements Serializable {
 		this.description = value.description;
 		this.completed = value.completed;
 		this.budgetAtCompletion = value.budgetAtCompletion;
-		this.actualCost = value.actualCost;
+		this.actualCostAtCompletion = value.actualCostAtCompletion;
 	}
 
-	public Project(Integer id, String  projectName,	String  description, Boolean completed, Integer budgetAtCompletion, Integer actualCost) {
+	public Project(
+		Integer id,
+		String  projectName,
+		String  description,
+		Boolean completed,
+		Integer budgetAtCompletion,
+		Integer actualCostAtCompletion
+	) {
 		this.id = id;
 		this.projectName = projectName;
 		this.description = description;
 		this.completed = completed;
 		this.budgetAtCompletion = budgetAtCompletion;
-		this.actualCost = actualCost;
+		this.actualCostAtCompletion = actualCostAtCompletion;
 	}
 
 	public Integer getId() {
@@ -90,12 +97,12 @@ public class Project implements Serializable {
 	public void setBudgetAtCompletion(Integer budgetAtCompletion) {
 		this.budgetAtCompletion = budgetAtCompletion;
 	}
-	
-	public Integer getActualCost(){
-		return this.actualCost;
+
+	public Integer getActualCostAtCompletion() {
+		return this.actualCostAtCompletion;
 	}
-	
-	public void setActualCost(Integer actualCost){
-		this.actualCost = actualCost;
+
+	public void setActualCostAtCompletion(Integer actualCostAtCompletion) {
+		this.actualCostAtCompletion = actualCostAtCompletion;
 	}
 }

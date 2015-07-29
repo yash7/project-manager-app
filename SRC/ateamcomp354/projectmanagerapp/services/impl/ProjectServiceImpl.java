@@ -3,6 +3,7 @@ package ateamcomp354.projectmanagerapp.services.impl;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
+import ateamcomp354.projectmanagerapp.ui.gen.EarnedValueChartGen;
 
 import org.jooq.DSLContext;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
@@ -16,6 +17,7 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -213,40 +215,65 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceFunctionalityException("unable to update project's BAC " + projectId, e);
         }
 	}
+	
+	@Override
+	public void updateActualCostAtCompletion(int projectId) {
+        try {
+            List<Integer> actualCost = create.select(Tables.ACTIVITY.ACTUAL_COST)
+            		.from(Tables.ACTIVITY)
+            		.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId)).and(Tables.ACTIVITY.STATUS.equal(Status.RESOLVED))
+            		.fetchInto(Integer.class);
+            
+            int sum = 0;
+            
+            for (Integer i : actualCost)
+            	sum += i;
+            
+            create.update(Tables.PROJECT)
+            .set(Tables.PROJECT.ACTUAL_COST_AT_COMPLETION, sum)
+            .where(Tables.PROJECT.ID.equal(projectId))
+            .execute();
+            
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("unable to update project's AC " + projectId, e);
+        }
+	}
 
 	@Override
-	public void ernedValueAnalysis(int projectId) {
+	public List<Integer> EVdates(int projectId) {
 		try{
-			//LocalDate localDate = new LocalDate();
-			
-			//System.out.println(localDate.toString()+ "  localDate");	
-			
+			List<Integer> val = new ArrayList<Integer>();
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 			Date todayDate = new Date();
+			Date startDate = null;
+			Date endDate = null;
 			
-			System.out.println((todayDate.getTime() / (1000 * 60 * 60 * 24)));
-			
-			List<Integer> dates = create.select(Tables.ACTIVITY.EARLIEST_START)
+			List<Integer> startProDate = create.select(Tables.ACTIVITY.EARLIEST_START.min())
 					.from(Tables.ACTIVITY)
 					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
 					.fetchInto(Integer.class);
 			
-			for (Integer i: dates){
-				
-				SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-				Date iDate = format.parse(i.toString());
-				
-				int daysBetween = (int) Math.abs( (todayDate.getTime() - iDate.getTime()) / (1000*60*60*24) );
-				
-				if( Math.abs(daysBetween) >=7)
-				{
-					System.out.println(iDate + " its been a week! Days: " + daysBetween);
-				}
-				else
-				{
-					System.out.println(iDate + " it hasn't been a week yet! Days: " + daysBetween);
-				}
-			}
-				
+			for(Integer i: startProDate)
+				startDate = format.parse(i.toString());
+			
+			List<Integer> endProDate = create.select(Tables.ACTIVITY.LATEST_FINISH.max())
+					.from(Tables.ACTIVITY)
+					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+					.fetchInto(Integer.class);
+			
+			for(Integer i: endProDate)
+				endDate = format.parse(i.toString());
+			
+			int days = (int)Math.abs((endDate.getTime() - startDate.getTime()) / (1000*60*60*24));
+			int weeks = (int)Math.ceil((double)days/7);
+			
+			val.add(days);
+			val.add(weeks);
+			
+			System.out.println("Start Date: " + startDate + "  End Date: " + endDate);
+			System.out.println("Days in Between: " + days + "   Weeks in between: " + weeks);
+			
+			return val;
 		}
 		catch(Exception e)
 		{

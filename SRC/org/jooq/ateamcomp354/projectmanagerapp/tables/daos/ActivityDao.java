@@ -130,6 +130,13 @@ public class ActivityDao extends DAOImpl<ActivityRecord, Activity, Integer> {
 	}
 
 	/**
+	 * Fetch records that have <code>float IN (values)</code>
+	 */
+	public List<Activity> fetchByFloat(Integer... values) {
+		return fetch(ActivityTable.ACTIVITY.FLOAT, values);
+	}
+
+	/**
 	 * Fetch records that have <code>description IN (values)</code>
 	 */
 	public List<Activity> fetchByDescription(String... values) {
@@ -141,5 +148,12 @@ public class ActivityDao extends DAOImpl<ActivityRecord, Activity, Integer> {
 	 */
 	public List<Activity> fetchByPlannedValue(Integer... values) {
 		return fetch(ActivityTable.ACTIVITY.PLANNED_VALUE, values);
+	}
+
+	/**
+	 * Fetch records that have <code>actual_cost IN (values)</code>
+	 */
+	public List<Activity> fetchByActualCost(Integer... values) {
+		return fetch(ActivityTable.ACTIVITY.ACTUAL_COST, values);
 	}
 }

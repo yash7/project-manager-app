@@ -76,5 +76,7 @@ public interface ProjectService {
     
     void updateProjectBudgetAtCompletion (int projectId);
     
-    void ernedValueAnalysis (int projectId);
+    void updateActualCostAtCompletion(int projectId);
+    
+    List<Integer> EVdates (int projectId);
 }
