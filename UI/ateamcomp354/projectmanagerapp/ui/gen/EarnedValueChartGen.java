@@ -16,14 +16,22 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.data.category.IntervalCategoryDataset;
-import org.jfree.data.gantt.Task;
-import org.jfree.data.gantt.TaskSeries;
-import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.data.general.Series;
 import org.jfree.data.time.SimpleTimePeriod;
+import org.jfree.data.xy.XYDataItem;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.Layer;
+import org.jfree.ui.RefineryUtilities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
@@ -42,13 +50,12 @@ public class EarnedValueChartGen extends JPanel {
      *
      * @param title  the frame title.
      */
-    public EarnedValueChartGen(String title, List<Activity> acts, List<Integer> dates) {
+    public EarnedValueChartGen(String title, List<Activity> acts, List<Object> startProDate) {
 
 
-        final IntervalCategoryDataset dataset = createDataset(acts);
+        final XYDataset dataset = createDataset(acts, startProDate);
         final JFreeChart chart = createChart(dataset, title);
-        chart.getCategoryPlot().addRangeMarker(new ValueMarker(new Date().getTime(), Color.BLACK, new BasicStroke(1.0F)), Layer.FOREGROUND);
-        
+       
         // add the chart to a panel...
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
@@ -57,50 +64,71 @@ public class EarnedValueChartGen extends JPanel {
         
     }
    
-    public IntervalCategoryDataset createDataset(List<Activity> acts) {
+    public XYDataset createDataset(List<Activity> acts, List<Object> startProDate) {
     	
-    	final TaskSeries s1 = new TaskSeries("Open");
-    	final TaskSeries s2 = new TaskSeries("In Progress");
-    	final TaskSeries s3 = new TaskSeries("Complete");
-        
-    	for(Activity a:acts){
-               
-	        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-	    	try{
-				Date esdate = format.parse(String.valueOf(a.getEarliestStart()).trim());
-				Date eedate = format.parse(String.valueOf(a.getLatestFinish()).trim());
-			
-				Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
-				if(a.getStatus() == Status.RESOLVED) {
-					t.setPercentComplete(1);
-					s3.add(t);
-				}
-				else if(a.getStatus() == Status.IN_PROGRESS) {
-					s2.add(t);
-				}
-				else {
-					s1.add(t);
-				}
-	    	}catch (ParseException e) {
+    	final XYSeries series1 = new XYSeries("Planed Value");
+    	final XYSeries series2 = new XYSeries("Earned Value");
+    	final XYSeries series3 = new XYSeries("Actual Cost");
+    	
+    	SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+    	
+    	Date startDate = (Date) startProDate.get(0);
+    	int weeks = (int) startProDate.get(1);
+    	
+    	int PV = 0;
+    	int EV = 0;
+    	int AC = 0;
+    	  
+        try{
+        	series1.add(0,0);
+        	series2.add(0,0);
+        	series3.add(0,0);
+        	
+        	int i = 1;
+        	
+        	while(i<= weeks){
+	        	for(Activity a:acts){
+					Date LFinishDate = format.parse(a.getLatestFinish().toString());
+				
+					int aDays = (int)Math.abs((LFinishDate.getTime() - startDate.getTime()) / (1000*60*60*24));
+					int aWeeks = (int)Math.ceil((double)aDays/7);
+					
+					if(aWeeks == i)
+					{
+						if(a.getStatus() == Status.NEW) {
+							PV += a.getPlannedValue();
+							
+							series1.add(i,PV);
+						}
+						else if(a.getStatus() == Status.IN_PROGRESS) {
+							PV += a.getPlannedValue();
+							EV += a.getPlannedValue();
+							
+							series1.add(i,PV);
+							series2.add(i,EV);
+						}
+						else{
+							PV += a.getPlannedValue();
+							AC += a.getActualCost();
+							
+							series1.add(i,PV);
+							series3.add(i,AC);
+						}
+					}
+	        	}
+	        	i++;
+        	}
+    	}catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-    	}
-        final TaskSeriesCollection collection = new TaskSeriesCollection();
-        collection.add(s1);
-        collection.add(s2);
-        collection.add(s3);
+		}
+        
+        final XYSeriesCollection collection = new XYSeriesCollection();
+        collection.addSeries(series1);
+        collection.addSeries(series2);
+        collection.addSeries(series3);
 
         return collection;
-    }
-
-    private Date date(final int day, final int month, final int year) {
-
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-        final Date result = calendar.getTime();
-        return result;
-
     }
         
     /**
@@ -110,16 +138,37 @@ public class EarnedValueChartGen extends JPanel {
      * 
      * @return The chart.
      */
-    private JFreeChart createChart(final IntervalCategoryDataset dataset, String title) {
-        final JFreeChart chart = ChartFactory.createGanttChart(
-            title,  // chart title
-            "Activity",              // domain axis label
-            "Date",              // range axis label
-            dataset,             // data
-            true,                // include legend
-            true,                // tooltips
-            false                // urls
-        );  
+    private JFreeChart createChart(final XYDataset dataset, String title) {
+        final JFreeChart chart = ChartFactory.createXYLineChart(
+        		title, 
+        		"Weeks", 
+        		"Value", 
+        		dataset, 
+        		PlotOrientation.VERTICAL, 
+        		true, true, false);
+        
+     // get a reference to the plot for further customisation...
+        final XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.lightGray);
+    //    plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
+        plot.setDomainGridlinePaint(Color.white);
+        plot.setRangeGridlinePaint(Color.white);
+
+        
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer( );
+        renderer.setSeriesPaint( 0 , Color.BLUE );
+        renderer.setSeriesPaint( 1 , Color.GREEN );
+        renderer.setSeriesPaint( 2 , Color.RED );
+        renderer.setSeriesStroke( 0 , new BasicStroke( 3.0f ) );
+        renderer.setSeriesStroke( 1 , new BasicStroke( 3.0f ) );
+        renderer.setSeriesStroke( 2 , new BasicStroke( 3.0f ) );
+        plot.setRenderer( renderer );
+        
+        
+        // change the auto tick unit selection to integer units only...
+        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        // OPTIONAL CUSTOMISATION COMPLETED.
         
         return chart;    
     }

@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -402,11 +403,11 @@ public class ProjectsPanel {
 	//Earned-Value Analysis clicked
 	
 	private void viewEVanalysisClicked(){		
-		List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
+		List<Activity> acts = projectService.EVactivitiesByEarliestStart(getProject().getId());
 		
 		if(acts.size()>0){
-			List<Integer> dates = projectService.EVdates(getProject().getId());
-			EarnedValueChartGen chart = new EarnedValueChartGen(getProject().getProjectName() + " Earned-Value Analysis",acts, dates); 
+			List<Object> startProDate = projectService.EVStartDate(getProject().getId());
+			EarnedValueChartGen chart = new EarnedValueChartGen(getProject().getProjectName() + " Earned-Value Analysis",acts, startProDate); 
 			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
 		}
 		else

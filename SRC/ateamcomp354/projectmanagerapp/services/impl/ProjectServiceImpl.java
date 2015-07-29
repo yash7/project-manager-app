@@ -6,15 +6,18 @@ import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.ui.gen.EarnedValueChartGen;
 
 import org.jooq.DSLContext;
+import org.jooq.Table;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectmembersDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UseractivitiesDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Projectmembers;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
+import org.omg.CORBA.ACTIVITY_COMPLETED;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -238,13 +241,32 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceFunctionalityException("unable to update project's AC " + projectId, e);
         }
 	}
+	
+	@Override
+	public List<Activity> EVactivitiesByEarliestStart(int projectId) {
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+			
+			List<Activity> acts = create.select()
+					.from(Tables.ACTIVITY)
+					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+					.orderBy(Tables.ACTIVITY.EARLIEST_START.asc())
+					.fetchInto(Activity.class);
+			
+			return acts;
+		}
+		catch(Exception e)
+		{
+			throw new ServiceFunctionalityException("" + projectId ,e);
+		}
+		
+	}
 
 	@Override
-	public List<Integer> EVdates(int projectId) {
+	public List<Object> EVStartDate(int projectId) {
 		try{
-			List<Integer> val = new ArrayList<Integer>();
+			List<Object> val = new ArrayList<Object>();
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-			Date todayDate = new Date();
 			Date startDate = null;
 			Date endDate = null;
 			
@@ -253,25 +275,20 @@ public class ProjectServiceImpl implements ProjectService {
 					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
 					.fetchInto(Integer.class);
 			
-			for(Integer i: startProDate)
-				startDate = format.parse(i.toString());
+			startDate = format.parse(startProDate.get(0).toString());
 			
 			List<Integer> endProDate = create.select(Tables.ACTIVITY.LATEST_FINISH.max())
 					.from(Tables.ACTIVITY)
 					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
 					.fetchInto(Integer.class);
 			
-			for(Integer i: endProDate)
-				endDate = format.parse(i.toString());
+			endDate = format.parse(endProDate.get(0).toString());
 			
 			int days = (int)Math.abs((endDate.getTime() - startDate.getTime()) / (1000*60*60*24));
 			int weeks = (int)Math.ceil((double)days/7);
 			
-			val.add(days);
+			val.add(startDate);
 			val.add(weeks);
-			
-			System.out.println("Start Date: " + startDate + "  End Date: " + endDate);
-			System.out.println("Days in Between: " + days + "   Weeks in between: " + weeks);
 			
 			return val;
 		}
