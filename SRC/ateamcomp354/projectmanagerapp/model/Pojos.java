@@ -2,6 +2,9 @@ package ateamcomp354.projectmanagerapp.model;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * A place for utils related to Jooq generated Pojos.
  *
@@ -9,6 +12,8 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
  * There may or may not be a way to configure that. At the time of writing nothing was known.
  */
 public class Pojos {
+
+    private static SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMdd");
 
     /**
      * Returns true if project p1 is logical equal to project p2, otherwise false.
@@ -26,5 +31,39 @@ public class Pojos {
         if (p1.getProjectName() != null ? !p1.getProjectName().equals(p2.getProjectName()) : p2.getProjectName() != null) return false;
 
         return true;
+    }
+
+    public static String dateToIntStr(Calendar date) throws NumberFormatException {
+        return Integer.toString( dateToInt( date ) );
+    }
+
+    public static int dateToInt(Calendar date) throws NumberFormatException {
+
+        int yearInt = date.get(Calendar.YEAR);
+        int monthInt = date.get(Calendar.MONTH);
+        int dateInt = date.get(Calendar.DATE);
+
+        String year = yearInt+"";
+        String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
+        String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
+
+        return Integer.parseInt( year+month+day );
+    }
+
+    public static Calendar intStrToDate(String yearMonthDay) throws NumberFormatException {
+
+        int year = Integer.parseInt( yearMonthDay.substring( 0, 4 ) );
+        int month = Integer.parseInt( yearMonthDay.substring( 4, 6 ) );
+        int day = Integer.parseInt( yearMonthDay.substring( 6, 8 ) );
+
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(0);
+        date.set(year, month - 1, day);
+
+        return date;
+    }
+
+    public static Calendar intToDate(int i) throws NumberFormatException {
+        return intStrToDate( Integer.toString( i ) );
     }
 }

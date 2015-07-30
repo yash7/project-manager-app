@@ -148,35 +148,28 @@ public class ActivityServiceImpl implements ActivityService {
     }
 	
     private void checkCircularDependency(int fromActivityId, int toActivityId, String string) {
-		if(addActivityToList(fromActivityId, toActivityId, new ArrayList<Integer>()) == null) {
+		if(checkLevel(fromActivityId, toActivityId) == true) {
 			throw new ServiceFunctionalityException(string);
 		}
 	}
     
-    private List<Integer> addActivityToList(int toAdd, int activityId, List<Integer> activities) {
+    private boolean checkLevel(int toAdd, int activityId) {
     	
     	List<Integer> links = getDependencies(toAdd);
-    	if(activities.contains(toAdd)) {
-    		return null;
-    	}
-    	if(links.size() == 0) {
-    		return links;
-    	}
-    	
-    	for (int x : links) {
-    		if(activities.contains(activityId)) {
-    			return null;
+    	ArrayList<Boolean> linkChecks = new ArrayList<Boolean>();
+    	for(int x : links) {
+    		if(x == toAdd || x == activityId) {
+    			return true;
     		}
-    		else {
-    			activities.add(activityId);
-    			List<Integer> y = addActivityToList(x, toAdd, activities);
-    			if(y == null) {
-    				return null;
-    			}
-    		}
+    		linkChecks.add(checkLevel(x, toAdd));
     	}
-    	
-    	return activities;
+
+    	if(linkChecks.contains(new Boolean(true))) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
     
 	@Override
@@ -467,8 +460,10 @@ public class ActivityServiceImpl implements ActivityService {
 	private void calculatePrevBackward(Activity a) {
 		Integer lastActivityLatestStart = -1;
 		for(int i : this.getDependents(a.getId())) {
-			if(lastActivityLatestStart == -1 || this.getActivity(i).getLatestStart() < lastActivityLatestStart) {
-				lastActivityLatestStart = this.getActivity(i).getLatestStart();
+			if(this.getActivity(i).getLatestStart() != null) {
+				if(lastActivityLatestStart == -1 || this.getActivity(i).getLatestStart() < lastActivityLatestStart) {
+					lastActivityLatestStart = this.getActivity(i).getLatestStart();
+				}
 			}
 		}
 		

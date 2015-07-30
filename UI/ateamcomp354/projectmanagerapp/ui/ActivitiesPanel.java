@@ -1,5 +1,6 @@
 package ateamcomp354.projectmanagerapp.ui;
 
+import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
@@ -51,23 +52,23 @@ public class ActivitiesPanel {
 	private int dependencyIndexes[];
 	private List<Integer> dependencyComboIndexes;
 	private int selectedDependencyId;
-	
+
 	private int selectedAssigneeId;
 	private int assigneeIndexes[];
 	private List<Integer> assigneeComboIndexes;
-	
+
 	private JList<Activity> activityList;
 	private JList<Activity> completedActivityList;
 	private JList<Users> assigneeList;
 	private JList<String> dependencyList;
-	
+
 	private DefaultListModel<String> assigneeListModel;
 	private DefaultListModel<String> dependencyListModel;
-	
+
 	private int projectId = 1;
 	private int activityId = 0;
 	private int oldYPos = -1;
-	
+
 
 	public ActivitiesPanel(ApplicationContext appCtx, SwapInterface swap) {
 
@@ -80,7 +81,7 @@ public class ActivitiesPanel {
 		activityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		completedActivityList = new JList<>();
 		completedActivityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
 		assigneeListModel = new DefaultListModel<String>();
 		dependencyListModel = new DefaultListModel<String>();
 
@@ -102,9 +103,9 @@ public class ActivitiesPanel {
 		splitPane1Gen.getAddAssigneeButton().setEnabled(true);
 		splitPane1Gen.getRemoveAssigneeButton().setEnabled(true);
 		splitPane1Gen.getAssigneeScrollPane().setEnabled(true);
-		
+
 		splitPane1Gen.resetDatePickers();
-		
+
 		splitPane1Gen.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -127,8 +128,8 @@ public class ActivitiesPanel {
 						projectLabelC);
 
 				fillActivitiesList();
-				
-				
+
+
 			}
 		});
 
@@ -153,9 +154,9 @@ public class ActivitiesPanel {
 				splitPane1Gen.getDeleteButton().setEnabled(false);
 				splitPane1Gen.getActivityNameField().setText("New Activity");
 				splitPane1Gen.getDependenciesComboBox().removeAllItems();
-				
+
 				toggleDependenciesAndAssignees(false);
-				
+
 				setReadOnly(false);
 			}
 		});
@@ -175,7 +176,7 @@ public class ActivitiesPanel {
 				addDependency();
 			}
 		});
-		
+
 		//removes selected dependency from selected project
 		splitPane1Gen.getRemoveDependencyButton().addActionListener(new ActionListener() {
 			@Override
@@ -183,7 +184,7 @@ public class ActivitiesPanel {
 				removeDependency();
 			}
 		});
-		
+
 		// adds a member to the selected activity
 		splitPane1Gen.getAddAssigneeButton().addActionListener(new ActionListener() {
 			@Override
@@ -191,7 +192,7 @@ public class ActivitiesPanel {
 				addAssignee();
 			}
 		});
-		
+
 		// removes selected member from the selected activity
 		splitPane1Gen.getRemoveAssigneeButton().addActionListener(new ActionListener() {
 			@Override
@@ -205,69 +206,25 @@ public class ActivitiesPanel {
 			public void actionPerformed(ActionEvent e) {
 				swap.removeSaveFrame();
 				swap.showProjectsView(projectId);
-				
+
 			}
 		});
-		
-		splitPane1Gen.getEarliestStartDatePicker().addDateListener(new DateListener() {
-			@Override
-			public void dateChanged(DateEvent e) {
-				int yearInt = splitPane1Gen.getEarliestStartDatePicker().getCalendar().get(Calendar.YEAR);
-				int monthInt = splitPane1Gen.getEarliestStartDatePicker().getCalendar().get(Calendar.MONTH);
-				int dateInt = splitPane1Gen.getEarliestStartDatePicker().getCalendar().get(Calendar.DATE);
-				
-				String year = yearInt+"";
-				String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
-				String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
-				
-				splitPane1Gen.getEarliestStartField().setText(year+month+day);
-			}
-		});
-		
-		splitPane1Gen.getLatestStartDatePicker().addDateListener(new DateListener() {
-			@Override
-			public void dateChanged(DateEvent e) {
-				int yearInt = splitPane1Gen.getLatestStartDatePicker().getCalendar().get(Calendar.YEAR);
-				int monthInt = splitPane1Gen.getLatestStartDatePicker().getCalendar().get(Calendar.MONTH);
-				int dateInt = splitPane1Gen.getLatestStartDatePicker().getCalendar().get(Calendar.DATE);
-				
-				String year = yearInt+"";
-				String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
-				String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
-				
-				splitPane1Gen.getLatestStartField().setText(year+month+day);
-			}
-		});
-		
-		splitPane1Gen.getEarliestFinishDatePicker().addDateListener(new DateListener() {
-			@Override
-			public void dateChanged(DateEvent e) {
-				int yearInt = splitPane1Gen.getEarliestFinishDatePicker().getCalendar().get(Calendar.YEAR);
-				int monthInt = splitPane1Gen.getEarliestFinishDatePicker().getCalendar().get(Calendar.MONTH);
-				int dateInt = splitPane1Gen.getEarliestFinishDatePicker().getCalendar().get(Calendar.DATE);
-				
-				String year = yearInt+"";
-				String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
-				String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
-				
-				splitPane1Gen.getEarliestFinishField().setText(year+month+day);
-			}
-		});
-		
-		splitPane1Gen.getLatestFinishDatePicker().addDateListener(new DateListener() {
-			@Override
-			public void dateChanged(DateEvent e) {
-				int yearInt = splitPane1Gen.getLatestFinishDatePicker().getCalendar().get(Calendar.YEAR);
-				int monthInt = splitPane1Gen.getLatestFinishDatePicker().getCalendar().get(Calendar.MONTH);
-				int dateInt = splitPane1Gen.getLatestFinishDatePicker().getCalendar().get(Calendar.DATE);
-				
-				String year = yearInt+"";
-				String month = monthInt+1 < 10 ? "0"+(monthInt+1) : ""+(monthInt+1);
-				String day = dateInt < 10 ? "0"+dateInt : ""+dateInt;
-				
-				splitPane1Gen.getEarliestFinishField().setText(year+month+day);
-			}
-		});
+
+		splitPane1Gen.getEarliestStartDatePicker().addDateListener(
+				e -> splitPane1Gen.getEarliestStartField().setText(Pojos.dateToIntStr(e.getSelectedDate()))
+		);
+
+		splitPane1Gen.getLatestStartDatePicker().addDateListener(
+				e -> splitPane1Gen.getLatestStartField().setText(Pojos.dateToIntStr(e.getSelectedDate()))
+		);
+
+		splitPane1Gen.getEarliestFinishDatePicker().addDateListener(
+				e -> splitPane1Gen.getEarliestFinishField().setText(Pojos.dateToIntStr(e.getSelectedDate()))
+		);
+
+		splitPane1Gen.getLatestFinishDatePicker().addDateListener(
+				e -> splitPane1Gen.getEarliestFinishField().setText(Pojos.dateToIntStr(e.getSelectedDate()))
+		);
 	}
 
 	protected void toggleDependenciesAndAssignees(boolean b) {
@@ -276,13 +233,13 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDependenciesComboBox().setVisible(b);
 		splitPane1Gen.getAddDependencyButton().setVisible(b);
 		splitPane1Gen.getDelDepButton().setVisible(b);
-		
+
 		splitPane1Gen.getAssigneesLabel().setVisible(b);
 		splitPane1Gen.getAssigneeScrollPane().setVisible(b);
 		splitPane1Gen.getAssigneesComboBox().setVisible(b);
 		splitPane1Gen.getAddAssigneeButton().setVisible(b);
 		splitPane1Gen.getDelAssignButton().setVisible(b);
-		
+
 		if(!b) { //small view
 			if(oldYPos == -1) {
 				oldYPos = splitPane1Gen.getSaveActivityButton().getLocation().y;
@@ -324,14 +281,14 @@ public class ActivitiesPanel {
 			splitPane1Gen.getDurationField().setText("1");
 			splitPane1Gen.getDescriptionArea().setText("");
 			splitPane1Gen.getPlannedValueField().setText("0");
-			
+
 			splitPane1Gen.resetDatePickers();
-			
+
 			splitPane1Gen.getDependenciesComboBox().removeAllItems();
 			splitPane1Gen.getAssigneesComboBox().removeAllItems();
 			assigneeListModel.clear();
 			dependencyListModel.clear();
-			
+
 			return true;
 		}
 		return false;
@@ -377,19 +334,19 @@ public class ActivitiesPanel {
 		catch(NumberFormatException e) {
 			errorString += "Planned Value must be a valid non-negative whole number\n";
 		}
-		
+
 		if(activity.getEarliestStart() > activity.getEarliestFinish()) {
 			errorString += "Start Date may not exceed End Date\n";
 		}
-		
+
 		String endDateAfterStartDate = anyEndDateAfterStartDate(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()), activity.getId());
-		
+
 		if(!endDateAfterStartDate.equals("")) {
 			errorString += endDateAfterStartDate+"\n";
 		}
-		
+
 		String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()), activity.getId());
-		
+
 		if(!startDateAfterEndDate.equals("")) {
 			errorString += startDateAfterEndDate+"\n";
 		}
@@ -398,7 +355,7 @@ public class ActivitiesPanel {
 			addOrUpdateActivity(activity);
 
 			projectService.updateProjectBudgetAtCompletion(projectId);
-			
+
 			boolean found = false;
 			for (int i = 0; i < idIndexes.length; i++) {
 				if (idIndexes[i] == activityId) {
@@ -426,14 +383,14 @@ public class ActivitiesPanel {
 		List<Integer> activities = activityService.getDependents(ID);
 		Integer earliestDate = -1;
 		String earliestActivity = "";
-		
+
 		for(Integer a : activities) {
 			if(activityService.getActivity(a).getEarliestStart() < finishDate) {
 				earliestDate = activityService.getActivity(a).getEarliestStart();
 				earliestActivity = activityService.getActivity(a).getLabel();
 			}
 		}
-		
+
 		if(earliestDate != -1) {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			try {
@@ -449,14 +406,14 @@ public class ActivitiesPanel {
 		List<Integer> activities = activityService.getDependencies(ID);
 		Integer latestDate = -1;
 		String latestActivity = "";
-		
+
 		for(Integer a : activities) {
 			if(activityService.getActivity(a).getEarliestStart() > startDate) {
 				latestDate = activityService.getActivity(a).getEarliestStart();
 				latestActivity = activityService.getActivity(a).getLabel();
 			}
 		}
-		
+
 		if(latestDate != -1) {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			try {
@@ -510,19 +467,20 @@ public class ActivitiesPanel {
 				Integer.toString(activity.getMaxDuration()));
 		splitPane1Gen.getDurationField().setText(
 				Integer.toString(activity.getDuration()));
-	
+
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			splitPane1Gen.getEarliestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 			splitPane1Gen.getLatestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 			splitPane1Gen.getEarliestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 			splitPane1Gen.getLatestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
-			splitPane1Gen.getEarliestStartDatePicker().setDate(formatter.parse(activity.getEarliestStart().toString()));
-			splitPane1Gen.getLatestStartDatePicker().setDate(formatter.parse(activity.getLatestStart().toString()));
-			splitPane1Gen.getEarliestFinishDatePicker().setDate(formatter.parse(activity.getEarliestFinish().toString()));
-			splitPane1Gen.getLatestFinishDatePicker().setDate(formatter.parse(activity.getEarliestFinish().toString()));
-		} catch (ParseException e) {}
-		
+			splitPane1Gen.getEarliestStartDatePicker().setDate(Pojos.intToDate(activity.getEarliestStart()).getTime());
+			splitPane1Gen.getLatestStartDatePicker().setDate(Pojos.intToDate(activity.getLatestStart()).getTime());
+			splitPane1Gen.getEarliestFinishDatePicker().setDate(Pojos.intToDate(activity.getEarliestFinish()).getTime());
+			splitPane1Gen.getLatestFinishDatePicker().setDate(Pojos.intToDate(activity.getEarliestFinish()).getTime());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		splitPane1Gen.getDeleteButton().setEnabled(true);
 		splitPane1Gen.getPlannedValueField().setText(Integer.toString(activity.getPlannedValue()));
@@ -535,13 +493,13 @@ public class ActivitiesPanel {
 		selectedDependencyId = 0;
 		List<Integer> dependencies = activityService.getDependencies(id);
 		dependencyIndexes = new int[dependencies.size()];
-		
+
 		for (int i = 0; i < dependencies.size(); i++)
 		{
 			dependencyListModel.addElement(activityService.getActivity(dependencies.get(i)).getLabel());
 			dependencyIndexes[i] = activityService.getActivity(dependencies.get(i)).getId();
 		}
-		
+
 		dependencyList = new JList<String>(dependencyListModel);
 		dependencyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		splitPane1Gen.getDependencyScrollPane().setViewportView(dependencyList);
@@ -589,28 +547,28 @@ public class ActivitiesPanel {
 			}
 		}
 	}
-	
+
 	private void addDependency()
-	{	
+	{
 		if (splitPane1Gen.getDependenciesComboBox().getSelectedIndex() == -1) return;
 		int toAdd = dependencyComboIndexes.get(splitPane1Gen.getDependenciesComboBox().getSelectedIndex());
-		
+
 		try {
 			activityService.addDependency(toAdd, activityId);
-			
+
 			String errorString = "";
 			String endDateAfterStartDate = anyEndDateAfterStartDate(Integer.parseInt(splitPane1Gen.getEarliestStartField().getText()), activityId);
-			
+
 			if(!endDateAfterStartDate.equals("")) {
 				errorString += endDateAfterStartDate+"\n";
 			}
-			
+
 			String startDateAfterEndDate = anyStartDateAfterEndDate(Integer.parseInt(splitPane1Gen.getEarliestFinishField().getText()), activityId);
-			
+
 			if(!startDateAfterEndDate.equals("")) {
 				errorString += startDateAfterEndDate+"\n";
 			}
-					
+
 			if(!errorString.equals("")) {
 				JOptionPane.showMessageDialog(null, errorString);
 				activityService.deleteDependency(toAdd, activityId);
@@ -698,29 +656,29 @@ public class ActivitiesPanel {
 			}
 		});
 	}
-	
-	private void showAssignees(int activityId) {		
-		
+
+	private void showAssignees(int activityId) {
+
 		assigneeListModel.clear();
-		
+
 		List<Users> assignees = activityService.getAssigneesForActivity(activityId);
-		
+
 		selectedAssigneeId = 0;
 		assigneeIndexes = new int[assignees.size()];
-		
+
 		for (int i = 0; i < assignees.size(); i++)
 		{
 			assigneeListModel.addElement(assignees.get(i).getFirstName() + " " + assignees.get(i).getLastName());
 			assigneeIndexes[i] = assignees.get(i).getId();
 		}
-		
+
 		JList<String> assigneeList = new JList<String>(assigneeListModel);
 		assigneeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		splitPane1Gen.getAssigneeScrollPane().setViewportView(assigneeList);
 		splitPane1Gen.getAssigneeScrollPane().validate();
-		
+
 		fillAssigneeComboBox();
-		
+
 		assigneeList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
@@ -729,28 +687,28 @@ public class ActivitiesPanel {
 			}
 		});
 	}
-	
+
 	private void fillAssigneeComboBox() {
 		splitPane1Gen.getAssigneesComboBox().removeAllItems();
 		assigneeComboIndexes = new ArrayList<Integer>();
 		assigneeComboIndexes.clear();
-		
+
 		List<Users> notAssigned = activityService.getUnassignedMembersForActivity(activityId);
-		
+
 		for (int i = 0; i < notAssigned.size(); i++) {
 			splitPane1Gen.getAssigneesComboBox().addItem(notAssigned.get(i).getFirstName() + " " + notAssigned.get(i).getLastName());
 			assigneeComboIndexes.add(notAssigned.get(i).getId());
 		}
 	}
-	
+
 	private void addAssignee()
-	{	
+	{
 		if (splitPane1Gen.getAssigneesComboBox().getSelectedIndex() == -1) return;
 		int toAdd = assigneeComboIndexes.get(splitPane1Gen.getAssigneesComboBox().getSelectedIndex());
 		activityService.addUserToActivity(activityId, userService.getUser(toAdd));
 		showAssignees(activityId);
 	}
-	
+
 	private void removeAssignee()
 	{
 		if (selectedAssigneeId == 0) return;
@@ -758,7 +716,7 @@ public class ActivitiesPanel {
 		selectedAssigneeId = 0;
 		showAssignees(activityId);
 	}
-	
+
 	private void setReadOnly(boolean readOnly)
 	{
 		splitPane1Gen.getActivityNameField().setEnabled(!readOnly);
@@ -772,12 +730,12 @@ public class ActivitiesPanel {
 		// splitPane1Gen.getLatestFinishField().setEnabled(!readOnly);
 		splitPane1Gen.getMaxDurationField().setEnabled(!readOnly);
 		splitPane1Gen.getDurationField().setEnabled(!readOnly);
-		
+
 		splitPane1Gen.getDependenciesComboBox().setEnabled(!readOnly);
 		splitPane1Gen.getDependencyScrollPane().setEnabled(!readOnly);
 		splitPane1Gen.getAddDependencyButton().setEnabled(!readOnly);
 		splitPane1Gen.getRemoveDependencyButton().setEnabled(!readOnly);
-		
+
 		splitPane1Gen.getAssigneesComboBox().setEnabled(!readOnly);
 		splitPane1Gen.getAssigneeScrollPane().setEnabled(!readOnly);
 		splitPane1Gen.getAddAssigneeButton().setEnabled(!readOnly);
@@ -794,7 +752,7 @@ public class ActivitiesPanel {
 			return false;
 
 		Activity a = activityService.getActivity(activityId);
-		
+
 		//if this is not a new activity, but has been changed, it is dirty
 		return (!a.getLabel().equals(splitPane1Gen.getActivityNameField().getText())
 				//|| a.getEarliestStart() != Integer.parseInt(splitPane1Gen.getEarliestStartField().getText())
