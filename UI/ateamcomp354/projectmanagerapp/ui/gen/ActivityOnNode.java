@@ -1,40 +1,39 @@
 package ateamcomp354.projectmanagerapp.ui.gen;
 
-import java.text.ParseException;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
-import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ActivityService;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JInternalFrame;
 
 public class ActivityOnNode extends JPanel {
 
@@ -120,9 +119,7 @@ public class ActivityOnNode extends JPanel {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		graph.getModel().beginUpdate();
-		try {
-			
-			
+		try {			
 			int xPos = 0;
 			for(int x = acts.size()-1; x >= 0; x--) {
 				int yPos = 0;
@@ -179,12 +176,50 @@ public class ActivityOnNode extends JPanel {
 		graphComponent.setEnabled(false);
 		this.add(graphComponent);
 		
-//		BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE, true, null);
-//		try {
-//			ImageIO.write(image, "PNG", new File("graph.png"));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 		
+		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					showGraphPopupMenu(e, graphComponent);
+				}
+			}
+		});
     }
+
+	void showGraphPopupMenu(MouseEvent e, mxGraphComponent graphComponent) {
+		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
+				graphComponent);
+		
+		JPopupMenu pop = new JPopupMenu();
+		JMenuItem mItem = new JMenuItem("Save Chart");
+		pop.add(mItem);
+		pop.show(graphComponent, pt.x, pt.y);
+		
+		mItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setAcceptAllFileFilterUsed(false);
+				chooser.addChoosableFileFilter(new FileNameExtensionFilter("png","PNG Images"));
+				chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				int status = chooser.showSaveDialog(null);
+				if(status == JFileChooser.APPROVE_OPTION) {
+					String path = chooser.getSelectedFile().getPath();
+					BufferedImage image = mxCellRenderer.createBufferedImage(graphComponent.getGraph(), null, 1, Color.WHITE, true, null);
+					try {
+						if (!path.endsWith("." + "png")) {
+					      path += ".png";
+					    }
+						ImageIO.write(image, "PNG", new File(path));
+					} catch (IOException ee) {
+						ee.printStackTrace();
+					}
+				}
+			}
+		});
+
+		e.consume();
+	}
 }
