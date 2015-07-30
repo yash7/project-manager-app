@@ -430,7 +430,7 @@ public class ProjectsPanel {
 	
 	private void openCriticalPaths(ActivityService ase, Integer act) {		
 		ActivityOnNode chart = new ActivityOnNode(ase, getProject().getProjectName()+ " Critical Path Analysis", ase.getActivity(act)); 
-		JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog (null, chart, getProject().getProjectName()+ " Critical Path Analysis", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	// Btn to create new project is clicked, clear list selections and
