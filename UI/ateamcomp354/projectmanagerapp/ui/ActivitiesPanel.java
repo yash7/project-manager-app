@@ -372,6 +372,7 @@ public class ActivitiesPanel {
 			addOrUpdateActivity(activity);
 
 			projectService.updateProjectBudgetAtCompletion(projectId);
+			projectService.updateActualCostAtCompletion(projectId);
 
 			boolean found = false;
 			for (int i = 0; i < idIndexes.length; i++) {
