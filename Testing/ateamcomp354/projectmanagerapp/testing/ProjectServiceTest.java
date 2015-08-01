@@ -14,7 +14,10 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeActivity;
+import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeProject;
 import static org.junit.Assert.*;
 
 public class ProjectServiceTest extends AbstractDatabaseTest {
@@ -793,4 +796,133 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         
         assertEquals(membersCount - 1, users.size());
     }
+
+    @Test
+    public void testUpdateActualCostAtCompletion_NoActivities(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "No activities");
+        projectService.addProject(p);
+
+        projectService.updateActualCostAtCompletion(p.getId());
+
+        assertEquals(Integer.valueOf(0), projectService.getProject(p.getId()).getActualCostAtCompletion());
+    }
+
+    @Test
+    public void testUpdateActualCostAtCompletion_NoResolvedActivities(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "No resolved activities");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(p.getId(), "A", 100);
+        Activity B = makeActivity(p.getId(), "B", 200);
+        Activity C = makeActivity(p.getId(), "C", 300);
+
+        Stream.of(A, B, C).forEach( activityService::addActivity );
+
+        projectService.updateActualCostAtCompletion(p.getId());
+
+        assertEquals(Integer.valueOf(0), projectService.getProject(p.getId()).getActualCostAtCompletion());
+    }
+
+    @Test
+    public void testUpdateActualCostAtCompletion_WithSomeResolvedActivities(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "Some resolved activities");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(p.getId(), "A", 100);
+        Activity B = makeActivity(p.getId(), "B", 200);
+        Activity C = makeActivity(p.getId(), "C", 300);
+        Activity D = makeActivity(p.getId(), "D", 400);
+
+        Stream.of(A, D).forEach( a -> a.setStatus(Status.RESOLVED) );
+        int actualCostAtCompletion = Stream.of(A, D).mapToInt( Activity::getActualCost ).sum();
+
+        Stream.of(A, B, C, D).forEach( activityService::addActivity );
+
+        projectService.updateActualCostAtCompletion(p.getId());
+
+        assertEquals(Integer.valueOf(actualCostAtCompletion), projectService.getProject(p.getId()).getActualCostAtCompletion());
+    }
+
+    @Test
+    public void testUpdateActualCostAtCompletion_WithAllResolvedActivities(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "All resolved activities");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(p.getId(), "A", 100);
+        Activity B = makeActivity(p.getId(), "B", 200);
+        Activity C = makeActivity(p.getId(), "C", 300);
+        Activity D = makeActivity(p.getId(), "D", 400);
+        Activity E = makeActivity(p.getId(), "E", 500);
+
+        Stream.of(A, B, C, D, E).forEach(a -> a.setStatus(Status.RESOLVED));
+        int actualCostAtCompletion = Stream.of(A, B, C, D, E).mapToInt( Activity::getActualCost ).sum();
+
+        Stream.of(A, B, C, D, E).forEach( activityService::addActivity );
+
+        projectService.updateActualCostAtCompletion(p.getId());
+
+        assertEquals(Integer.valueOf(actualCostAtCompletion), projectService.getProject(p.getId()).getActualCostAtCompletion());
+    }
+
+    @Test
+    public void testUpdateActualCostAtCompletion_WithCompletedProject(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "Completed project");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(p.getId(), "A", 100);
+        Activity B = makeActivity(p.getId(), "B", 200);
+        Activity C = makeActivity(p.getId(), "C", 300);
+
+        Stream.of(A, B, C).forEach(a -> a.setStatus(Status.RESOLVED));
+        int actualCostAtCompletion = Stream.of(A, B, C).mapToInt( Activity::getActualCost ).sum();
+
+        Stream.of(A, B, C).forEach( activityService::addActivity );
+
+        p.setCompleted(true);
+        projectService.updateProject(p);
+
+        projectService.updateActualCostAtCompletion(p.getId());
+
+        assertEquals(Integer.valueOf(actualCostAtCompletion), projectService.getProject(p.getId()).getActualCostAtCompletion());
+    }
+
+    @Test
+    public void testEVactivitiesByEarliestStart_(){}
+
+    @Test
+    public void testEVactivitiesByEarliestStart__(){}
+
+    @Test
+    public void testEVStartDate_(){}
+
+    @Test
+    public void testEVStartDate__(){}
 }

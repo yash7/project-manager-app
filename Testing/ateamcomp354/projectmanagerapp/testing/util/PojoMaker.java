@@ -35,6 +35,18 @@ public class PojoMaker {
         return new Project(id, name, "", false, 10000, 10000);
     }
 
+    public static Activity makeActivity(int projectId, String name, int cost) {
+        Activity a = new Activity();
+        a.setId( activityIdSeq++ );
+        a.setProjectId( projectId );
+        a.setLabel( name );
+        a.setDescription("");
+        a.setStatus(Status.NEW);
+        a.setPlannedValue(0);
+        a.setActualCost(cost);
+        return a;
+    }
+
     public static Activity makeActivity(int projectId, String name, Calendar start, Calendar end) {
         Activity a = new Activity();
         a.setId( activityIdSeq++ );
