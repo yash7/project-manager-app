@@ -24,7 +24,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService =  appCtx.getProjectService();
 
-        Project p = new Project(0, "No activities project", "This project has no activities", false, 10000, 0);
+        Project p = makeProject(0, "No activities project");
         projectService.addProject( p );
 
         Charts.viewCriticalPathsChart(appCtx, p);
@@ -45,7 +45,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService =  appCtx.getProjectService();
 
-        Project p = new Project(0, "Straight line activities", "This project has a straight line of dependencies", false, 10000, 0);
+        Project p = makeProject(0, "Straight line activities");
         projectService.addProject( p );
 
         ActivityService activityService = appCtx.getActivityService( p.getId() );
@@ -81,7 +81,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService =  appCtx.getProjectService();
 
-        Project p = new Project(0, "Two critical paths", "This project has 2 critical paths", false, 10000, 0);
+        Project p = makeProject(0, "Two critical paths");
         projectService.addProject( p );
 
         ActivityService activityService = appCtx.getActivityService( p.getId() );
@@ -116,7 +116,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService =  appCtx.getProjectService();
 
-        Project p = new Project(0, "", "", false, 10000, 0);
+        Project p = makeProject(0, "Linked diamonds");
         projectService.addProject( p );
 
         ActivityService activityService = appCtx.getActivityService( p.getId() );
@@ -142,7 +142,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
 
         Charts.viewCriticalPathsChart(appCtx, p);
 
-        assertDisplayedProperly("testProjectWithBranches", "");
+        assertDisplayedProperly("testProjectWithBranches", "Expected two linked diamonds");
     }
 
     private void assertDisplayedProperly(String testName, String expectedDisplay) {

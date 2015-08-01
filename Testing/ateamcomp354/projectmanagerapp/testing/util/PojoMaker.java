@@ -3,6 +3,7 @@ package ateamcomp354.projectmanagerapp.testing.util;
 import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.Status;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 
 import java.util.Calendar;
 
@@ -28,6 +29,10 @@ public class PojoMaker {
         c.setTimeInMillis(0);
         c.set(year, month - 1, day);
         return c;
+    }
+
+    public static Project makeProject(int id, String name) {
+        return new Project(id, name, "", false, 10000, 10000);
     }
 
     public static Activity makeActivity(int projectId, String name, Calendar start, Calendar end) {
