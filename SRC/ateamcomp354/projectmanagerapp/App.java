@@ -110,8 +110,8 @@ public class App {
 		ActivityService activityService = appCtx.getActivityService( project.getId() );
 
 		if ( activityService.getActivities().isEmpty() ) {
-			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150721, 20150721, "The cool activity", 20150722, 20150722, 1, 1, "This activity is for cool people to do.", 0));
-			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150722, 20150722, "The ugly activity", 20150724, 20150724, 2, 2, "This activity that no one wants to do.", 0 ));
+			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150721, 20150721, "The cool activity", 20150722, 20150722, 1, 1, 0, "This activity is for cool people to do.", 0));
+			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150722, 20150722, "The ugly activity", 20150724, 20150724, 2, 2, 0, "This activity that no one wants to do.", 0 ));
 		}
 		
 		Activity a1 = activityDao.fetchByLabel("The cool activity").get(0);

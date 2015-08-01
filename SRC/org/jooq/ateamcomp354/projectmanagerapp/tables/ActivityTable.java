@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ActivityTable extends TableImpl<ActivityRecord> {
 
-	private static final long serialVersionUID = 1150161059;
+	private static final long serialVersionUID = 692125733;
 
 	/**
 	 * The reference instance of <code>activity</code>
@@ -100,6 +100,11 @@ public class ActivityTable extends TableImpl<ActivityRecord> {
 	 * The column <code>activity.max_duration</code>.
 	 */
 	public final TableField<ActivityRecord, Integer> MAX_DURATION = createField("max_duration", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>activity.float</code>.
+	 */
+	public final TableField<ActivityRecord, Integer> FLOAT = createField("float", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
 	 * The column <code>activity.description</code>.

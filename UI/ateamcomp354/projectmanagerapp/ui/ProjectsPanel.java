@@ -2,31 +2,25 @@ package ateamcomp354.projectmanagerapp.ui;
 
 import ateamcomp354.projectmanagerapp.model.Pojos;
 import ateamcomp354.projectmanagerapp.model.ProjectInfo;
-import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
-import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.services.UserService;
+import ateamcomp354.projectmanagerapp.ui.gen.GanttChartGen;
 import ateamcomp354.projectmanagerapp.ui.gen.SplitPane1Gen;
 import ateamcomp354.projectmanagerapp.ui.gen.US1RightPanelGen;
+import ateamcomp354.projectmanagerapp.ui.util.Charts;
 import ateamcomp354.projectmanagerapp.ui.util.Dialogs;
 import ateamcomp354.projectmanagerapp.ui.util.FrameSaver;
 import ateamcomp354.projectmanagerapp.ui.util.TwoColumnListCellRenderer;
-
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The projects panel displays a list of all the projects in the system.
@@ -55,7 +49,6 @@ public class ProjectsPanel {
 	private final DefaultListModel<Project> closedProjectsModel;
 	
 	private ApplicationContext appCtx;
-	private ActivityService ase;
 
 	private int selectedProjectMemberId;
 	private List<Integer> projectMemberComboIndexes;
@@ -105,7 +98,7 @@ public class ProjectsPanel {
 		projectInfos = new HashMap<>();
 
 		splitPane1Gen = new SplitPane1Gen();
-		splitPane1Gen.getBtnChart().setBounds(43, 344, 257, 30);
+		splitPane1Gen.getBtnChart().setBounds(44, 345, 116, 30);
 
 		us1RightPanelGen = new US1RightPanelGen();
 
@@ -126,6 +119,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getAddButton().addActionListener( __ -> addProjectClicked() );
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
 		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
+		splitPane1Gen.getBtnCriticalPath().addActionListener(__ -> viewCriticalPath());
 		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
@@ -167,7 +161,7 @@ public class ProjectsPanel {
 		selectedProject = Optional.empty();
 		displayProject();
 	}
-	
+
 	public JComponent getComponent()
 	{
 		return splitPane1Gen;
@@ -389,6 +383,10 @@ public class ProjectsPanel {
 			else
 				JOptionPane.showMessageDialog (null, "There are no activities for this project"
 						, "No Report", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	private void viewCriticalPath() {
+		Charts.viewCriticalPathsChart( appCtx, getProject() );
 	}
 
 	// Btn to create new project is clicked, clear list selections and

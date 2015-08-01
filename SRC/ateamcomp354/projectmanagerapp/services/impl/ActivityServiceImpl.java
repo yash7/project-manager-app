@@ -16,7 +16,11 @@ import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,37 +146,30 @@ public class ActivityServiceImpl implements ActivityService {
             throw new ServiceFunctionalityException("failed to delete a dependency from " + fromActivityId + " to " + toActivityId , e);
         }
     }
-
+	
     private void checkCircularDependency(int fromActivityId, int toActivityId, String string) {
-		if(addActivityToList(fromActivityId, toActivityId, new ArrayList<Integer>()) == null) {
+		if(checkLevel(fromActivityId, toActivityId) == true) {
 			throw new ServiceFunctionalityException(string);
 		}
 	}
     
-    private List<Integer> addActivityToList(int toAdd, int activityId, List<Integer> activities) {
+    private boolean checkLevel(int toAdd, int activityId) {
     	
     	List<Integer> links = getDependencies(toAdd);
-    	if(activities.contains(toAdd)) {
-    		return null;
-    	}
-    	if(links.size() == 0) {
-    		return links;
-    	}
-    	
-    	for (int x : links) {
-    		if(activities.contains(activityId)) {
-    			return null;
+    	ArrayList<Boolean> linkChecks = new ArrayList<Boolean>();
+    	for(int x : links) {
+    		if(x == toAdd || x == activityId) {
+    			return true;
     		}
-    		else {
-    			activities.add(activityId);
-    			List<Integer> y = addActivityToList(x, toAdd, activities);
-    			if(y == null) {
-    				return null;
-    			}
-    		}
+    		linkChecks.add(checkLevel(x, toAdd));
     	}
-    	
-    	return activities;
+
+    	if(linkChecks.contains(new Boolean(true))) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
     
 	@Override
@@ -305,4 +302,234 @@ public class ActivityServiceImpl implements ActivityService {
             throw new ServiceFunctionalityException("failed to get project members for project", e);
         }
     }
+	
+	@Override
+	public List<Integer> calculateNumberOfStartingNodes(List<Integer> startingNodes, int activityId) {
+		List<Integer> acts = this.getDependencies(activityId);
+		
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				List<Integer> nodes = calculateNumberOfStartingNodes(startingNodes, aId);
+				for(Integer newId : nodes) {
+					if(!startingNodes.contains(newId)) {
+						startingNodes.add(newId);
+					}
+				}
+			}
+			
+		}
+		else {
+			if(!startingNodes.contains(activityId)) {
+				startingNodes.add(activityId);
+			}
+		}
+		
+		return startingNodes;
+	}
+	
+	@Override
+	public List<Integer> calculateNumberOfEndingNodes(List<Integer> endingNodes, int activityId) {
+		List<Integer> acts = this.getDependents(activityId);
+		
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				List<Integer> nodes = calculateNumberOfEndingNodes(endingNodes, aId);
+				for(Integer newId : nodes) {
+					if(!endingNodes.contains(newId)) {
+						endingNodes.add(newId);
+					}
+				}
+			}
+			
+		}
+		else {
+			if(!endingNodes.contains(activityId)) {
+				endingNodes.add(activityId);
+			}
+		}
+		
+		return endingNodes;
+	}
+
+	@Override
+	public List<Integer> calculateSizeOfChain(List<Integer> nodes, int activityId) {
+		if(!nodes.contains(activityId)) { //always try to add current activityId
+			nodes.add(activityId);
+		}
+		
+		List<Integer> actsBackward = this.getDependencies(activityId);
+		List<Integer> actsForward = this.getDependents(activityId);
+		
+		if(actsBackward.size() > 0) { //middle/end
+			for(Integer aId : actsBackward) {
+				List<Integer> newNodes = calculateAllBackward(nodes, aId);
+				for(Integer newId : newNodes) {
+					if(!nodes.contains(newId)) {
+						nodes.add(newId);
+					}
+				}
+			}
+		}
+		
+		if(actsForward.size() > 0) { //middle/end
+			for(Integer aId : actsForward) {
+				List<Integer> newNodes = calculateAllForward(nodes, aId);
+				for(Integer newId : newNodes) {
+					if(!nodes.contains(newId)) {
+						nodes.add(newId);
+					}
+				}
+			}
+		}
+		return nodes;
+	}
+	
+	private List<Integer> calculateAllForward(List<Integer> activities, int activityId) {
+		if(!activities.contains(activityId)) {
+			activities.add(activityId);
+		}
+		
+		List<Integer> acts = this.getDependents(activityId);
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				if(!activities.contains(aId)) {
+					activities.add(aId);
+				}
+				List<Integer> nodes = calculateAllForward(activities, aId);
+				for(Integer newId : nodes) {
+					if(!activities.contains(newId)) {
+						activities.add(newId);
+					}
+				}
+			}
+		}
+		
+		return activities;
+	}
+	
+	private List<Integer> calculateAllBackward(List<Integer> activities, int activityId) {
+		if(!activities.contains(activityId)) {
+			activities.add(activityId);
+		}
+		
+		List<Integer> acts = this.getDependencies(activityId);
+		if(acts.size() > 0) {
+			for(Integer aId : acts) {
+				if(!activities.contains(aId)) {
+					activities.add(aId);
+				}
+				List<Integer> nodes = calculateAllBackward(activities, aId);
+				for(Integer newId : nodes) {
+					if(!activities.contains(newId)) {
+						activities.add(newId);
+					}
+				}
+			}
+		}
+		
+		return activities;
+	}
+	
+	@Override
+	public List<Integer> calculateAllParamsOfChain(int startActivityId, int endActivityId) {
+		Activity startActivity = this.getActivity(startActivityId);
+		List<Integer> activities = calculateNextForward(startActivity);
+		
+		Activity lastActivity = this.getActivity(endActivityId);
+		lastActivity.setLatestFinish(lastActivity.getEarliestFinish());
+		lastActivity.setLatestStart(lastActivity.getEarliestStart());
+		lastActivity.setFloat(0);
+		lastActivity.setMaxDuration(lastActivity.getDuration());
+		
+		this.updateActivity(lastActivity);
+		
+//		System.out.println("Activity "+lastActivity.getLabel());
+//		System.out.println("    Earliest Start - "+lastActivity.getEarliestStart());
+//		System.out.println("    Earliest Finish - "+lastActivity.getEarliestFinish());
+//		System.out.println("    Latest Start - "+lastActivity.getLatestStart());
+//		System.out.println("    Latest Finish - "+lastActivity.getLatestFinish());
+//		System.out.println("    Float - "+lastActivity.getFloat());
+//		System.out.println("    Duration - "+lastActivity.getDuration());
+//		System.out.println("    Max Duration - "+lastActivity.getMaxDuration());
+		
+		calculatePrevBackward(lastActivity);
+		
+		return activities;
+	}
+	
+	private void calculatePrevBackward(Activity a) {
+		Integer lastActivityLatestStart = -1;
+		for(int i : this.getDependents(a.getId())) {
+			if(this.getActivity(i).getLatestStart() != null) {
+				if(lastActivityLatestStart == -1 || this.getActivity(i).getLatestStart() < lastActivityLatestStart) {
+					lastActivityLatestStart = this.getActivity(i).getLatestStart();
+				}
+			}
+		}
+		
+		if(lastActivityLatestStart != -1) {
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+				Calendar cal = Calendar.getInstance();
+				
+				a.setLatestFinish(lastActivityLatestStart);
+				
+				cal.setTime(formatter.parse(a.getLatestFinish().toString()));
+				cal.add(Calendar.DATE, -1 * a.getDuration());
+				
+				Integer currentActivityLatestStart = Integer.parseInt(formatter.format(cal.getTime()));
+				
+				a.setLatestStart(currentActivityLatestStart);
+				
+				Date ES = formatter.parse(a.getEarliestStart().toString());
+				Date LS = formatter.parse(a.getLatestStart().toString());
+				int floatVal = (int) (LS.getTime() - ES.getTime()) / (1000 * 60 * 60 * 24);
+				a.setFloat(floatVal);
+				
+				Date LF = formatter.parse(a.getLatestFinish().toString());
+				int maxDuration = (int) (LF.getTime() - ES.getTime()) / (1000 * 60 * 60 * 24);
+				a.setMaxDuration(maxDuration);
+				this.updateActivity(a);
+						
+//				System.out.println("Activity "+a.getLabel());
+//				System.out.println("    Earliest Start - "+a.getEarliestStart());
+//				System.out.println("    Earliest Finish - "+a.getEarliestFinish());
+//				System.out.println("    Latest Start - "+a.getLatestStart());
+//				System.out.println("    Latest Finish - "+a.getLatestFinish());
+//				System.out.println("    Float - "+a.getFloat());
+//				System.out.println("    Duration - "+a.getDuration());
+//				System.out.println("    Max Duration - "+a.getMaxDuration());
+			} catch (ParseException e) {}
+		}
+		
+		for(int i : this.getDependencies(a.getId())) {
+			calculatePrevBackward(this.getActivity(i));
+		}	
+	}
+
+	private List<Integer> calculateNextForward(Activity a) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+		List<Integer> activities = new ArrayList<Integer>();
+		activities.add(a.getId());
+		
+		try {
+			Date startDate = formatter.parse(a.getEarliestStart().toString());
+			Date endDate = formatter.parse(a.getEarliestFinish().toString());
+			int duration = (int) (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+			a.setDuration(duration);
+			this.updateActivity(a);
+			
+			for(int i : this.getDependents(a.getId())) {
+				List<Integer> newActs = calculateNextForward(this.getActivity(i));
+				for(Integer na : newActs) {
+					if(!activities.contains(na)) {
+						activities.add(na);
+					}
+				}
+			}
+						
+		} catch (ParseException e) {}
+		
+		return activities;
+	}
 }

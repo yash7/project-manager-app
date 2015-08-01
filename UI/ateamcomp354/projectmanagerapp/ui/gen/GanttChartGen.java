@@ -2,11 +2,9 @@ package ateamcomp354.projectmanagerapp.ui.gen;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,12 +20,8 @@ import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.Layer;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
-import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
-
-import ateamcomp354.projectmanagerapp.App;
 import ateamcomp354.projectmanagerapp.model.Status;
 
 public class GanttChartGen extends JPanel {
@@ -68,7 +62,7 @@ public class GanttChartGen extends JPanel {
 	        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
 	    	try{
 				Date esdate = format.parse(String.valueOf(a.getEarliestStart()).trim());
-				Date eedate = format.parse(String.valueOf(a.getLatestFinish()).trim());
+				Date eedate = format.parse(String.valueOf(a.getEarliestFinish()).trim());
 			
 				Task t = new Task(a.getLabel(), new SimpleTimePeriod(esdate,eedate));
 				if(a.getStatus() == Status.RESOLVED) {
