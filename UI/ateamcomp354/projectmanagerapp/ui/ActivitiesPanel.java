@@ -91,6 +91,7 @@ public class ActivitiesPanel {
 
 		// REMOVE THINGS FROM SPLITPANE THAT ARE NOT NEEDED IN ACTIVITY VIEW
 		splitPane1Gen.getBtnCriticalPath().setVisible(false);
+		splitPane1Gen.getBtnEVanalysis().setVisible(false);
 		splitPane1Gen.getBtnView().setVisible(false);
 		splitPane1Gen.getTopLabel().setVisible(false);
 
@@ -281,7 +282,7 @@ public class ActivitiesPanel {
 			splitPane1Gen.getDurationField().setText("1");
 			splitPane1Gen.getDescriptionArea().setText("");
 			splitPane1Gen.getPlannedValueField().setText("0");
-
+			splitPane1Gen.getActualCostField().setText("0");
 			splitPane1Gen.resetDatePickers();
 
 			splitPane1Gen.getDependenciesComboBox().removeAllItems();
@@ -321,6 +322,7 @@ public class ActivitiesPanel {
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField()
 				.getText()));
 		activity.setDescription(splitPane1Gen.getDescriptionArea().getText());
+		
 		Integer iVal = 0;
 		try {
 			iVal = Integer.parseInt(splitPane1Gen.getPlannedValueField().getText());
@@ -335,7 +337,22 @@ public class ActivitiesPanel {
 			errorString += "Planned Value must be a valid non-negative whole number\n";
 		}
 
-		if(activity.getEarliestStart() > activity.getEarliestFinish()) {
+		iVal = 0;
+		
+		try {
+			iVal = Integer.parseInt(splitPane1Gen.getActualCostField().getText());
+			if(iVal < 0) {
+				errorString += "Actual Cost must be a valid non-negative whole number\n";
+			}
+			else {
+				activity.setActualCost(iVal);
+			}
+		}
+		catch(NumberFormatException e) {
+			errorString += "Actual Cost must be a valid non-negative whole number\n";
+		}
+		
+		if(activity.getEarliestStart() > activity.getLatestFinish()) {
 			errorString += "Start Date may not exceed End Date\n";
 		}
 
@@ -484,6 +501,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getDescriptionArea().setText(activity.getDescription());
 		splitPane1Gen.getDeleteButton().setEnabled(true);
 		splitPane1Gen.getPlannedValueField().setText(Integer.toString(activity.getPlannedValue()));
+		splitPane1Gen.getActualCostField().setText(Integer.toString(activity.getActualCost()));
 		showDependencies(id);
 		showAssignees(id);
 		setReadOnly(activity.getStatus() == Status.RESOLVED);
@@ -721,6 +739,7 @@ public class ActivitiesPanel {
 	{
 		splitPane1Gen.getActivityNameField().setEnabled(!readOnly);
 		splitPane1Gen.getPlannedValueField().setEnabled(!readOnly);
+		splitPane1Gen.getActualCostField().setEnabled(!readOnly);
 		splitPane1Gen.getDescriptionArea().setEnabled(!readOnly);
 		splitPane1Gen.getEarliestStartDatePicker().setEnabled(!readOnly);
 		splitPane1Gen.getLatestFinishDatePicker().setEnabled(!readOnly);
@@ -763,6 +782,7 @@ public class ActivitiesPanel {
 				|| a.getMaxDuration() != Integer.parseInt(splitPane1Gen.getMaxDurationField().getText())
 				|| a.getDuration() != Integer.parseInt(splitPane1Gen.getDurationField().getText())
 				|| a.getPlannedValue() != Integer.parseInt(splitPane1Gen.getPlannedValueField().getText())
+				|| a.getActualCost() != Integer.parseInt(splitPane1Gen.getActualCostField().getText())
 				|| !a.getDescription().equals(splitPane1Gen.getDescriptionArea().getText()));
 	}
 }

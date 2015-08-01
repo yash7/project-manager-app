@@ -1,8 +1,10 @@
 package ateamcomp354.projectmanagerapp.services;
 
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,4 +77,10 @@ public interface ProjectService {
     List<Users> getMembersForProject(int projectId);
     
     void updateProjectBudgetAtCompletion (int projectId);
+    
+    void updateActualCostAtCompletion(int projectId);
+    
+    List<Activity> EVactivitiesByEarliestStart(int projectId);
+    
+    List<Object> EVStartDate(int projectId);
 }

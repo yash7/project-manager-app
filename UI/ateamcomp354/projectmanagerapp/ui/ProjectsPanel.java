@@ -98,8 +98,14 @@ public class ProjectsPanel {
 		projectInfos = new HashMap<>();
 
 		splitPane1Gen = new SplitPane1Gen();
-		splitPane1Gen.getBtnChart().setBounds(44, 345, 116, 30);
 
+		//splitPane1Gen.getBtnChart().setBounds(44, 345, 116, 30);
+		splitPane1Gen.getBtnChart().setText("GANTT Chart");
+		splitPane1Gen.getBtnChart().setBounds(43, 365, 120, 34);
+
+		splitPane1Gen.getBtnEVanalysis().setText("Earned-Value");
+		splitPane1Gen.getBtnEVanalysis().setBounds(170, 365, 131, 34);
+		
 		us1RightPanelGen = new US1RightPanelGen();
 
 		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
@@ -120,6 +126,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
 		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
 		splitPane1Gen.getBtnCriticalPath().addActionListener(__ -> viewCriticalPath());
+		splitPane1Gen.getEVanalysisButton().addActionListener(__-> viewEVanalysisClicked());
 		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
@@ -279,6 +286,7 @@ public class ProjectsPanel {
 	// If they choose cancel then we need to undo the selection and reselect
 	// the old project.
 	private void projectSelected( ListSelectionEvent e, JList<Project> list1, JList<Project> list2 ) {
+				
 		if ( valueIsAdjusting ) {
 			return;
 		}
@@ -295,8 +303,8 @@ public class ProjectsPanel {
 		list2.clearSelection();
 		valueIsAdjusting = false;
 
-		Project project = list1.getModel().getElementAt( i );
-
+		Project project = list1.getModel().getElementAt( i );		
+		
 		int r = checkDirty();
 		if ( r == JOptionPane.YES_OPTION ) {
 			valueIsAdjusting = true;
@@ -372,21 +380,26 @@ public class ProjectsPanel {
 		swap.saveFrame(activityFrame); // Saves the frame next frame
 	}
 	
+	//Gantt CHart button clicked
+	
 	private void viewProgressClicked(){
 			List<Activity> acts = appCtx.getActivityService(getProject().getId()).getActivities();
 					
 			if(acts.size()>0){
-			GanttChartGen chart = new GanttChartGen(getProject().getProjectName()
-					 + " Progress",acts); 
+			GanttChartGen chart = new GanttChartGen(getProject().getProjectName() + " Progress",acts); 
 			JOptionPane.showMessageDialog (null, chart, "Project", JOptionPane.PLAIN_MESSAGE);
 			}
 			else
 				JOptionPane.showMessageDialog (null, "There are no activities for this project"
 						, "No Report", JOptionPane.PLAIN_MESSAGE);
 	}
-	
+
 	private void viewCriticalPath() {
-		Charts.viewCriticalPathsChart( appCtx, getProject() );
+		Charts.viewCriticalPathsChart(appCtx, getProject());
+	}
+	
+	private void viewEVanalysisClicked(){		
+		Charts.viewEVAnalysisChart(appCtx, getProject());
 	}
 
 	// Btn to create new project is clicked, clear list selections and
@@ -476,7 +489,6 @@ public class ProjectsPanel {
 		us1RightPanelGen.getDescriptionArea().setEnabled( !p.getCompleted() );
 		us1RightPanelGen.getDescriptionArea().setText( p.getDescription() );
 		
-		
 		if(p.getBudgetAtCompletion() != null) {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText(p.getBudgetAtCompletion().toString());
 		}
@@ -484,6 +496,10 @@ public class ProjectsPanel {
 			us1RightPanelGen.getBudgetAtCompletionLabel().setText("0");
 		}
 		
+		if(p.getActualCostAtCompletion() != null)
+			us1RightPanelGen.getActualCostField().setText(p.getActualCostAtCompletion().toString());
+		else
+			us1RightPanelGen.getActualCostField().setText("0");
 		
 		if (p.getId() != null) {
 			us1RightPanelGen.getProjectMembersScrollPane().setVisible(true);
@@ -514,6 +530,7 @@ public class ProjectsPanel {
 		p.setDescription( us1RightPanelGen.getDescriptionArea().getText() );
 		p.setCompleted( p.getId() != null && us1RightPanelGen.getCompletedCheckBox().isSelected() );
 		p.setBudgetAtCompletion( Integer.valueOf(us1RightPanelGen.getBudgetAtCompletionLabel().getText()));
+		p.setActualCostAtCompletion(Integer.valueOf(us1RightPanelGen.getActualCostField().getText()));
 		return p;
 	}
 	

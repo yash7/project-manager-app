@@ -3,19 +3,26 @@ package ateamcomp354.projectmanagerapp.services.impl;
 import ateamcomp354.projectmanagerapp.model.Status;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
+import ateamcomp354.projectmanagerapp.ui.gen.EarnedValueChartGen;
 
 import org.jooq.DSLContext;
+import org.jooq.Table;
 import org.jooq.ateamcomp354.projectmanagerapp.Tables;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectmembersDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UseractivitiesDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Projectmembers;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Useractivities;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.jooq.exception.DataAccessException;
+import org.omg.CORBA.ACTIVITY_COMPLETED;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 public class ProjectServiceImpl implements ProjectService {
 
@@ -210,5 +217,85 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (DataAccessException e) {
             throw new ServiceFunctionalityException("unable to update project's BAC " + projectId, e);
         }
+	}
+	
+	@Override
+	public void updateActualCostAtCompletion(int projectId) {
+        try {
+            List<Integer> actualCost = create.select(Tables.ACTIVITY.ACTUAL_COST)
+            		.from(Tables.ACTIVITY)
+            		.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId)).and(Tables.ACTIVITY.STATUS.equal(Status.RESOLVED))
+            		.fetchInto(Integer.class);
+            
+            int sum = 0;
+            
+            for (Integer i : actualCost)
+            	sum += i;
+            
+            create.update(Tables.PROJECT)
+            .set(Tables.PROJECT.ACTUAL_COST_AT_COMPLETION, sum)
+            .where(Tables.PROJECT.ID.equal(projectId))
+            .execute();
+            
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("unable to update project's AC " + projectId, e);
+        }
+	}
+	
+	@Override
+	public List<Activity> EVactivitiesByEarliestStart(int projectId) {
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+			
+			List<Activity> acts = create.select()
+					.from(Tables.ACTIVITY)
+					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+					.orderBy(Tables.ACTIVITY.EARLIEST_START.asc())
+					.fetchInto(Activity.class);
+			
+			return acts;
+		}
+		catch(Exception e)
+		{
+			throw new ServiceFunctionalityException("" + projectId ,e);
+		}
+		
+	}
+
+	@Override
+	public List<Object> EVStartDate(int projectId) {
+		try{
+			List<Object> val = new ArrayList<Object>();
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+			Date startDate = null;
+			Date endDate = null;
+			
+			List<Integer> startProDate = create.select(Tables.ACTIVITY.EARLIEST_START.min())
+					.from(Tables.ACTIVITY)
+					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+					.fetchInto(Integer.class);
+			
+			startDate = format.parse(startProDate.get(0).toString());
+			
+			List<Integer> endProDate = create.select(Tables.ACTIVITY.LATEST_FINISH.max())
+					.from(Tables.ACTIVITY)
+					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+					.fetchInto(Integer.class);
+			
+			endDate = format.parse(endProDate.get(0).toString());
+			
+			int days = (int)Math.abs((endDate.getTime() - startDate.getTime()) / (1000*60*60*24));
+			int weeks = (int)Math.ceil((double)days/7);
+			
+			val.add(startDate);
+			val.add(weeks);
+			
+			return val;
+		}
+		catch(Exception e)
+		{
+			throw new ServiceFunctionalityException("" + projectId ,e);
+		}
+		
 	}
 }

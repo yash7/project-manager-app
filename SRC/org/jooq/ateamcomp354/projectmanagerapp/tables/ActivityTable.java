@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ActivityTable extends TableImpl<ActivityRecord> {
 
-	private static final long serialVersionUID = 692125733;
+	private static final long serialVersionUID = -1862402807;
 
 	/**
 	 * The reference instance of <code>activity</code>
@@ -115,6 +115,11 @@ public class ActivityTable extends TableImpl<ActivityRecord> {
 	 * The column <code>activity.planned_value</code>.
 	 */
 	public final TableField<ActivityRecord, Integer> PLANNED_VALUE = createField("planned_value", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>activity.actual_cost</code>.
+	 */
+	public final TableField<ActivityRecord, Integer> ACTUAL_COST = createField("actual_cost", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
 	 * Create a <code>activity</code> table reference

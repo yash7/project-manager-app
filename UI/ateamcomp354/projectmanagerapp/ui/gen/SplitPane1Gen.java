@@ -51,6 +51,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton addButton;
 	private JButton deleteButton;
 	private JButton btnCriticalPath;
+	private JButton btnEVanalysis;
 	private JLabel activityNameLabel;
 
 	private int appWidth = MainFrame.getAppWidth();
@@ -95,6 +96,7 @@ public class SplitPane1Gen extends JPanel {
 	private JCalendarCombo latestStartDatePicker;
 	private JCalendarCombo earliestFinishDatePicker;
 	private JCalendarCombo latestFinishDatePicker;
+	private JTextField actualCostField;
 	
 	/**
 	 * Create the panel.
@@ -126,7 +128,7 @@ public class SplitPane1Gen extends JPanel {
 		LeftPanel.add(topLabel);
 		
 		listScrollPane = new JScrollPane();
-		listScrollPane.setBounds(45, 132, 256, 197);
+		listScrollPane.setBounds(43, 132, 258, 197);
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("Add");
@@ -138,26 +140,35 @@ public class SplitPane1Gen extends JPanel {
 		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		deleteButton.setBounds(149, 91, 70, 30);
 		LeftPanel.add(deleteButton);
-		
+
 		btnCriticalPath = new JButton("Critical Path");
 		btnCriticalPath.setBounds(170, 342, 131, 30);
 		LeftPanel.add(btnCriticalPath);
-		
+
+		btnEVanalysis = new JButton("Earned-Value");
+		btnEVanalysis.setBounds(170, 365, 131, 34);
+		LeftPanel.add(btnEVanalysis);
+
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(43, 385, 256, 197);
+		scrollPane.setBounds(43, 410, 258, 197);
 		LeftPanel.add(scrollPane);
 		
 		btnView = new JButton("View Activity");
-		btnView.setBounds(149, 617, 148, 30);
+		btnView.setBounds(149, 642, 148, 30);
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
 		backBtn.setBounds(17, 36, 90, 30);
 		LeftPanel.add(backBtn);
 		
-		btnChart = new JButton("Progress Chart");
-		btnChart.setBounds(43, 342, 120, 30);
+		btnChart = new JButton("GANTT Chart");
+		btnChart.setBounds(43, 365, 120, 34);
 		LeftPanel.add(btnChart);
+		
+		JLabel lblAnalysis = new JLabel("Analysis:");
+		lblAnalysis.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblAnalysis.setBounds(47, 340, 73, 26);
+		LeftPanel.add(lblAnalysis);
 
 		splitPane.setRightComponent(RightPanel);
 		RightPanel.setLayout(null);
@@ -171,11 +182,11 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(statusLabel);
 		
 		statusComboBox = new JComboBox();
-		statusComboBox.setBounds(147, 76, 116, 25);
+		statusComboBox.setBounds(147, 76, 120, 20);
 		RightPanel.add(statusComboBox);
 		
 		earliestStartLabel = new JLabel("Start Date:");
-		earliestStartLabel.setBounds(12, 134, 128, 16);
+		earliestStartLabel.setBounds(12, 165, 128, 16);
 		RightPanel.add(earliestStartLabel);
 		
 		latestStartLabel = new JLabel("Latest Start:");
@@ -189,7 +200,7 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(earliestFinishLabel);
 		
 		latestFinishLabel = new JLabel("End Date:");
-		latestFinishLabel.setBounds(11, 166, 128, 16);
+		latestFinishLabel.setBounds(12, 197, 128, 16);
 		RightPanel.add(latestFinishLabel);
 		
 		maxDurationLabel = new JLabel("Max Duration:");
@@ -226,69 +237,69 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(descriptionLabel);
 		
 		dependenciesLabel = new JLabel("Dependencies:");
-		dependenciesLabel.setBounds(12, 197, 89, 16);
+		dependenciesLabel.setBounds(12, 243, 89, 16);
 		RightPanel.add(dependenciesLabel);
 		
 		dependenciesComboBox = new JComboBox();
-		dependenciesComboBox.setBounds(12, 362, 116, 25);
+		dependenciesComboBox.setBounds(12, 408, 116, 25);
 		RightPanel.add(dependenciesComboBox);
 		
 		assigneesLabel = new JLabel("Assignees:");
-		assigneesLabel.setBounds(147, 197, 89, 16);
+		assigneesLabel.setBounds(147, 243, 89, 16);
 		RightPanel.add(assigneesLabel);
 		
 		assigneesComboBox = new JComboBox();
-		assigneesComboBox.setBounds(147, 362, 116, 25);
+		assigneesComboBox.setBounds(147, 408, 116, 25);
 		RightPanel.add(assigneesComboBox);
 		
 		saveActivityButton = new JButton("Save Activity");
-		saveActivityButton.setBounds(86, 486, 116, 30);
+		saveActivityButton.setBounds(86, 532, 116, 30);
 		RightPanel.add(saveActivityButton);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
-		textField.setBounds(147, 48, 116, 22);
+		textField.setBounds(147, 48, 120, 20);
 		RightPanel.add(textField);
 		
 		addDepButton = new JButton("Add");
 		addDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addDepButton.setBounds(31, 400, 70, 30);
+		addDepButton.setBounds(31, 446, 70, 30);
 		RightPanel.add(addDepButton);
 		
 		delDepButton = new JButton("Delete");
 		delDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		delDepButton.setBounds(31, 438, 70, 30);
+		delDepButton.setBounds(31, 484, 70, 30);
 		RightPanel.add(delDepButton);
 		
 		addAssignButton = new JButton("Add");
 		addAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addAssignButton.setBounds(166, 400, 70, 30);
+		addAssignButton.setBounds(166, 446, 70, 30);
 		RightPanel.add(addAssignButton);
 		
 		delAssignButton = new JButton("Delete");
 		delAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		delAssignButton.setBounds(166, 438, 70, 30);
+		delAssignButton.setBounds(166, 484, 70, 30);
 		RightPanel.add(delAssignButton);
 		
 		dependencyScrollPane = new JScrollPane();
-		dependencyScrollPane.setBounds(12, 226, 116, 129);
+		dependencyScrollPane.setBounds(12, 272, 116, 129);
 		RightPanel.add(dependencyScrollPane);
 		
 		assigneeScrollPane = new JScrollPane();
-		assigneeScrollPane.setBounds(147, 226, 116, 129);
+		assigneeScrollPane.setBounds(147, 272, 116, 129);
 		RightPanel.add(assigneeScrollPane);
 		
 		JLabel lblPlannedValue = new JLabel("Planned Value ($):");
-		lblPlannedValue.setBounds(12, 107, 128, 16);
+		lblPlannedValue.setBounds(12, 110, 128, 16);
 		RightPanel.add(lblPlannedValue);
 		
 		plannedValueField = new JTextField();
-		plannedValueField.setBounds(147, 107, 116, 22);
+		plannedValueField.setBounds(147, 107, 120, 20);
 		RightPanel.add(plannedValueField);
 		plannedValueField.setColumns(10);
 		
 		earliestStartDatePicker = new JCalendarCombo();
-		earliestStartDatePicker.setBounds(147, 135, 117, 20);
+		earliestStartDatePicker.setBounds(147, 163, 120, 20);
 		RightPanel.add(earliestStartDatePicker);
 		
 		latestStartDatePicker = new JCalendarCombo();
@@ -302,11 +313,11 @@ public class SplitPane1Gen extends JPanel {
 		RightPanel.add(earliestFinishDatePicker);
 		
 		latestFinishDatePicker = new JCalendarCombo();
-		latestFinishDatePicker.setBounds(146, 166, 117, 20);
+		latestFinishDatePicker.setBounds(147, 195, 120, 20);
 		RightPanel.add(latestFinishDatePicker);
 		
 		earliestStartField = new JTextField();
-		earliestStartField.setBounds(147, 134, 116, 22);
+		earliestStartField.setBounds(147, 163, 120, 20);
 		RightPanel.add(earliestStartField);
 		earliestStartField.setColumns(10);
 		earliestStartField.setVisible(false);
@@ -325,7 +336,7 @@ public class SplitPane1Gen extends JPanel {
 		
 		latestFinishField = new JTextField();
 		latestFinishField.setColumns(10);
-		latestFinishField.setBounds(147, 163, 116, 22);
+		latestFinishField.setBounds(147, 195, 120, 20);
 		RightPanel.add(latestFinishField);
 		latestFinishField.setVisible(false);	
 		
@@ -334,6 +345,15 @@ public class SplitPane1Gen extends JPanel {
 		getLatestStartDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 		getEarliestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 		getLatestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
+		
+		JLabel lblActualCost = new JLabel("Actual Cost:");
+		lblActualCost.setBounds(12, 136, 128, 16);
+		RightPanel.add(lblActualCost);
+		
+		actualCostField = new JTextField();
+		actualCostField.setColumns(10);
+		actualCostField.setBounds(147, 134, 120, 20);
+		RightPanel.add(actualCostField);
 	}
 
 	public JLabel getTopLabel() {
@@ -351,6 +371,10 @@ public class SplitPane1Gen extends JPanel {
 
 	public JButton getBtnCriticalPath() {
 		return btnCriticalPath;
+	}
+
+	public JButton getEVanalysisButton(){
+		return btnEVanalysis;
 	}
 	
 	public JButton getChartButton(){
@@ -427,6 +451,9 @@ public class SplitPane1Gen extends JPanel {
 	public JTextField getPlannedValueField() {
 		return plannedValueField;
 	}
+	public JTextField getActualCostField() {
+		return actualCostField;
+	}
 	public JLabel getStatusLabel() {
 		return statusLabel;
 	}
@@ -477,6 +504,10 @@ public class SplitPane1Gen extends JPanel {
 
 	public JButton getDelAssignButton() {
 		return delAssignButton;
+	}
+	
+	public JButton getBtnEVanalysis() {
+		return btnEVanalysis;
 	}
 
 	public JButton getBtnChart() {

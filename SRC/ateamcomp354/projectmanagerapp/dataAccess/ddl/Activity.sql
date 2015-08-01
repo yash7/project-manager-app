@@ -11,5 +11,6 @@ CREATE TABLE activity (
 	max_duration INTEGER,
 	float INTEGER,
 	description TEXT,
-	planned_value INTEGER
+	planned_value INTEGER,
+	actual_cost INTEGER
 );
