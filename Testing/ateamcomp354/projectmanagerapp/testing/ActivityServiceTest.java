@@ -596,8 +596,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateSizeOfChain_singleChain()
-	{
+	public void testCalculateSizeOfChain_singleChain()	{
 		Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
 		Activity B = makeActivity(0, "B", makeDate(2015, 1, 3), makeDate(2015, 1, 4));
 		Activity C = makeActivity(0, "C", makeDate(2015, 1, 5), makeDate(2015, 1, 6));
@@ -614,8 +613,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateSizeOfChain_multipleChains()
-	{
+	public void testCalculateSizeOfChain_multipleChains()	{
 		Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
 		Activity B = makeActivity(0, "B", makeDate(2015, 1, 3), makeDate(2015, 1, 4));
 		Activity C = makeActivity(0, "C", makeDate(2015, 1, 5), makeDate(2015, 1, 6));
@@ -639,8 +637,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		// Also used to test chains of one element 
 	}
 	
-	private void testCalculateAllParamsOfChain_setup()
-	{
+	private void testCalculateAllParamsOfChain_setup()	{
 		ase.getActivities().clear();
 		
 		Activity S = makeActivity(0, "S", makeDate(2015, 1, 1), makeDate(2015, 1, 15));
@@ -684,8 +681,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateAllParamsOfChain_testDurations()
-	{
+	public void testCalculateAllParamsOfChain_testDurations()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test
@@ -707,8 +703,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateAllParamsOfChain_testFloats()
-	{
+	public void testCalculateAllParamsOfChain_testFloats()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test
@@ -730,8 +725,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateAllParamsOfChain_testMaxDurations()
-	{
+	public void testCalculateAllParamsOfChain_testMaxDurations()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test
@@ -753,8 +747,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateAllParamsOfChain_testEarliestStarts()
-	{
+	public void testCalculateAllParamsOfChain_testEarliestStarts()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test
@@ -776,8 +769,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateAllParamsOfChain_testEarliestFinishes()
-	{
+	public void testCalculateAllParamsOfChain_testEarliestFinishes()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test
@@ -799,8 +791,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 
 	@Test
-	public void testCalculateAllParamsOfChain_testLatestStarts()
-	{
+	public void testCalculateAllParamsOfChain_testLatestStarts()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test
@@ -822,8 +813,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testCalculateAllParamsOfChain_testLatestFinishes()
-	{
+	public void testCalculateAllParamsOfChain_testLatestFinishes()	{
 		testCalculateAllParamsOfChain_setup();
 		
 //		Visual test

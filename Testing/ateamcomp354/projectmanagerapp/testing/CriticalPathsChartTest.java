@@ -145,8 +145,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         assertDisplayedProperly("testProjectWithBranches", "");
     }
 
-    private ApplicationContext getAlternateChain()
-	{
+    private ApplicationContext getAlternateChain()	{
 		ApplicationContext appCtx = App.getApplicationContext( db.getConnection() );
 		
 		ProjectService pjs = appCtx.getProjectService();
@@ -199,8 +198,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
 	}
     
     @Test
-    public void displayChart()
-    {
+    public void displayChart()    {
     	ApplicationContext appCtx = getAlternateChain();
     	
     	ProjectService pjs = appCtx.getProjectService();
