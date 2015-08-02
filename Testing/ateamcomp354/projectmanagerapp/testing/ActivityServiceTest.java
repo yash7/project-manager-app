@@ -692,14 +692,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 		
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getDuration(), 14) not accepted 
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getDuration()), Double.valueOf(14));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getDuration()), Double.valueOf(5));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getDuration()), Double.valueOf(10));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getDuration()), Double.valueOf(10));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getDuration()), Double.valueOf(14));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getDuration()), Double.valueOf(8));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getDuration()), Double.valueOf(10));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getDuration()), Double.valueOf(6));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(0).getDuration()));
+		assertEquals(Double.valueOf(5), Double.valueOf(ase.getActivities().get(1).getDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(2).getDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(3).getDuration()));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(4).getDuration()));
+		assertEquals(Double.valueOf(8), Double.valueOf(ase.getActivities().get(5).getDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(6).getDuration()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(7).getDuration()));
 	}
 	
 	@Test
@@ -714,14 +714,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 		
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getFloat(), 0) not accepted 
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getFloat()), Double.valueOf(0));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getFloat()), Double.valueOf(5));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getFloat()), Double.valueOf(0));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getFloat()), Double.valueOf(6));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getFloat()), Double.valueOf(0));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getFloat()), Double.valueOf(6));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getFloat()), Double.valueOf(0));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getFloat()), Double.valueOf(0));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(0).getFloat()));
+		assertEquals(Double.valueOf(5), Double.valueOf(ase.getActivities().get(1).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(2).getFloat()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(3).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(4).getFloat()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(5).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(6).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(7).getFloat()));
 	}
 	
 	@Test
@@ -736,14 +736,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getMaxDuration(), 14) not accepted
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getMaxDuration()), Double.valueOf(14));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getMaxDuration()), Double.valueOf(10));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getMaxDuration()), Double.valueOf(10));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getMaxDuration()), Double.valueOf(16));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getMaxDuration()), Double.valueOf(14));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getMaxDuration()), Double.valueOf(14));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getMaxDuration()), Double.valueOf(10));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getMaxDuration()), Double.valueOf(6));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(0).getMaxDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(1).getMaxDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(2).getMaxDuration()));
+		assertEquals(Double.valueOf(16), Double.valueOf(ase.getActivities().get(3).getMaxDuration()));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(4).getMaxDuration()));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(5).getMaxDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(6).getMaxDuration()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(7).getMaxDuration()));
 	}
 	
 	@Test
@@ -758,14 +758,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getEarliestStart(), 120150101) not accepted
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getEarliestStart()), Double.valueOf(20150101));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getEarliestStart()), Double.valueOf(20150115));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getEarliestStart()), Double.valueOf(20150115));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getEarliestStart()), Double.valueOf(20150115));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getEarliestStart()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getEarliestStart()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getEarliestStart()), Double.valueOf(20150208));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getEarliestStart()), Double.valueOf(20150218));
+		assertEquals(Double.valueOf(20150101), Double.valueOf(ase.getActivities().get(0).getEarliestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(1).getEarliestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(2).getEarliestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(3).getEarliestStart()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(4).getEarliestStart()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(5).getEarliestStart()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(6).getEarliestStart()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(7).getEarliestStart()));
 	}
 	
 	@Test
@@ -780,14 +780,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getEarliestFinish(), 20150115) not accepted
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getEarliestFinish()), Double.valueOf(20150115));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getEarliestFinish()), Double.valueOf(20150120));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getEarliestFinish()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getEarliestFinish()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getEarliestFinish()), Double.valueOf(20150208));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getEarliestFinish()), Double.valueOf(20150202));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getEarliestFinish()), Double.valueOf(20150218));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getEarliestFinish()), Double.valueOf(20150224));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(0).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150120), Double.valueOf(ase.getActivities().get(1).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(2).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(3).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(4).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150202), Double.valueOf(ase.getActivities().get(5).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(6).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150224), Double.valueOf(ase.getActivities().get(7).getEarliestFinish()));
 	}
 
 	@Test
@@ -802,15 +802,15 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getLatestStart(), 20150101) not accepted
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getLatestStart()), Double.valueOf(20150101));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getLatestStart()), Double.valueOf(20150120));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getLatestStart()), Double.valueOf(20150115));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getLatestStart()), Double.valueOf(20150121));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getLatestStart()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getLatestStart()), Double.valueOf(20150131));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getLatestStart()), Double.valueOf(20150208));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getLatestStart()), Double.valueOf(20150218));
-	}
+		assertEquals(Double.valueOf(20150101), Double.valueOf(ase.getActivities().get(0).getLatestStart()));
+		assertEquals(Double.valueOf(20150120), Double.valueOf(ase.getActivities().get(1).getLatestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(2).getLatestStart()));
+		assertEquals(Double.valueOf(20150121), Double.valueOf(ase.getActivities().get(3).getLatestStart()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(4).getLatestStart()));
+		assertEquals(Double.valueOf(20150131), Double.valueOf(ase.getActivities().get(5).getLatestStart()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(6).getLatestStart()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(7).getLatestStart()));
+	}	
 	
 	@Test
 	public void testCalculateAllParamsOfChain_testLatestFinishes()	{
@@ -824,14 +824,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 //		}
 
 //		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getLatestFinish(), 20150115) not accepted
-		assertEquals(Double.valueOf(ase.getActivities().get(0).getLatestFinish()), Double.valueOf(20150115));
-		assertEquals(Double.valueOf(ase.getActivities().get(1).getLatestFinish()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(2).getLatestFinish()), Double.valueOf(20150125));
-		assertEquals(Double.valueOf(ase.getActivities().get(3).getLatestFinish()), Double.valueOf(20150131));
-		assertEquals(Double.valueOf(ase.getActivities().get(4).getLatestFinish()), Double.valueOf(20150208));
-		assertEquals(Double.valueOf(ase.getActivities().get(5).getLatestFinish()), Double.valueOf(20150208));
-		assertEquals(Double.valueOf(ase.getActivities().get(6).getLatestFinish()), Double.valueOf(20150218));
-		assertEquals(Double.valueOf(ase.getActivities().get(7).getLatestFinish()), Double.valueOf(20150224));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(0).getLatestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(1).getLatestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(2).getLatestFinish()));
+		assertEquals(Double.valueOf(20150131), Double.valueOf(ase.getActivities().get(3).getLatestFinish()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(4).getLatestFinish()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(5).getLatestFinish()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(6).getLatestFinish()));
+		assertEquals(Double.valueOf(20150224), Double.valueOf(ase.getActivities().get(7).getLatestFinish()));
 	}
 	
 	@Before
