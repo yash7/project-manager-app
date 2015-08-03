@@ -25,7 +25,7 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         ProjectService projectService =  appCtx.getProjectService();
 
         Project p = makeProject(0, "No activities project");
-        projectService.addProject( p );
+        projectService.addProject(p);
 
         Charts.viewCriticalPathsChart(appCtx, p);
 
@@ -145,65 +145,56 @@ public class CriticalPathsChartTest extends AbstractDatabaseTest {
         assertDisplayedProperly("testProjectWithBranches", "Expected two linked diamonds");
     }
 
-    private ApplicationContext getAlternateChain()	{
-		ApplicationContext appCtx = App.getApplicationContext( db.getConnection() );
-		
-		ProjectService pjs = appCtx.getProjectService();
-		
-		Project p = new Project();
+    /**
+     * Test the example project from the notes
+     */
+    @Test
+    public void testProjectExample() {
+
+        ApplicationContext appCtx = App.getApplicationContext( db.getConnection() );
+        ProjectService pjs = appCtx.getProjectService();
+
+        Project p = new Project();
         p.setId(0);
         p.setProjectName("Test Project");
         p.setDescription("Test Project");
         pjs.addProject(p);
-		
-		ActivityService ase = appCtx.getActivityService(0);
-    	
-    	ase.getActivities().clear();
-		
-		Activity S = makeActivity(0, "S", makeDate(2015, 1, 1), makeDate(2015, 1, 15));
-//		Activity AS = makeActivity(0, "AS", makeDate(2015, 1, 1), makeDate(2015, 1, 11));
-		Activity DCA = makeActivity(0, "DCA", makeDate(2015, 1, 15), makeDate(2015, 1, 20));
-		Activity DCB = makeActivity(0, "DCB", makeDate(2015, 1, 15), makeDate(2015, 1, 25));
-		Activity DCC = makeActivity(0, "DCC", makeDate(2015, 1, 15), makeDate(2015, 1, 25));
-		Activity UTAB = makeActivity(0, "UTAB", makeDate(2015, 1, 25), makeDate(2015, 2, 8));
-		Activity UTC = makeActivity(0, "UTC", makeDate(2015, 1, 25), makeDate(2015, 2, 2));
-		Activity P = makeActivity(0, "P", makeDate(2015, 2, 8), makeDate(2015, 2, 18));
-		Activity IST = makeActivity(0, "IST", makeDate(2015, 2, 18), makeDate(2015, 2, 24));
-//		Activity AF = makeActivity(0, "B", makeDate(2015, 2, 18), makeDate(2015, 3, 5));
-		
-		ase.addActivity(S);
-//		ase.addActivity(AS);
-		ase.addActivity(DCA);
-		ase.addActivity(DCB);
-		ase.addActivity(DCC);
-		ase.addActivity(UTAB);
-		ase.addActivity(UTC);
-		ase.addActivity(P);
-		ase.addActivity(IST);
-//		ase.addActivity(AF);
-		
-		ase.addDependency(S.getId(), DCA.getId());
-		ase.addDependency(S.getId(), DCB.getId());
-		ase.addDependency(S.getId(), DCC.getId());
-//		ase.addDependency(AS.getId(), DCC.getId());
-		ase.addDependency(DCA.getId(), UTAB.getId());
-		ase.addDependency(DCB.getId(), UTAB.getId());
-		ase.addDependency(DCC.getId(), UTC.getId());
-		ase.addDependency(UTAB.getId(), P.getId());
-		ase.addDependency(UTC.getId(), P.getId());
-		ase.addDependency(P.getId(), IST.getId());
-//		ase.addDependency(P.getId(), AF.getId());
 
-		return appCtx;
-	}
-    
-    @Test
-    public void displayChart()    {
-    	ApplicationContext appCtx = getAlternateChain();
-    	
-    	ProjectService pjs = appCtx.getProjectService();
-    	
-    	Charts.viewCriticalPathsChart(appCtx, pjs.getProject(0));
+        ActivityService ase = appCtx.getActivityService(0);
+
+        ase.getActivities().clear();
+
+        Activity S = makeActivity(0, "S", makeDate(2015, 1, 1), makeDate(2015, 1, 15));
+        Activity DCA = makeActivity(0, "DCA", makeDate(2015, 1, 15), makeDate(2015, 1, 20));
+        Activity DCB = makeActivity(0, "DCB", makeDate(2015, 1, 15), makeDate(2015, 1, 25));
+        Activity DCC = makeActivity(0, "DCC", makeDate(2015, 1, 15), makeDate(2015, 1, 25));
+        Activity UTAB = makeActivity(0, "UTAB", makeDate(2015, 1, 25), makeDate(2015, 2, 8));
+        Activity UTC = makeActivity(0, "UTC", makeDate(2015, 1, 25), makeDate(2015, 2, 2));
+        Activity P = makeActivity(0, "P", makeDate(2015, 2, 8), makeDate(2015, 2, 18));
+        Activity IST = makeActivity(0, "IST", makeDate(2015, 2, 18), makeDate(2015, 2, 24));
+
+        ase.addActivity(S);
+        ase.addActivity(DCA);
+        ase.addActivity(DCB);
+        ase.addActivity(DCC);
+        ase.addActivity(UTAB);
+        ase.addActivity(UTC);
+        ase.addActivity(P);
+        ase.addActivity(IST);
+
+        ase.addDependency(S.getId(), DCA.getId());
+        ase.addDependency(S.getId(), DCB.getId());
+        ase.addDependency(S.getId(), DCC.getId());
+        ase.addDependency(DCA.getId(), UTAB.getId());
+        ase.addDependency(DCB.getId(), UTAB.getId());
+        ase.addDependency(DCC.getId(), UTC.getId());
+        ase.addDependency(UTAB.getId(), P.getId());
+        ase.addDependency(UTC.getId(), P.getId());
+        ase.addDependency(P.getId(), IST.getId());
+
+        Charts.viewCriticalPathsChart(appCtx, p);
+
+        assertDisplayedProperly("testProjectExample", "Expected project from the notes");
     }
     
     private void assertDisplayedProperly(String testName, String expectedDisplay) {
