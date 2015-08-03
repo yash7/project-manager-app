@@ -315,8 +315,8 @@ public class ActivitiesPanel {
 				.getLatestStartField().getText()));
 		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen
 				.getEarliestFinishField().getText()));
-		activity.setEarliestFinish(Integer.parseInt(splitPane1Gen
-				.getEarliestFinishField().getText()));
+		activity.setLatestFinish(Integer.parseInt(splitPane1Gen
+				.getLatestFinishField().getText()));
 		activity.setMaxDuration(Integer.parseInt(splitPane1Gen
 				.getMaxDurationField().getText()));
 		activity.setDuration(Integer.parseInt(splitPane1Gen.getDurationField()
