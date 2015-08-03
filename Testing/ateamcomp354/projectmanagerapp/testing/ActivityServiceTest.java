@@ -24,6 +24,8 @@ import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 
+import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.*;
+
 public class ActivityServiceTest extends AbstractDatabaseTest {
 
 	private ActivityService ase;
@@ -591,6 +593,245 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		dependents = this.ase.getDependents(activityFromID);
 		
 		assertEquals(linkCount, dependents.size());
+	}
+	
+	@Test
+	public void testCalculateSizeOfChain_singleChain()	{
+		Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
+		Activity B = makeActivity(0, "B", makeDate(2015, 1, 3), makeDate(2015, 1, 4));
+		Activity C = makeActivity(0, "C", makeDate(2015, 1, 5), makeDate(2015, 1, 6));
+		
+		ase.addActivity(A);
+		ase.addActivity(B);
+		ase.addActivity(C);
+		
+		ase.addDependency(A.getId(), B.getId());
+		ase.addDependency(B.getId(), C.getId());
+		
+		assertEquals(ase.calculateSizeOfChain(new ArrayList<Integer>(), 2).size(), 3);
+		// Also used to test no chains
+	}
+	
+	@Test
+	public void testCalculateSizeOfChain_multipleChains()	{
+		Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
+		Activity B = makeActivity(0, "B", makeDate(2015, 1, 3), makeDate(2015, 1, 4));
+		Activity C = makeActivity(0, "C", makeDate(2015, 1, 5), makeDate(2015, 1, 6));
+		
+		Activity D = makeActivity(0, "D", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
+		Activity E = makeActivity(0, "E", makeDate(2015, 1, 3), makeDate(2015, 1, 4));
+		
+		ase.addActivity(A);
+		ase.addActivity(B);
+		ase.addActivity(C);
+		ase.addActivity(D);
+		ase.addActivity(E);
+		
+		ase.addDependency(A.getId(), B.getId());
+		ase.addDependency(B.getId(), C.getId());
+		
+//		ase.addDependency(D.getId(), E.getId());
+		
+		assertEquals(ase.calculateSizeOfChain(new ArrayList<Integer>(), 2).size(), 3);
+		assertEquals(ase.calculateSizeOfChain(new ArrayList<Integer>(), 4).size(), 1);
+		// Also used to test chains of one element 
+	}
+	
+	private void testCalculateAllParamsOfChain_setup()	{
+		ase.getActivities().clear();
+		
+		Activity S = makeActivity(0, "S", makeDate(2015, 1, 1), makeDate(2015, 1, 15));
+//		Activity AS = makeActivity(0, "AS", makeDate(2015, 1, 1), makeDate(2015, 1, 11));
+		Activity DCA = makeActivity(0, "DCA", makeDate(2015, 1, 15), makeDate(2015, 1, 20));
+		Activity DCB = makeActivity(0, "DCB", makeDate(2015, 1, 15), makeDate(2015, 1, 25));
+		Activity DCC = makeActivity(0, "DCC", makeDate(2015, 1, 15), makeDate(2015, 1, 25));
+		Activity UTAB = makeActivity(0, "UTAB", makeDate(2015, 1, 25), makeDate(2015, 2, 8));
+		Activity UTC = makeActivity(0, "UTC", makeDate(2015, 1, 25), makeDate(2015, 2, 2));
+		Activity P = makeActivity(0, "P", makeDate(2015, 2, 8), makeDate(2015, 2, 18));
+		Activity IST = makeActivity(0, "IST", makeDate(2015, 2, 18), makeDate(2015, 2, 24));
+//		Activity AF = makeActivity(0, "B", makeDate(2015, 2, 18), makeDate(2015, 3, 5));
+		
+		ase.addActivity(S);
+//		ase.addActivity(AS);
+		ase.addActivity(DCA);
+		ase.addActivity(DCB);
+		ase.addActivity(DCC);
+		ase.addActivity(UTAB);
+		ase.addActivity(UTC);
+		ase.addActivity(P);
+		ase.addActivity(IST);
+//		ase.addActivity(AF);
+		
+		ase.addDependency(S.getId(), DCA.getId());
+		ase.addDependency(S.getId(), DCB.getId());
+		ase.addDependency(S.getId(), DCC.getId());
+//		ase.addDependency(AS.getId(), DCC.getId());
+		ase.addDependency(DCA.getId(), UTAB.getId());
+		ase.addDependency(DCB.getId(), UTAB.getId());
+		ase.addDependency(DCC.getId(), UTC.getId());
+		ase.addDependency(UTAB.getId(), P.getId());
+		ase.addDependency(UTC.getId(), P.getId());
+		ase.addDependency(P.getId(), IST.getId());
+//		ase.addDependency(P.getId(), AF.getId());
+
+		List<Integer> startNodes = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), ase.getActivities().get(4).getId());
+		List<Integer> endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(4).getId());
+		
+		ase.calculateAllParamsOfChain(startNodes.get(0), endNodes.get(0));
+	}
+	
+	@Test
+	public void testCalculateAllParamsOfChain_testDurations()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getDuration().toString());
+//		}
+		
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getDuration(), 14) not accepted 
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(0).getDuration()));
+		assertEquals(Double.valueOf(5), Double.valueOf(ase.getActivities().get(1).getDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(2).getDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(3).getDuration()));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(4).getDuration()));
+		assertEquals(Double.valueOf(8), Double.valueOf(ase.getActivities().get(5).getDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(6).getDuration()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(7).getDuration()));
+	}
+	
+	@Test
+	public void testCalculateAllParamsOfChain_testFloats()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getFloat().toString());
+//		}
+		
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getFloat(), 0) not accepted 
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(0).getFloat()));
+		assertEquals(Double.valueOf(5), Double.valueOf(ase.getActivities().get(1).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(2).getFloat()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(3).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(4).getFloat()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(5).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(6).getFloat()));
+		assertEquals(Double.valueOf(0), Double.valueOf(ase.getActivities().get(7).getFloat()));
+	}
+	
+	@Test
+	public void testCalculateAllParamsOfChain_testMaxDurations()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getMaxDuration().toString());
+//		}
+
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getMaxDuration(), 14) not accepted
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(0).getMaxDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(1).getMaxDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(2).getMaxDuration()));
+		assertEquals(Double.valueOf(16), Double.valueOf(ase.getActivities().get(3).getMaxDuration()));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(4).getMaxDuration()));
+		assertEquals(Double.valueOf(14), Double.valueOf(ase.getActivities().get(5).getMaxDuration()));
+		assertEquals(Double.valueOf(10), Double.valueOf(ase.getActivities().get(6).getMaxDuration()));
+		assertEquals(Double.valueOf(6), Double.valueOf(ase.getActivities().get(7).getMaxDuration()));
+	}
+	
+	@Test
+	public void testCalculateAllParamsOfChain_testEarliestStarts()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getEarliestStart().toString());
+//		}
+
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getEarliestStart(), 120150101) not accepted
+		assertEquals(Double.valueOf(20150101), Double.valueOf(ase.getActivities().get(0).getEarliestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(1).getEarliestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(2).getEarliestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(3).getEarliestStart()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(4).getEarliestStart()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(5).getEarliestStart()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(6).getEarliestStart()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(7).getEarliestStart()));
+	}
+	
+	@Test
+	public void testCalculateAllParamsOfChain_testEarliestFinishes()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getEarliestFinish().toString());
+//		}
+
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getEarliestFinish(), 20150115) not accepted
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(0).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150120), Double.valueOf(ase.getActivities().get(1).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(2).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(3).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(4).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150202), Double.valueOf(ase.getActivities().get(5).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(6).getEarliestFinish()));
+		assertEquals(Double.valueOf(20150224), Double.valueOf(ase.getActivities().get(7).getEarliestFinish()));
+	}
+
+	@Test
+	public void testCalculateAllParamsOfChain_testLatestStarts()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getLatestStart().toString());
+//		}
+
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getLatestStart(), 20150101) not accepted
+		assertEquals(Double.valueOf(20150101), Double.valueOf(ase.getActivities().get(0).getLatestStart()));
+		assertEquals(Double.valueOf(20150120), Double.valueOf(ase.getActivities().get(1).getLatestStart()));
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(2).getLatestStart()));
+		assertEquals(Double.valueOf(20150121), Double.valueOf(ase.getActivities().get(3).getLatestStart()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(4).getLatestStart()));
+		assertEquals(Double.valueOf(20150131), Double.valueOf(ase.getActivities().get(5).getLatestStart()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(6).getLatestStart()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(7).getLatestStart()));
+	}	
+	
+	@Test
+	public void testCalculateAllParamsOfChain_testLatestFinishes()	{
+		testCalculateAllParamsOfChain_setup();
+		
+//		Visual test
+//		for (int i = 0; i < ase.getActivities().size(); i++)
+//		{
+//			Activity tempActivity = ase.getActivity(i);
+//			System.out.println(tempActivity.getLabel() + " " + tempActivity.getLatestFinish().toString());
+//		}
+
+//		Autoboxing causes ambiguity, Double.valueOf(double) needed; assertEquals(ase.getActivities().get(0).getLatestFinish(), 20150115) not accepted
+		assertEquals(Double.valueOf(20150115), Double.valueOf(ase.getActivities().get(0).getLatestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(1).getLatestFinish()));
+		assertEquals(Double.valueOf(20150125), Double.valueOf(ase.getActivities().get(2).getLatestFinish()));
+		assertEquals(Double.valueOf(20150131), Double.valueOf(ase.getActivities().get(3).getLatestFinish()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(4).getLatestFinish()));
+		assertEquals(Double.valueOf(20150208), Double.valueOf(ase.getActivities().get(5).getLatestFinish()));
+		assertEquals(Double.valueOf(20150218), Double.valueOf(ase.getActivities().get(6).getLatestFinish()));
+		assertEquals(Double.valueOf(20150224), Double.valueOf(ase.getActivities().get(7).getLatestFinish()));
 	}
 	
 	@Before
