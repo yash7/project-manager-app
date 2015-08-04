@@ -32,7 +32,7 @@ public class PojoMaker {
     }
 
     public static Project makeProject(int id, String name) {
-        return new Project(id, name, "", false, 10000, 10000);
+        return new Project(id, name, "", false, 0, 0);
     }
 
     public static Activity makeActivity(int projectId, String name, int cost) {

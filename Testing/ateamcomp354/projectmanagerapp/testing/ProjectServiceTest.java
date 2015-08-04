@@ -771,7 +771,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     	final int projectID 		= 0;
     	final String projectInfo 	= "Test project";
     	final int membersCount		= 2;
-    	int userID					= 0;
+    	int userID					= 1000;
     	final String firstName		= "test";
     	final String lastName		= "test";
     	final String userName		= "test";

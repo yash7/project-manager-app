@@ -275,22 +275,27 @@ public class ProjectServiceImpl implements ProjectService {
 					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
 					.fetchInto(Integer.class);
 			
-			startDate = format.parse(startProDate.get(0).toString());
+			if(startProDate.size() != 0 && startProDate.get(0) != null){
+				startDate = format.parse(startProDate.get(0).toString());
 			
-			List<Integer> endProDate = create.select(Tables.ACTIVITY.LATEST_FINISH.max())
-					.from(Tables.ACTIVITY)
-					.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
-					.fetchInto(Integer.class);
+				List<Integer> endProDate = create.select(Tables.ACTIVITY.LATEST_FINISH.max())
+						.from(Tables.ACTIVITY)
+						.where(Tables.ACTIVITY.PROJECT_ID.equal(projectId))
+						.fetchInto(Integer.class);
+				
+				
+				endDate = format.parse(endProDate.get(0).toString());
 			
-			endDate = format.parse(endProDate.get(0).toString());
+				int days = (int)Math.abs((endDate.getTime() - startDate.getTime()) / (1000*60*60*24));
+				int weeks = (int)Math.ceil((double)days/7);
 			
-			int days = (int)Math.abs((endDate.getTime() - startDate.getTime()) / (1000*60*60*24));
-			int weeks = (int)Math.ceil((double)days/7);
+				val.add(startDate);
+				val.add(weeks);
+				
+				return val;
+			}
 			
-			val.add(startDate);
-			val.add(weeks);
-			
-			return val;
+			return null;
 		}
 		catch(Exception e)
 		{
