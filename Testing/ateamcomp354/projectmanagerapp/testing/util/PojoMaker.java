@@ -57,6 +57,7 @@ public class PojoMaker {
         a.setDescription("");
         a.setStatus(Status.NEW);
         a.setPlannedValue(0);
+        a.setActualCost(0);
         return a;
     }
 }

@@ -1040,7 +1040,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testEVStartDate_OverTwoWeeks(){
+    public void testEVStartDate_OverSevenDays(){
 
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService = appCtx.getProjectService();
@@ -1063,11 +1063,11 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
 
         List<Object> evStartDate = projectService.EVStartDate(p.getId());
 
-        assertEquals( Arrays.asList(makeDate(2015,1,5).getTime(), 2), evStartDate );
+        assertEquals( Arrays.asList(makeDate(2015,1,5).getTime(), 1), evStartDate );
     }
 
     @Test
-    public void testEVStartDate_OverThreeWeeks(){
+    public void testEVStartDate_OverFourteenDays(){
 
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService = appCtx.getProjectService();
@@ -1088,6 +1088,6 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
 
         List<Object> evStartDate = projectService.EVStartDate(p.getId());
 
-        assertEquals( Arrays.asList(makeDate(2015,1,7).getTime(), 3), evStartDate );
+        assertEquals( Arrays.asList(makeDate(2015,1,7).getTime(), 2), evStartDate );
     }
 }
