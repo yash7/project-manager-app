@@ -32,7 +32,7 @@ public class PojoMaker {
     }
 
     public static Project makeProject(int id, String name) {
-        return new Project(id, name, "", false, 10000, 10000);
+        return new Project(id, name, "", false, 0, 0);
     }
 
     public static Activity makeActivity(int projectId, String name, int cost) {
@@ -53,10 +53,11 @@ public class PojoMaker {
         a.setProjectId( projectId );
         a.setLabel( name );
         a.setEarliestStart(Pojos.dateToInt( start ) );
-        a.setEarliestFinish(Pojos.dateToInt( end ) );
+        a.setLatestFinish(Pojos.dateToInt( end ) );
         a.setDescription("");
         a.setStatus(Status.NEW);
         a.setPlannedValue(0);
+        a.setActualCost(0);
         return a;
     }
 }

@@ -1036,7 +1036,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
 
         List<Object> evStartDate = projectService.EVStartDate(p.getId());
 
-        assertEquals( Arrays.asList(startDate.getTime(), 1), evStartDate );
+        assertEquals( Arrays.asList(startDate.getTime(), 1), evStartDate.get(0) );
     }
 
     @Test
