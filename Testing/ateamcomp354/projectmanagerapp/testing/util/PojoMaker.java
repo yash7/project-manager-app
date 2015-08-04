@@ -26,8 +26,8 @@ public class PojoMaker {
      */
     public static Calendar makeDate(int year, int month, int day) {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(0);
-        c.set(year, month - 1, day);
+        c.set(year, month - 1, day, 0, 0, 0);
+        c.set(Calendar.MILLISECOND, 0);
         return c;
     }
 

@@ -8,16 +8,22 @@ import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
 import ateamcomp354.projectmanagerapp.services.UserService;
 
+import ateamcomp354.projectmanagerapp.testing.util.ActivityServiceUtil;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Project;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Users;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeActivity;
+import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeDate;
 import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeProject;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
 public class ProjectServiceTest extends AbstractDatabaseTest {
@@ -915,14 +921,173 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testEVactivitiesByEarliestStart_(){}
+    public void testEVactivitiesByEarliestStart_NoActivities(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "No activities");
+        projectService.addProject(p);
+
+        assertEquals(Collections.emptyList(), projectService.EVactivitiesByEarliestStart(p.getId()));
+    }
 
     @Test
-    public void testEVactivitiesByEarliestStart__(){}
+    public void testEVactivitiesByEarliestStart_WithUniqueStartDates(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "No activities");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
+        Activity B = makeActivity(0, "B", makeDate(2015, 1, 2), makeDate(2015, 1, 4));
+        Activity C = makeActivity(0, "C", makeDate(2015, 1, 4), makeDate(2015, 1, 7));
+        Activity D = makeActivity(0, "D", makeDate(2015, 1, 7), makeDate(2015, 1, 11));
+
+        Stream.of(A, B, C, D).forEach( activityService::addActivity );
+
+        List<Integer> validSort = Arrays.asList(A, B, C, D).stream()
+                .map(Activity::getId)
+                .collect(toList());
+
+        List<Integer> questionableSort = projectService.EVactivitiesByEarliestStart(p.getId()).stream()
+                .map(Activity::getId)
+                .collect(toList());
+
+        assertEquals(validSort, questionableSort);
+    }
 
     @Test
-    public void testEVStartDate_(){}
+    public void testEVactivitiesByEarliestStart_WithSomeSameStartDates(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "No activities");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 2));
+        Activity B = makeActivity(0, "B", makeDate(2015, 1, 2), makeDate(2015, 1, 4));
+        Activity C = makeActivity(0, "C", makeDate(2015, 1, 2), makeDate(2015, 1, 7));
+        Activity D = makeActivity(0, "D", makeDate(2015, 1, 7), makeDate(2015, 1, 11));
+
+        Stream.of(A, B, C, D).forEach( activityService::addActivity );
+
+        List<Integer> validSort1 =  Arrays.asList(A, B, C, D).stream()
+                                            .map(Activity::getId)
+                                            .collect(toList());
+        List<Integer> validSort2 =  Arrays.asList(A, C, B, D).stream()
+                                            .map(Activity::getId)
+                                            .collect(toList());
+
+        List<Integer> questionableSort = projectService.EVactivitiesByEarliestStart(p.getId()).stream()
+                .map(Activity::getId)
+                .collect(toList());
+
+        boolean isSort1 = validSort1.equals( questionableSort );
+        boolean isSort2 = validSort2.equals( questionableSort );
+
+        assertTrue( "Not sort1 or sort2", isSort1 || isSort2 );
+    }
 
     @Test
-    public void testEVStartDate__(){}
+    public void testEVStartDate_NoActivities(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "One activity");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        ActivityServiceUtil.calculateAllParams( activityService );
+
+        List<Object> evStartDate = projectService.EVStartDate(p.getId());
+
+        assertEquals( null, evStartDate );
+    }
+
+    @Test
+    public void testEVStartDate_OneActivity(){
+
+        Calendar startDate = makeDate(2015, 1, 1);
+        Calendar endDate = makeDate(2015, 1, 2);
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "One activity");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(0, "A", startDate, endDate);
+
+        Stream.of(A).forEach( activityService::addActivity );
+
+        ActivityServiceUtil.calculateAllParams( activityService );
+
+        List<Object> evStartDate = projectService.EVStartDate(p.getId());
+
+        assertEquals( Arrays.asList(startDate.getTime(), 1), evStartDate );
+    }
+
+    @Test
+    public void testEVStartDate_OverTwoWeeks(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "Over two weeks");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(0, "A", makeDate(2015,1,5), makeDate(2015,1,6));
+        Activity B = makeActivity(0, "B", makeDate(2015,1,6), makeDate(2015,1,8));
+        Activity C = makeActivity(0, "C", makeDate(2015,1,8), makeDate(2015,1,12));
+
+        Stream.of(A, B, C).forEach( activityService::addActivity );
+
+        activityService.addDependency(A.getId(), B.getId());
+        activityService.addDependency(B.getId(), C.getId());
+
+        ActivityServiceUtil.calculateAllParams( activityService );
+
+        List<Object> evStartDate = projectService.EVStartDate(p.getId());
+
+        assertEquals( Arrays.asList(makeDate(2015,1,5).getTime(), 2), evStartDate );
+    }
+
+    @Test
+    public void testEVStartDate_OverThreeWeeks(){
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = makeProject(0, "Over three weeks");
+        projectService.addProject(p);
+
+        ActivityService activityService = appCtx.getActivityService(p.getId());
+
+        Activity A = makeActivity(0, "A", makeDate(2015,1,7), makeDate(2015,1,14));
+        Activity B = makeActivity(0, "B", makeDate(2015,1,14), makeDate(2015,1,21));
+
+        Stream.of(A, B).forEach( activityService::addActivity );
+
+        activityService.addDependency(A.getId(), B.getId());
+
+        ActivityServiceUtil.calculateAllParams( activityService );
+
+        List<Object> evStartDate = projectService.EVStartDate(p.getId());
+
+        assertEquals( Arrays.asList(makeDate(2015,1,7).getTime(), 3), evStartDate );
+    }
 }
