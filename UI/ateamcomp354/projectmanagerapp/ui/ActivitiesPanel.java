@@ -351,8 +351,8 @@ public class ActivitiesPanel {
 		catch(NumberFormatException e) {
 			errorString += "Actual Cost must be a valid non-negative whole number\n";
 		}
-		
-		if(activity.getEarliestStart() > activity.getLatestFinish()) {
+
+		if(activity.getEarliestStart() > activity.getEarliestFinish()) {
 			errorString += "Start Date may not exceed End Date\n";
 		}
 
