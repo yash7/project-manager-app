@@ -56,15 +56,36 @@ public class Charts {
     }
 
     public static void viewEVAnalysisChart(ApplicationContext appCtx, Project project){
+    	ActivityService ase = appCtx.getActivityService(project.getId());
 
-        ProjectService projectService = appCtx.getProjectService();
+        List<Activity> acts = ase.getActivities();
 
-        List<Activity> acts = projectService.EVactivitiesByEarliestStart(project.getId());
+        if(acts.size() > 0) {
+            List<Integer> x = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), acts.get(0).getId());
+            if(x.size() == 1) {
+                List<Integer> y = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), acts.get(0).getId());
+                if(y.size() == 1) {
+                    List<Integer> sizeArray = ase.calculateSizeOfChain(new ArrayList<Integer>(), acts.get(0).getId());
+                    if(acts.size() == sizeArray.size()) {
+                        ase.calculateAllParamsOfChain(x.get(0), y.get(0));
+                        ProjectService projectService = appCtx.getProjectService();
 
-        if(acts.size()>0){
-            List<Object> startProDate = projectService.EVStartDate(project.getId());
-            openEVAnalysisChart(project, acts, startProDate);
+                        acts = projectService.EVactivitiesByEarliestStart(project.getId());
 
+                        List<Object> startProDate = projectService.EVStartDate(project.getId());
+                        openEVAnalysisChart(project, acts, startProDate);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "There are loose activities not linked to any others, all activities must be linked in order to create a working Critical Path Analysis");
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "There are multiple ending activities (or dangles), there must be only a single end activity to create a working Critical Path Analysis");
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "There are multiple starting activities, there must be only a single start activity to create a working Critical Path Analysis");
+            }
         }
         else
             JOptionPane.showMessageDialog (null, "There are no activities for this project", "No Report", JOptionPane.PLAIN_MESSAGE);
