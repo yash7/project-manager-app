@@ -60,6 +60,20 @@ public class ActivityServiceImpl implements ActivityService {
             throw new ServiceFunctionalityException("failed to get all activities", e);
         }
     }
+    
+    @Override
+    public List<Activity> getActivitiesOrderedByEarliestFinish() {
+    	try {
+            return create.select()
+                    .from(Tables.ACTIVITY)
+                    .where(Tables.ACTIVITY.PROJECT_ID.eq(projectId))
+                    .orderBy(Tables.ACTIVITY.EARLIEST_FINISH)
+                    .fetchInto(Activity.class);
+        } catch (DataAccessException e) {
+            throw new ServiceFunctionalityException("failed to get specified activities", e);
+        }
+    }
+
 
     @Override
     public List<Activity> getActivities(List<Integer> activityIds) {
@@ -484,11 +498,11 @@ public class ActivityServiceImpl implements ActivityService {
 				Date ES = formatter.parse(a.getEarliestStart().toString());
 				Date LS = formatter.parse(a.getLatestStart().toString());
 				int floatVal = (int) (LS.getTime() - ES.getTime()) / (1000 * 60 * 60 * 24);
-				a.setFloat(floatVal);
+				a.setFloat(Math.abs(floatVal));
 				
 				Date LF = formatter.parse(a.getLatestFinish().toString());
 				int maxDuration = (int) (LF.getTime() - ES.getTime()) / (1000 * 60 * 60 * 24);
-				a.setMaxDuration(maxDuration);
+				a.setMaxDuration(Math.abs(maxDuration));
 				this.updateActivity(a);
 						
 //				System.out.println("Activity "+a.getLabel());
@@ -516,7 +530,7 @@ public class ActivityServiceImpl implements ActivityService {
 			Date startDate = formatter.parse(a.getEarliestStart().toString());
 			Date endDate = formatter.parse(a.getEarliestFinish().toString());
 			int duration = (int) (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-			a.setDuration(duration);
+			a.setDuration(Math.abs(duration));
 			this.updateActivity(a);
 			
 			for(int i : this.getDependents(a.getId())) {
