@@ -113,6 +113,7 @@ public class ActivityServiceImpl implements ActivityService {
 	public void addActivity(Activity activity) {
 	
 	    checkProjectNotCompleted( "Project to add activity to is completed" );
+	    checkBudgetNotNegative(activity, "Activity can not have negative duration");
 	
 	    try {
 	        activityDao.insert(activity);
@@ -121,8 +122,16 @@ public class ActivityServiceImpl implements ActivityService {
 	    }
 	}
 
+	private void checkBudgetNotNegative(Activity activity, String string) {
+		if(activity.getDuration() != null && activity.getDuration() < 0) {
+			throw new ServiceFunctionalityException(string);
+		}
+	}
+
 	@Override
     public void updateActivity(Activity activity) {
+		checkBudgetNotNegative(activity, "Activity can not have negative duration");
+		
         try {
             activityDao.update(activity);
         } catch (DataAccessException e) {
