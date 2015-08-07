@@ -98,20 +98,10 @@ public class ProjectsPanel {
 		projectInfos = new HashMap<>();
 
 		splitPane1Gen = new SplitPane1Gen();
-
-		//splitPane1Gen.getBtnChart().setBounds(44, 345, 116, 30);
-		splitPane1Gen.getBtnChart().setText("GANTT Chart");
-		splitPane1Gen.getBtnChart().setBounds(43, 365, 120, 34);
-
-		splitPane1Gen.getBtnEVanalysis().setText("Earned-Value");
-		splitPane1Gen.getBtnEVanalysis().setBounds(170, 365, 131, 34);
-		
 		us1RightPanelGen = new US1RightPanelGen();
 
-		us1RightPanelGen.getBudgetAtCompletionLabel().setSize(200, 16);
-		us1RightPanelGen.getBudgetAtCompletionLabel().setLocation(141, 103);
-
 		splitPane1Gen.getSplitPane().setRightComponent( us1RightPanelGen );
+		us1RightPanelGen.setVisible(false);
 
 		openProjectsModel = new DefaultListModel<>();
 		closedProjectsModel = new DefaultListModel<>();
@@ -481,6 +471,7 @@ public class ProjectsPanel {
 	private void displayProject() {
 		Project p = getProject();
 		
+		us1RightPanelGen.setVisible(true);
 		us1RightPanelGen.getTitleLabel().setText( p.getId() == null ? ADD_PROJECT_TITLE_LBL_TXT : EDIT_PROJECT_TITLE_LBL_TXT );
 		us1RightPanelGen.getCompletedCheckBox().setVisible(p.getId() != null);
 		us1RightPanelGen.getCompletedCheckBox().setSelected(p.getCompleted());

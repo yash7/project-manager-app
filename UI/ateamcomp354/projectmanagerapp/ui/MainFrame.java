@@ -163,14 +163,6 @@ public class MainFrame extends JFrame implements SwapInterface{
 		editUserItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		editUserItm.addActionListener( __->showEditUserListView());
 		
-		JMenuItem ganttChartItm = new JMenuItem( "GANTT Chart" );
-		ganttChartItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		ganttChartItm.addActionListener( __->showGanttChartView());
-		
-		JMenuItem earnedValueAnalysisItm = new JMenuItem( "Earned Value Analysis" );
-		earnedValueAnalysisItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		earnedValueAnalysisItm.addActionListener( __->showEarnedValueAnalysisView());
-		
 		JMenuItem logoutItm = new JMenuItem( "Logout" );
 		logoutItm.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		logoutItm.addActionListener( __ -> showLoginView() );
@@ -179,8 +171,6 @@ public class MainFrame extends JFrame implements SwapInterface{
 		viewMenu.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		viewMenu.add(createUserItm );
 		viewMenu.add(editUserItm);
-		viewMenu.add(ganttChartItm);
-		viewMenu.add(earnedValueAnalysisItm);
 		
 		JSeparator separator = new JSeparator();
 		viewMenu.add(separator);

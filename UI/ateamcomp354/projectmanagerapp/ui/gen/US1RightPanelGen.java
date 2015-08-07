@@ -39,6 +39,10 @@ public class US1RightPanelGen extends JPanel {
 		setSize(MainFrame.getAppWidth()/2, MainFrame.getAppHeight());
 		setLayout(null);
 		
+		saveButton = new JButton("Save Project");
+		saveButton.setBounds(200, 321, 141, 30);
+		add(saveButton);
+		
 		newEditProjectLabel = new JLabel("New/Edit Project");
 		newEditProjectLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		newEditProjectLabel.setBounds(12, 13, 173, 30);
@@ -52,63 +56,53 @@ public class US1RightPanelGen extends JPanel {
 		projectNameField.setBounds(101, 73, 240, 22);
 		add(projectNameField);
 		projectNameField.setColumns(10);
-		
-		JLabel descriptionLabel = new JLabel("Description:");
-
-		descriptionLabel.setBounds(12, 155, 112, 16);
-		add(descriptionLabel);
 		JScrollPane descriptionScrollPane = new JScrollPane();
-		descriptionScrollPane.setBounds(12, 182, 329, 150);
+		descriptionScrollPane.setBounds(12, 160, 329, 150);
 		add(descriptionScrollPane);
 		
 		descriptionArea = new JTextArea();
 		descriptionScrollPane.setViewportView(descriptionArea);
 		
-		saveButton = new JButton("Save Project");
-		saveButton.setBounds(12, 697, 141, 30);
-		add(saveButton);
+		JLabel descriptionLabel = new JLabel("Description:");
+		descriptionScrollPane.setColumnHeaderView(descriptionLabel);
 		
 		chckbxProjectIsCompleted = new JCheckBox("Project is completed");
-		chckbxProjectIsCompleted.setBounds(12, 658, 329, 23);
+		chckbxProjectIsCompleted.setBounds(12, 325, 173, 23);
 		add(chckbxProjectIsCompleted);
 		
-		projectMembersLabel = new JLabel("Project Members:");
-		projectMembersLabel.setBounds(12, 343, 132, 16);
-		add(projectMembersLabel);
-		
 		projectMembersScrollPane = new JScrollPane();
-		projectMembersScrollPane.setBounds(12, 371, 329, 201);
+		projectMembersScrollPane.setBounds(12, 362, 329, 201);
 		add(projectMembersScrollPane);
 		
+		projectMembersLabel = new JLabel("Project Members:");
+		projectMembersScrollPane.setColumnHeaderView(projectMembersLabel);
+		
 		projectMembersComboBox = new JComboBox();
-		projectMembersComboBox.setBounds(12, 584, 329, 22);
+		projectMembersComboBox.setBounds(12, 575, 329, 22);
 		add(projectMembersComboBox);
 		
 		addButton = new JButton("Add");
-		addButton.setBounds(12, 618, 117, 29);
+		addButton.setBounds(12, 609, 162, 29);
 		add(addButton);
 		
 		deleteButton = new JButton("Delete");
-		deleteButton.setBounds(141, 618, 117, 29);
+		deleteButton.setBounds(179, 609, 162, 29);
 		add(deleteButton);
 
 		lblBudgetAtCompletion = new JLabel("Budget at Completion:");
-		lblBudgetAtCompletion.setBounds(12, 102, 173, 16);
+		lblBudgetAtCompletion.setBounds(12, 133, 162, 20);
 		add(lblBudgetAtCompletion);
 		
 		budgetAtCompletionLabel = new JLabel("0");
-		budgetAtCompletionLabel.setBounds(200, 102, 141, 16);
-		budgetAtCompletionLabel.setSize(200, 16);
-		budgetAtCompletionLabel.setLocation(141, 102);
-
+		budgetAtCompletionLabel.setBounds(152, 133, 100, 20);
 		add(budgetAtCompletionLabel);
 		
 		lblActualCostAtCompletion = new JLabel("Actual Cost to Date:");
-		lblActualCostAtCompletion.setBounds(12, 129, 141, 16);
+		lblActualCostAtCompletion.setBounds(12, 106, 141, 20);
 		add(lblActualCostAtCompletion);
 		
 		actualCostLabel = new JLabel("0");
-		actualCostLabel.setBounds(141, 129, 200, 20);
+		actualCostLabel.setBounds(152, 104, 100, 20);
 		add(actualCostLabel);
 		
 	}

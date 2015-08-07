@@ -67,8 +67,6 @@ public class ActivitiesPanel {
 
 	private int projectId = 1;
 	private int activityId = 0;
-	private int oldYPos = -1;
-
 
 	public ActivitiesPanel(ApplicationContext appCtx, SwapInterface swap) {
 
@@ -94,6 +92,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getBtnEVanalysis().setVisible(false);
 		splitPane1Gen.getBtnView().setVisible(false);
 		splitPane1Gen.getTopLabel().setVisible(false);
+		splitPane1Gen.getLblAnalysis().setVisible(false);
 
 		// TEMPORARY - MAKE FIELDS READ ONLY FOR FIRST ITERATION
 		splitPane1Gen.getEarliestStartField().setEnabled(true);
@@ -240,20 +239,6 @@ public class ActivitiesPanel {
 		splitPane1Gen.getAssigneesComboBox().setVisible(b);
 		splitPane1Gen.getAddAssigneeButton().setVisible(b);
 		splitPane1Gen.getDelAssignButton().setVisible(b);
-
-		if(!b) { //small view
-			if(oldYPos == -1) {
-				oldYPos = splitPane1Gen.getSaveActivityButton().getLocation().y;
-				splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, splitPane1Gen.getSaveActivityButton().getLocation().y - 275);
-			}
-			else {
-				splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, oldYPos - 275);
-			}
-		}
-		else {
-			splitPane1Gen.getSaveActivityButton().setLocation(splitPane1Gen.getSaveActivityButton().getLocation().x, oldYPos == -1 ? splitPane1Gen.getSaveActivityButton().getLocation().y : oldYPos);
-			oldYPos = -1;
-		}
 	}
 
 	public JComponent getComponent() {
@@ -289,7 +274,6 @@ public class ActivitiesPanel {
 			splitPane1Gen.getAssigneesComboBox().removeAllItems();
 			assigneeListModel.clear();
 			dependencyListModel.clear();
-
 			return true;
 		}
 		return false;
@@ -390,6 +374,7 @@ public class ActivitiesPanel {
 					}
 				}
 			}
+			
 			setReadOnly(activity.getStatus() == Status.RESOLVED);
 		}
 		else {

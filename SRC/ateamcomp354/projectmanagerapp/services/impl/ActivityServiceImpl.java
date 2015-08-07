@@ -67,7 +67,7 @@ public class ActivityServiceImpl implements ActivityService {
             return create.select()
                     .from(Tables.ACTIVITY)
                     .where(Tables.ACTIVITY.PROJECT_ID.eq(projectId))
-                    .orderBy(Tables.ACTIVITY.EARLIEST_FINISH)
+                    .orderBy(Tables.ACTIVITY.EARLIEST_FINISH.asc())
                     .fetchInto(Activity.class);
         } catch (DataAccessException e) {
             throw new ServiceFunctionalityException("failed to get specified activities", e);

@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import java.awt.Color;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 
@@ -42,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.freixas.jcalendar.JCalendarCombo;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -97,6 +99,9 @@ public class SplitPane1Gen extends JPanel {
 	private JCalendarCombo earliestFinishDatePicker;
 	private JCalendarCombo latestFinishDatePicker;
 	private JTextField actualCostField;
+	private JLabel lblAnalysis;
+	private JPanel LeftPanel;
+	private JPanel RightPanel;
 	
 	/**
 	 * Create the panel.
@@ -112,9 +117,9 @@ public class SplitPane1Gen extends JPanel {
 		add(splitPane);
 		splitPane.setEnabled(false);
 		
-		JPanel LeftPanel = new JPanel();
+		LeftPanel = new JPanel();
 		
-		JPanel RightPanel = new JPanel();
+		RightPanel = new JPanel();
 		
 
 		splitPane.setLeftComponent(LeftPanel);
@@ -124,50 +129,51 @@ public class SplitPane1Gen extends JPanel {
 		topLabel.setBackground(Color.BLACK);
 		topLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		topLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		topLabel.setBounds(43, 94, 77, 25);
+		topLabel.setBounds(13, 0, 77, 25);
 		LeftPanel.add(topLabel);
 		
 		listScrollPane = new JScrollPane();
-		listScrollPane.setBounds(43, 132, 258, 197);
+		listScrollPane.setBounds(13, 52, 372, 197);
 		LeftPanel.add(listScrollPane);
 		
 		addButton = new JButton("Add");
-		addButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addButton.setBounds(231, 91, 70, 30);
+		addButton.setFont(new Font("Dialog", Font.BOLD, 12));
+		addButton.setBounds(267, 11, 118, 30);
 		LeftPanel.add(addButton);
 		
 		deleteButton = new JButton("Delete");
-		deleteButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		deleteButton.setBounds(149, 91, 70, 30);
+		deleteButton.setFont(new Font("Dialog", Font.BOLD, 12));
+		deleteButton.setBounds(140, 11, 117, 30);
 		LeftPanel.add(deleteButton);
 
 		btnCriticalPath = new JButton("Critical Path");
-		btnCriticalPath.setBounds(170, 342, 131, 30);
+		btnCriticalPath.setBounds(209, 538, 176, 34);
 		LeftPanel.add(btnCriticalPath);
 
 		btnEVanalysis = new JButton("Earned-Value");
-		btnEVanalysis.setBounds(170, 365, 131, 34);
+		btnEVanalysis.setBounds(13, 581, 176, 34);
 		LeftPanel.add(btnEVanalysis);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(43, 410, 258, 197);
+		scrollPane.setBounds(13, 260, 372, 197);
 		LeftPanel.add(scrollPane);
 		
 		btnView = new JButton("View Activity");
-		btnView.setBounds(149, 642, 148, 30);
+		btnView.setBounds(13, 468, 372, 30);
 		LeftPanel.add(btnView);
 		
 		backBtn = new JButton("< Back");
-		backBtn.setBounds(17, 36, 90, 30);
+		backBtn.setFont(new Font("Dialog", Font.BOLD, 12));
+		backBtn.setBounds(13, 11, 117, 30);
 		LeftPanel.add(backBtn);
 		
 		btnChart = new JButton("GANTT Chart");
-		btnChart.setBounds(43, 365, 120, 34);
+		btnChart.setBounds(13, 538, 176, 34);
 		LeftPanel.add(btnChart);
 		
-		JLabel lblAnalysis = new JLabel("Analysis:");
+		lblAnalysis = new JLabel("Analysis:");
 		lblAnalysis.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblAnalysis.setBounds(47, 340, 73, 26);
+		lblAnalysis.setBounds(13, 509, 73, 26);
 		LeftPanel.add(lblAnalysis);
 
 		splitPane.setRightComponent(RightPanel);
@@ -229,31 +235,22 @@ public class SplitPane1Gen extends JPanel {
 		descriptionArea.setLineWrap(true);
 		
 		descriptionScrollPane = new JScrollPane(descriptionArea);
-		descriptionScrollPane.setBounds(287, 80, 207, 178);
+		descriptionScrollPane.setBounds(277, 51, 207, 203);
 		RightPanel.add(descriptionScrollPane);
 		
 		descriptionLabel = new JLabel("Description:");
-		descriptionLabel.setBounds(287, 51, 89, 16);
-		RightPanel.add(descriptionLabel);
-		
-		dependenciesLabel = new JLabel("Dependencies:");
-		dependenciesLabel.setBounds(12, 243, 89, 16);
-		RightPanel.add(dependenciesLabel);
+		descriptionScrollPane.setColumnHeaderView(descriptionLabel);
 		
 		dependenciesComboBox = new JComboBox();
-		dependenciesComboBox.setBounds(12, 408, 116, 25);
+		dependenciesComboBox.setBounds(12, 430, 120, 25);
 		RightPanel.add(dependenciesComboBox);
 		
-		assigneesLabel = new JLabel("Assignees:");
-		assigneesLabel.setBounds(147, 243, 89, 16);
-		RightPanel.add(assigneesLabel);
-		
 		assigneesComboBox = new JComboBox();
-		assigneesComboBox.setBounds(147, 408, 116, 25);
+		assigneesComboBox.setBounds(147, 430, 120, 25);
 		RightPanel.add(assigneesComboBox);
 		
 		saveActivityButton = new JButton("Save Activity");
-		saveActivityButton.setBounds(86, 532, 116, 30);
+		saveActivityButton.setBounds(12, 224, 255, 30);
 		RightPanel.add(saveActivityButton);
 		
 		textField = new JTextField();
@@ -263,31 +260,37 @@ public class SplitPane1Gen extends JPanel {
 		
 		addDepButton = new JButton("Add");
 		addDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addDepButton.setBounds(31, 446, 70, 30);
+		addDepButton.setBounds(12, 468, 120, 30);
 		RightPanel.add(addDepButton);
 		
 		delDepButton = new JButton("Delete");
 		delDepButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		delDepButton.setBounds(31, 484, 70, 30);
+		delDepButton.setBounds(12, 506, 120, 30);
 		RightPanel.add(delDepButton);
 		
 		addAssignButton = new JButton("Add");
 		addAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		addAssignButton.setBounds(166, 446, 70, 30);
+		addAssignButton.setBounds(147, 468, 120, 30);
 		RightPanel.add(addAssignButton);
 		
 		delAssignButton = new JButton("Delete");
 		delAssignButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		delAssignButton.setBounds(166, 484, 70, 30);
+		delAssignButton.setBounds(147, 506, 120, 30);
 		RightPanel.add(delAssignButton);
 		
 		dependencyScrollPane = new JScrollPane();
-		dependencyScrollPane.setBounds(12, 272, 116, 129);
+		dependencyScrollPane.setBounds(12, 294, 120, 129);
 		RightPanel.add(dependencyScrollPane);
 		
+		dependenciesLabel = new JLabel("Dependencies:");
+		dependencyScrollPane.setColumnHeaderView(dependenciesLabel);
+		
 		assigneeScrollPane = new JScrollPane();
-		assigneeScrollPane.setBounds(147, 272, 116, 129);
+		assigneeScrollPane.setBounds(147, 294, 120, 129);
 		RightPanel.add(assigneeScrollPane);
+		
+		assigneesLabel = new JLabel("Assignees:");
+		assigneeScrollPane.setColumnHeaderView(assigneesLabel);
 		
 		JLabel lblPlannedValue = new JLabel("Planned Value ($):");
 		lblPlannedValue.setBounds(12, 110, 128, 16);
@@ -551,5 +554,17 @@ public class SplitPane1Gen extends JPanel {
 		latestStartField.setText(year+month+day);
 		earliestFinishField.setText(year+month+day);
 		latestFinishField.setText(year+month+day);
+	}
+
+	public JComponent getLblAnalysis() {
+		return lblAnalysis;
+	}
+
+	public JPanel getLeftPanel() {
+		return LeftPanel;
+	}
+
+	public JPanel getRightPanel() {
+		return RightPanel;
 	}
 }
