@@ -651,7 +651,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     	final String lastName		= "test";
     	final String userName		= "test";
     	final String password		= "test";
-    	int userID					= 0;
+    	int userID					= 1;
     	Users u						= null;
     	
     	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
