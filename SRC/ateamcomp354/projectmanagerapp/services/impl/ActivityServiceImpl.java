@@ -162,20 +162,20 @@ public class ActivityServiceImpl implements ActivityService {
     }
 	
     private void checkCircularDependency(int fromActivityId, int toActivityId, String string) {
-		if(checkLevel(fromActivityId, toActivityId) == true) {
+		if(checkLevel(fromActivityId, fromActivityId, toActivityId) == true) {
 			throw new ServiceFunctionalityException(string);
 		}
 	}
     
-    private boolean checkLevel(int toAdd, int activityId) {
+    private boolean checkLevel(int lvl, int toAdd, int activityId) {
     	
-    	List<Integer> links = getDependencies(toAdd);
+    	List<Integer> links = getDependencies(lvl);
     	ArrayList<Boolean> linkChecks = new ArrayList<Boolean>();
     	for(int x : links) {
     		if(x == toAdd || x == activityId) {
     			return true;
     		}
-    		linkChecks.add(checkLevel(x, toAdd));
+    		linkChecks.add(checkLevel(x, toAdd, activityId));
     	}
 
     	if(linkChecks.contains(new Boolean(true))) {
