@@ -981,7 +981,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	
 	@Before
 	public void initial(){
-
+		resetSeq();
 		appCtx = App.getApplicationContext( db.getConnection() );
 		
 		pjs = appCtx.getProjectService();

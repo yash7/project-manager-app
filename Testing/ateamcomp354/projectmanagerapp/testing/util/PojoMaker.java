@@ -60,4 +60,8 @@ public class PojoMaker {
         a.setActualCost(0);
         return a;
     }
+    
+    public static void resetSeq() {
+    	activityIdSeq = 0;
+    }
 }
