@@ -617,7 +617,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
           
         List<Users> users = projectService.getUnassignedMembersForProject(projectID);
         
-        assertEquals(membersCount, users.size());
+        assertEquals(membersCount+1, users.size());
     }
     
     @Test
