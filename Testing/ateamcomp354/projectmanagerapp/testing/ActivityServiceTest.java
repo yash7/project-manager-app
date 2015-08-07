@@ -834,6 +834,151 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		assertEquals(Double.valueOf(20150224), Double.valueOf(ase.getActivities().get(7).getLatestFinish()));
 	}
 	
+	@Test
+	public void testCalculateNumberOfStartingNodes_oneStartNode() {
+		ase.getActivities().clear();
+
+		Activity S = makeActivity(0, "S", makeDate(2015, 1, 1),makeDate(2015, 1, 15));
+		// Activity AS = makeActivity(0, "AS", makeDate(2015, 1, 1), makeDate(2015, 1, 11));
+		Activity DCA = makeActivity(0, "DCA", makeDate(2015, 1, 15),makeDate(2015, 1, 20));
+		Activity DCB = makeActivity(0, "DCB", makeDate(2015, 1, 15),makeDate(2015, 1, 25));
+		Activity DCC = makeActivity(0, "DCC", makeDate(2015, 1, 15),makeDate(2015, 1, 25));
+		Activity UTAB = makeActivity(0, "UTAB", makeDate(2015, 1, 25),makeDate(2015, 2, 8));
+		Activity UTC = makeActivity(0, "UTC", makeDate(2015, 1, 25),makeDate(2015, 2, 2));
+		Activity P = makeActivity(0, "P", makeDate(2015, 2, 8),makeDate(2015, 2, 18));
+		Activity IST = makeActivity(0, "IST", makeDate(2015, 2, 18),makeDate(2015, 2, 24));
+		// Activity AF = makeActivity(0, "B", makeDate(2015, 2, 18),makeDate(2015, 3, 5));
+
+		ase.addActivity(S);
+		// ase.addActivity(AS);
+		ase.addActivity(DCA);
+		ase.addActivity(DCB);
+		ase.addActivity(DCC);
+		ase.addActivity(UTAB);
+		ase.addActivity(UTC);
+		ase.addActivity(P);
+		ase.addActivity(IST);
+		// ase.addActivity(AF);
+
+		ase.addDependency(S.getId(), DCA.getId());
+		ase.addDependency(S.getId(), DCB.getId());
+		ase.addDependency(S.getId(), DCC.getId());
+		// ase.addDependency(AS.getId(), DCC.getId());
+		ase.addDependency(DCA.getId(), UTAB.getId());
+		ase.addDependency(DCB.getId(), UTAB.getId());
+		ase.addDependency(DCC.getId(), UTC.getId());
+		ase.addDependency(UTAB.getId(), P.getId());
+		ase.addDependency(UTC.getId(), P.getId());
+		ase.addDependency(P.getId(), IST.getId());
+		// ase.addDependency(P.getId(), AF.getId());
+
+		List<Integer> startNodes = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), ase.getActivities().get(5).getId());
+		assertEquals(startNodes.size(), 1);
+	}
+	
+	@Test
+	public void testCalculateNumberOfStartingNodes_multipleStartNodes() {
+		ase.getActivities().clear();
+
+		Activity S = makeActivity(0, "S", makeDate(2015, 1, 1),makeDate(2015, 1, 15));
+		Activity SA = makeActivity(0, "SA", makeDate(2015, 1, 1),makeDate(2015, 1, 15));
+		Activity DCA = makeActivity(0, "DCA", makeDate(2015, 1, 15),makeDate(2015, 1, 20));
+		Activity DCB = makeActivity(0, "DCB", makeDate(2015, 1, 15),makeDate(2015, 1, 25));
+		Activity DCC = makeActivity(0, "DCC", makeDate(2015, 1, 15),makeDate(2015, 1, 25));
+		Activity UTAB = makeActivity(0, "UTAB", makeDate(2015, 1, 25),makeDate(2015, 2, 8));
+		Activity UTC = makeActivity(0, "UTC", makeDate(2015, 1, 25),makeDate(2015, 2, 2));
+		Activity P = makeActivity(0, "P", makeDate(2015, 2, 8),makeDate(2015, 2, 18));
+		Activity IST = makeActivity(0, "IST", makeDate(2015, 2, 18),makeDate(2015, 2, 24));
+
+		ase.addActivity(S);
+		ase.addActivity(SA);
+		ase.addActivity(DCA);
+		ase.addActivity(DCB);
+		ase.addActivity(DCC);
+		ase.addActivity(UTAB);
+		ase.addActivity(UTC);
+		ase.addActivity(P);
+		ase.addActivity(IST);
+
+		ase.addDependency(S.getId(), DCC.getId());
+		ase.addDependency(SA.getId(), DCC.getId());
+		ase.addDependency(DCA.getId(), UTAB.getId());
+		ase.addDependency(DCB.getId(), UTAB.getId());
+		ase.addDependency(DCC.getId(), UTAB.getId());
+		ase.addDependency(DCC.getId(), UTC.getId());
+		ase.addDependency(UTAB.getId(), P.getId());
+		ase.addDependency(UTC.getId(), P.getId());
+		ase.addDependency(P.getId(), IST.getId());
+
+		List<Integer> startNodes = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), ase.getActivities().get(5).getId());
+		assertEquals(startNodes.size(), 4);
+		
+		List<Integer> endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(4).getId());
+	}
+	
+	@Test
+	public void testCalculateNumberOfEndNodes_convergeOnOneEndNode() {
+		ase.getActivities().clear();
+
+		Activity S = makeActivity(0, "S", makeDate(2015, 1, 1),makeDate(2015, 1, 15));
+		Activity SA = makeActivity(0, "SA", makeDate(2015, 1, 1),makeDate(2015, 1, 15));
+		Activity DCA = makeActivity(0, "DCA", makeDate(2015, 1, 15),makeDate(2015, 1, 20));
+		Activity DCB = makeActivity(0, "DCB", makeDate(2015, 1, 15),makeDate(2015, 1, 25));
+		Activity DCC = makeActivity(0, "DCC", makeDate(2015, 1, 15),makeDate(2015, 1, 25));
+		Activity UTAB = makeActivity(0, "UTAB", makeDate(2015, 1, 25),makeDate(2015, 2, 8));
+		Activity UTC = makeActivity(0, "UTC", makeDate(2015, 1, 25),makeDate(2015, 2, 2));
+		Activity P = makeActivity(0, "P", makeDate(2015, 2, 8),makeDate(2015, 2, 18));
+		Activity IST = makeActivity(0, "IST", makeDate(2015, 2, 18),makeDate(2015, 2, 24));
+
+		ase.addActivity(S);
+		ase.addActivity(SA);
+		ase.addActivity(DCA);
+		ase.addActivity(DCB);
+		ase.addActivity(DCC);
+		ase.addActivity(UTAB);
+		ase.addActivity(UTC);
+		ase.addActivity(P);
+		ase.addActivity(IST);
+
+		ase.addDependency(S.getId(), DCC.getId());
+		ase.addDependency(SA.getId(), DCC.getId());
+		ase.addDependency(DCA.getId(), UTAB.getId());
+		ase.addDependency(DCB.getId(), UTAB.getId());
+		ase.addDependency(DCC.getId(), UTAB.getId());
+		ase.addDependency(DCC.getId(), UTC.getId());
+		ase.addDependency(UTAB.getId(), P.getId());
+		ase.addDependency(UTC.getId(), P.getId());
+		ase.addDependency(P.getId(), IST.getId());
+		
+		Integer endId = IST.getId();
+
+		//test from several starting points. all should converge on one node
+		//S
+		List<Integer> endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(0).getId());
+		assertEquals(endNodes.size(), 1);
+		assertEquals(endNodes.get(0), endId);
+		
+		//SA
+		endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(1).getId());
+		assertEquals(endNodes.size(), 1);
+		assertEquals(endNodes.get(0), endId);
+		
+		//DCA
+		endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(2).getId());
+		assertEquals(endNodes.size(), 1);
+		assertEquals(endNodes.get(0), endId);
+		
+		//one middle node
+		endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(6).getId());
+		assertEquals(endNodes.size(), 1);
+		assertEquals(endNodes.get(0), endId);
+		
+		//end node
+		endNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), ase.getActivities().get(8).getId());
+		assertEquals(endNodes.size(), 1);
+		assertEquals(endNodes.get(0), endId);
+	}
+	
 	@Before
 	public void initial(){
 
