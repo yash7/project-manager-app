@@ -623,7 +623,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     @Test
     public void testGetUnassignedMembersForProject_noUnassignedMember() throws Exception {
     	final int projectID 		= 0;
-    	final int membersCount 		= 0;
+    	final int membersCount 		= 1;
     	final String projectInfo 	= "Test project";
     	
     	ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
@@ -639,6 +639,15 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         List<Users> users = projectService.getUnassignedMembersForProject(projectID);
         
         assertEquals(membersCount, users.size());
+        
+        UserService userService = appCtx.getUserService();
+        Users u = new Users(null, "bob", "joe", "bojo", "jobo", false);
+        userService.addUser(u);
+        projectService.addUserToProject(projectID, u);
+        
+        users = projectService.getUnassignedMembersForProject(projectID);
+        
+        assertEquals(membersCount+1, users.size());
     }
 
     @Test(expected=Exception.class)
