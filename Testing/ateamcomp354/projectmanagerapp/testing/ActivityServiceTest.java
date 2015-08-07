@@ -608,7 +608,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		ase.addDependency(A.getId(), B.getId());
 		ase.addDependency(B.getId(), C.getId());
 		
-		assertEquals(ase.calculateSizeOfChain(new ArrayList<Integer>(), 2).size(), 3);
+		assertEquals(3, ase.calculateSizeOfChain(new ArrayList<Integer>(), 2).size());
 		// Also used to test no chains
 	}
 	
@@ -632,8 +632,8 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		
 //		ase.addDependency(D.getId(), E.getId());
 		
-		assertEquals(ase.calculateSizeOfChain(new ArrayList<Integer>(), 2).size(), 3);
-		assertEquals(ase.calculateSizeOfChain(new ArrayList<Integer>(), 4).size(), 1);
+		assertEquals(3, ase.calculateSizeOfChain(new ArrayList<Integer>(), 2).size());
+		assertEquals(1, ase.calculateSizeOfChain(new ArrayList<Integer>(), 4).size());
 		// Also used to test chains of one element 
 	}
 	
