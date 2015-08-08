@@ -126,4 +126,6 @@ public interface ActivityService {
 	List<Integer> calculateSizeOfChain(List<Integer> nodes, int id);
 
 	List<Integer> calculateNumberOfEndingNodes(List<Integer> endingNodes,	int activityId);
+	
+	void calculateEstimatesAndDerivatives();
 }

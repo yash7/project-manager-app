@@ -51,6 +51,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton addButton;
 	private JButton deleteButton;
 	private JButton btnCriticalPath;
+	private JButton btnPERT;
 	private JLabel activityNameLabel;
 
 	private int appWidth = MainFrame.getAppWidth();
@@ -90,6 +91,7 @@ public class SplitPane1Gen extends JPanel {
 	private JButton addAssignButton;
 	private JButton backBtn;
 	private JButton btnChart;
+	
 	private JTextField plannedValueField;
 	private JCalendarCombo earliestStartDatePicker;
 	private JCalendarCombo latestStartDatePicker;
@@ -142,6 +144,10 @@ public class SplitPane1Gen extends JPanel {
 		btnCriticalPath = new JButton("Critical Path");
 		btnCriticalPath.setBounds(170, 342, 131, 30);
 		LeftPanel.add(btnCriticalPath);
+		
+		btnPERT = new JButton("PERT");
+		btnPERT.setBounds(300, 342, 70, 30);
+		LeftPanel.add(btnPERT);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(43, 385, 256, 197);
@@ -351,6 +357,10 @@ public class SplitPane1Gen extends JPanel {
 
 	public JButton getBtnCriticalPath() {
 		return btnCriticalPath;
+	}
+	
+	public JButton getBtnPERT() {
+		return btnPERT;
 	}
 	
 	public JButton getChartButton(){

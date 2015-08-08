@@ -120,6 +120,7 @@ public class ProjectsPanel {
 		splitPane1Gen.getDeleteButton().addActionListener( __ -> deleteProjectClicked() );
 		splitPane1Gen.getChartButton().addActionListener(__-> viewProgressClicked());
 		splitPane1Gen.getBtnCriticalPath().addActionListener(__ -> viewCriticalPath());
+		splitPane1Gen.getBtnPERT().addActionListener(__ -> viewPERT());
 		
 		TwoColumnListCellRenderer<Project> renderer = new TwoColumnListCellRenderer<>(
 				Project::getProjectName,
@@ -389,6 +390,10 @@ public class ProjectsPanel {
 		Charts.viewCriticalPathsChart( appCtx, getProject() );
 	}
 
+	private void viewPERT() {
+		Charts.viewPERTChart(appCtx, getProject());
+	}
+	
 	// Btn to create new project is clicked, clear list selections and
 	// fill the form with the default project template.
 	private void addProjectClicked() {

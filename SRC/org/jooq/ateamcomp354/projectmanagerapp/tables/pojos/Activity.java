@@ -39,6 +39,11 @@ public class Activity implements Serializable {
 	private Integer float_;
 	private String  description;
 	private Integer plannedValue;
+	private float optimisticTime;
+	private float mostLikelyTime;
+	private float pessimisticTime;
+	private float expectedTime;
+	private float standardDeviation;
 
 	public Activity() {}
 
@@ -190,5 +195,45 @@ public class Activity implements Serializable {
 
 	public void setPlannedValue(Integer plannedValue) {
 		this.plannedValue = plannedValue;
+	}
+	
+	public float getOptimisticTime() {
+		return optimisticTime;
+	}
+
+	public void setOptimisticTime(float optimisticTime) {
+		this.optimisticTime = optimisticTime;
+	}
+
+	public float getMostLikelyTime() {
+		return mostLikelyTime;
+	}
+
+	public void setMostLikelyTime(float mostLikelyTime) {
+		this.mostLikelyTime = mostLikelyTime;
+	}
+
+	public float getPessimisticTime() {
+		return pessimisticTime;
+	}
+
+	public void setPessimisticTime(float pessimisticTime) {
+		this.pessimisticTime = pessimisticTime;
+	}
+
+	public float getExpectedTime() {
+		return expectedTime;
+	}
+
+	public void setExpectedTime(float expectedTime) {
+		this.expectedTime = expectedTime;
+	}
+
+	public float getStandardDeviation() {
+		return standardDeviation;
+	}
+
+	public void setStandardDeviation(float standardDeviation) {
+		this.standardDeviation = standardDeviation;
 	}
 }

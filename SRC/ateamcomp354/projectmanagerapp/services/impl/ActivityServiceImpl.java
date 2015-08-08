@@ -532,4 +532,25 @@ public class ActivityServiceImpl implements ActivityService {
 		
 		return activities;
 	}
+
+	/**
+	 * Formulas to get estimates are random (2/3 and 3/2).
+	 */
+	public void calculateEstimatesAndDerivatives() {
+		List<Activity> activities = getActivities();
+		
+		for(Activity activity: activities) {
+			float expectedTime = (float)activity.getExpectedTime();
+			activity.setMostLikelyTime(expectedTime);
+			activity.setOptimisticTime((2/3) * expectedTime);
+			activity.setPessimisticTime((3/2) * expectedTime);
+			
+			float a = activity.getOptimisticTime();
+			float m = activity.getMostLikelyTime();
+			float b = activity.getPessimisticTime();
+			
+			activity.setExpectedTime((a + (4*m) + b) / 6);
+			activity.setStandardDeviation((b - a) / 6);
+		}
+	}
 }
