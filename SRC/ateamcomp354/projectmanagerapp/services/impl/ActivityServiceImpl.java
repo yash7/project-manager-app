@@ -540,10 +540,11 @@ public class ActivityServiceImpl implements ActivityService {
 		List<Activity> activities = getActivities();
 		
 		for(Activity activity: activities) {
-			float expectedTime = (float)activity.getExpectedTime();
-			activity.setMostLikelyTime(expectedTime);
-			activity.setOptimisticTime((2/3) * expectedTime);
-			activity.setPessimisticTime((3/2) * expectedTime);
+			Integer mostLikely = activity.getDuration();
+			
+			activity.setMostLikelyTime(mostLikely);
+			activity.setOptimisticTime((2/3) * mostLikely);
+			activity.setPessimisticTime((3/2) * mostLikely);
 			
 			float a = activity.getOptimisticTime();
 			float m = activity.getMostLikelyTime();
