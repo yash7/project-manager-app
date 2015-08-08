@@ -322,8 +322,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testDeleteProject_noProductExistsWithID() throws Exception {
-
+    public void testDeleteProject_noProjectExistsWithID() throws Exception {
 
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
         ProjectService projectService = appCtx.getProjectService();
@@ -350,6 +349,27 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
         projectService.deleteProject(0);
 
         assertEquals(0, projectService.getProjects().size());
+    }
+    
+    @Test (expected = ServiceFunctionalityException.class)
+    public void testDeleteProject_DatabaseError() throws Exception {
+
+
+        ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+        ProjectService projectService = appCtx.getProjectService();
+
+        Project p = new Project();
+        p.setId(0);
+        p.setProjectName("Test project");
+        p.setDescription("Test project");
+
+        projectService.addProject(p);
+
+        assertEquals(1, projectService.getProjects().size());
+        
+        db.closeConnection();
+
+        projectService.deleteProject(0);
     }
 
     @Test
@@ -417,7 +437,7 @@ public class ProjectServiceTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void testUpdateProject_productExists() throws Exception {
+    public void testUpdateProject_ProjectExists() throws Exception {
 
 
         ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
