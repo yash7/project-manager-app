@@ -461,7 +461,7 @@ public class ActivitiesPanel {
 		splitPane1Gen.getEarliestStartField().setText(
 				Integer.toString(activity.getEarliestStart()));
 		splitPane1Gen.getLatestStartField().setText(
-				Integer.toString(activity.getLatestStart()));
+				Integer.toString(activity.getEarliestStart()));
 		splitPane1Gen.getEarliestFinishField().setText(
 				Integer.toString(activity.getEarliestFinish()));
 		splitPane1Gen.getLatestFinishField().setText(
@@ -477,7 +477,7 @@ public class ActivitiesPanel {
 			splitPane1Gen.getEarliestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 			splitPane1Gen.getLatestFinishDatePicker().setDateFormat(new SimpleDateFormat("yyyy/MM/dd"));
 			splitPane1Gen.getEarliestStartDatePicker().setDate(Pojos.intToDate(activity.getEarliestStart()).getTime());
-			splitPane1Gen.getLatestStartDatePicker().setDate(Pojos.intToDate(activity.getLatestStart()).getTime());
+			splitPane1Gen.getLatestStartDatePicker().setDate(Pojos.intToDate(activity.getEarliestStart()).getTime());
 			splitPane1Gen.getEarliestFinishDatePicker().setDate(Pojos.intToDate(activity.getEarliestFinish()).getTime());
 			splitPane1Gen.getLatestFinishDatePicker().setDate(Pojos.intToDate(activity.getEarliestFinish()).getTime());
 		} catch (NumberFormatException e) {

@@ -94,9 +94,9 @@ public class ActivityOnNode extends JPanel {
 		Object parent = graph.getDefaultParent();
 		
 		Map<String, Object> edge = new HashMap<String, Object>();
+		graph.setKeepEdgesInBackground( true);
 	    edge.put(mxConstants.STYLE_ROUNDED, true);
 	    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-	    edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
 	    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
 	    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
 	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
