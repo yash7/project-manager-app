@@ -83,44 +83,35 @@ public class EarnedValueChartGen extends JPanel {
         	series1.add(0,0);
         	series2.add(0,0);
         	series3.add(0,0);
-        	
-        	int i = 1;
-        	
-        	while(i<= weeks){
-	        	for(Activity a:acts){
-					Date LFinishDate = format.parse(a.getLatestFinish().toString());
-				
-					int aDays = (int)Math.abs((LFinishDate.getTime() - startDate.getTime()) / (1000*60*60*24));
-					int aWeeks = (int)Math.ceil((double)aDays/7);
+        	      	
+        	for(Activity a:acts){
+				Date LFinishDate = format.parse(a.getLatestFinish().toString());
+			
+				int aDays = (int)Math.abs((LFinishDate.getTime() - startDate.getTime()) / (1000*60*60*24));
+				float aWeeks = (float) aDays/7;
+
+				if(a.getStatus() == Status.NEW) {
+					PV += a.getPlannedValue();
 					
-					if(aWeeks == i)
-					{
-						if(a.getStatus() == Status.NEW) {
-							PV += a.getPlannedValue();
-							
-							series1.add(i,PV);
-						}
-						else if(a.getStatus() == Status.IN_PROGRESS) {
-							PV += a.getPlannedValue();
-							EV += a.getPlannedValue();
-							
-							series1.add(i,PV);
-							series2.add(i,EV);
-						}
-						else{
-							PV += a.getPlannedValue();
-							AC += a.getActualCost();
-							
-							series1.add(i,PV);
-							series3.add(i,AC);
-						}
-					}
-	        	}
-	        	i++;
+					series1.add(aWeeks,PV);
+				}
+				else if(a.getStatus() == Status.IN_PROGRESS) {
+					PV += a.getPlannedValue();
+					EV += a.getPlannedValue();
+					
+					series1.add(aWeeks,PV);
+					series2.add(aWeeks,EV);
+				}
+				else{
+					PV += a.getPlannedValue();
+					AC += a.getActualCost();
+					
+					series1.add(aWeeks,PV);
+					series3.add(aWeeks,AC);
+				}
         	}
     	}catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+    		e.printStackTrace();
 		}
         
         final XYSeriesCollection collection = new XYSeriesCollection();

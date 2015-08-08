@@ -1,5 +1,8 @@
 package ateamcomp354.projectmanagerapp;
 
+import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeActivity;
+import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.makeDate;
+
 import java.awt.EventQueue;
 import java.sql.Connection;
 
@@ -13,6 +16,7 @@ import ateamcomp354.projectmanagerapp.ui.MainFrame;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivityDao;
+import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ActivitylinksDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.ProjectmembersDao;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.daos.UseractivitiesDao;
@@ -103,29 +107,113 @@ public class App {
 
 		if ( projectDao.fetchByProjectName( "The Awesome Project" ).isEmpty() ) {
 			projectDao.insert( new Project( null, "The Awesome Project", "This project is awesome.", false, 0, 0) );
+			projectDao.insert(new Project( null, "Crit Path & Gantt", "Project Designed to show a Critical Path Chart and a GANTT CHART", false, 0, 0));
+			projectDao.insert(new Project( null, "Ev Chart", "Project Designed to show an EV Chart", false, 200, 40));
+			projectDao.insert(new Project( null, "PERT Chart", "Project Designed to show a PERT Chart", false, 0, 0));
 		}
 
-		Project project = projectDao.fetchByProjectName( "The Awesome Project" ).get( 0 );
-
-		ActivityService activityService = appCtx.getActivityService( project.getId() );
-
-		if ( activityService.getActivities().isEmpty() ) {
-			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150721, 20150721, "The cool activity", 20150722, 20150722, 1, 1, 0, "This activity is for cool people to do.", 0, 0));
-			activityService.addActivity(new Activity( null, project.getId(), Status.NEW, 20150722, 20150722, "The ugly activity", 20150724, 20150724, 2, 2, 0, "This activity that no one wants to do.", 0, 0));
+		Project p1 = projectDao.fetchByProjectName("The Awesome Project").get(0);
+		Project p2 = projectDao.fetchByProjectName("Crit Path & Gantt").get(0);
+		Project p3 = projectDao.fetchByProjectName("Ev Chart").get(0);
+		Project p4 = projectDao.fetchByProjectName("PERT Chart").get(0);
+		
+		/// DEFAULT PROJECT
+		
+		ActivityService as1 = appCtx.getActivityService( p1.getId() );
+		
+		if ( as1.getActivities().isEmpty() ) {
+			as1.addActivity(new Activity( null, p1.getId(), Status.NEW, 20150721, 20150721, "The cool activity", 20150722, 20150722, 1, 1, 0, "This activity is for cool people to do.", 0, 0));
+			as1.addActivity(new Activity( null, p1.getId(), Status.NEW, 20150722, 20150722, "The ugly activity", 20150724, 20150724, 2, 2, 0, "This activity that no one wants to do.", 0, 0));
 		}
 		
-		Activity a1 = activityDao.fetchByLabel("The cool activity").get(0);
-		Activity a2 = activityDao.fetchByLabel("The ugly activity").get(0);
-		
-		if ( userActivitiesDao.findAll().isEmpty()) {
-			userActivitiesDao.insert(new Useractivities ( null, a1.getId(), ssmith.getId()));
-			userActivitiesDao.insert(new Useractivities ( null, a1.getId(), cpratt.getId()));
-		}
+		Activity as1a1 = activityDao.fetchByLabel("The cool activity").get(0);
+		Activity as1a2 = activityDao.fetchByLabel("The ugly activity").get(0);
 		
 		if (projectMembersDao.findAll().isEmpty()) {
-			projectMembersDao.insert(new Projectmembers (null, project.getId(), ssmith.getId()));
-			projectMembersDao.insert(new Projectmembers (null, project.getId(), cpratt.getId()));
+			projectMembersDao.insert(new Projectmembers (null, p1.getId(), ssmith.getId()));
+			projectMembersDao.insert(new Projectmembers (null, p1.getId(), cpratt.getId()));
 		}
 		
+		if ( userActivitiesDao.findAll().isEmpty()) {
+			userActivitiesDao.insert(new Useractivities ( null, as1a1.getId(), ssmith.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as1a2.getId(), cpratt.getId()));
+		}
+		
+		/// ACTIVITY ON NODE PROJECT & GANTT
+		
+		ActivityService as2 = appCtx.getActivityService( p2.getId() );
+		
+		if ( as2.getActivities().isEmpty() ) {
+			as2.addActivity(new Activity( null, p2.getId(), Status.RESOLVED, 20150701, 20150704, "Spec", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.RESOLVED, 20150704, 20150708, "D/C A", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.IN_PROGRESS, 20150704, 20150707, "D/C B", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.IN_PROGRESS, 20150704, 20150705, "D/C C", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.NEW, 20150708, 20150712, "UT A&B", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.NEW, 20150708, 20150710, "UT C", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.NEW, 20150712, 20150715, "Plan", 0, 0, 0, 0, 0, "", 0, 0));
+			as2.addActivity(new Activity( null, p2.getId(), Status.NEW, 20150715, 20150720, "Implement", 0, 0, 0, 0, 0, "", 0, 0));
+		}
+		
+		Activity as2a1 = activityDao.fetchByLabel("Spec").get(0);
+		Activity as2a2 = activityDao.fetchByLabel("D/C A").get(0);
+		Activity as2a3 = activityDao.fetchByLabel("D/C B").get(0);
+		Activity as2a4 = activityDao.fetchByLabel("D/C C").get(0);
+		Activity as2a5 = activityDao.fetchByLabel("UT A&B").get(0);
+		Activity as2a6 = activityDao.fetchByLabel("UT C").get(0);
+		Activity as2a7 = activityDao.fetchByLabel("Plan").get(0);
+		Activity as2a8 = activityDao.fetchByLabel("Implement").get(0);
+		
+		as2.addDependency(as2a1.getId(), as2a2.getId());
+		as2.addDependency(as2a1.getId(), as2a3.getId());
+		as2.addDependency(as2a1.getId(), as2a4.getId());
+		as2.addDependency(as2a2.getId(), as2a5.getId());
+		as2.addDependency(as2a3.getId(), as2a5.getId());
+		as2.addDependency(as2a4.getId(), as2a6.getId());
+		as2.addDependency(as2a5.getId(), as2a7.getId());
+		as2.addDependency(as2a6.getId(), as2a7.getId());
+		as2.addDependency(as2a7.getId(), as2a8.getId());
+		
+		if (projectMembersDao.findAll().isEmpty()) {
+			projectMembersDao.insert(new Projectmembers (null, p1.getId(), jdoe.getId()));
+		}
+		
+		if ( userActivitiesDao.findAll().isEmpty()) {
+			userActivitiesDao.insert(new Useractivities ( null, as2a1.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a2.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a3.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a4.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a5.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a6.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a7.getId(), jdoe.getId()));
+			userActivitiesDao.insert(new Useractivities ( null, as2a8.getId(), jdoe.getId()));
+		}
+		
+		/// EV CHART
+		
+		ActivityService as3 = appCtx.getActivityService( p3.getId() );
+		
+		if ( as3.getActivities().isEmpty() ) {
+			as3.addActivity(new Activity( null, p3.getId(), Status.RESOLVED, 20150721, 20150724, "A", 0, 0, 0, 0, 0, "", 30, 40));
+			as3.addActivity(new Activity( null, p3.getId(), Status.IN_PROGRESS, 20150724, 20150727, "B", 0, 0, 0, 0, 0, "", 20, 0));
+			as3.addActivity(new Activity( null, p3.getId(), Status.IN_PROGRESS, 20150724, 20150726, "C", 0, 0, 0, 0, 0, "", 10, 0));
+			as3.addActivity(new Activity( null, p3.getId(), Status.NEW, 20150727, 20150729, "D", 0, 0, 0, 0, 0, "", 45, 0));
+			as3.addActivity(new Activity( null, p3.getId(), Status.NEW, 20150729, 20150730, "E", 0, 0, 0, 0, 0, "", 95, 0));
+		}
+		
+		Activity as3a1 = activityDao.fetchByLabel("A").get(0);
+		Activity as3a2 = activityDao.fetchByLabel("B").get(0);
+		Activity as3a3 = activityDao.fetchByLabel("C").get(0);
+		Activity as3a4 = activityDao.fetchByLabel("D").get(0);
+		Activity as3a5 = activityDao.fetchByLabel("E").get(0);
+		
+		if (projectMembersDao.findAll().isEmpty()) {
+			projectMembersDao.insert(new Projectmembers (null, p3.getId(), ssmith.getId()));
+		}
+		
+		as3.addDependency(as3a1.getId(), as3a2.getId());
+		as3.addDependency(as3a1.getId(), as3a3.getId());
+		as3.addDependency(as3a2.getId(), as3a4.getId());
+		as3.addDependency(as3a3.getId(), as3a4.getId());
+		as3.addDependency(as3a4.getId(), as3a5.getId());
 	}
 }
