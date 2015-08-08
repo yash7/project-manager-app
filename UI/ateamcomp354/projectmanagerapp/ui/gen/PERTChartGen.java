@@ -1,10 +1,19 @@
 package ateamcomp354.projectmanagerapp.ui.gen;
  
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import javax.swing.JPanel;
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
+
+import com.mxgraph.model.mxCell;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxStylesheet;
+
 import ateamcomp354.projectmanagerapp.services.ActivityService;
  
 public class PERTChartGen extends JPanel {
@@ -15,16 +24,64 @@ public class PERTChartGen extends JPanel {
     private List<Activity> activities						= null;
     private Integer currentEvent 							= 1;
     private Integer closestFromDistance 					= -1;
-    private boolean createVertex 							= true;
+    private boolean createVertex 							= false;
      
     public PERTChartGen(ActivityService ase, List<Activity> independentActivities) {
     	this.ase = ase;
     	verticesArray 	= new ArrayList<ArrayList<Properties>>();
         edges 			= new ArrayList<Properties>();
         activities 		= ase.getActivities();
-        
+       
+        mxGraph graph 	= new mxGraph();
+		Object parent 	= graph.getDefaultParent();
+		
+		Map<String, Object> edge = new HashMap<String, Object>();
+	    edge.put(mxConstants.STYLE_ROUNDED, true);
+	    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
+	    edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
+	    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+	    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
+	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+	    edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+	    edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
+	    edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
+
+	    mxStylesheet edgeStyle = new mxStylesheet();
+	    edgeStyle.setDefaultEdgeStyle(edge);
+	    graph.setStylesheet(edgeStyle);
+		
         processIndependentActivities(independentActivities);
         generateChart();
+        
+        graph.getModel().beginUpdate();
+        
+        try {
+        	for (int x = 0; x < verticesArray.size(); ++x) {
+        		for (int y = 0; y < verticesArray.get(x).size(); ++y) {
+        			Object v = null;
+        			
+        			v = graph.insertVertex(parent, (String) verticesArray.get(x).get(y).get("id"), (String) verticesArray.get(x).get(y).get("id"), x*280+25, y*280+25, 218, 60, "strokeColor=black;fillColor=yellow");
+        			verticesArray.get(x).get(y).put("cell", v);
+        		}
+        	}
+        	
+        	for (Properties edg : edges) {
+        		
+        		
+        		mxCell from = (mxCell) getVertexFromName((String) edg.get("from")).get("cell");
+        		mxCell to = (mxCell) getVertexFromName((String) edg.get("to")).get("cell");	
+        		
+        		graph.insertEdge(parent, null, "", from , to);
+        	}
+
+        } catch (Exception e) {}
+		finally {
+			graph.getModel().endUpdate();
+		}
+        
+        mxGraphComponent graphComponent = new mxGraphComponent(graph);
+		graphComponent.setEnabled(false);
+		this.add(graphComponent);
     }
  
     private void generateChart() {
