@@ -81,6 +81,7 @@ public class PERTChartGen extends JPanel {
     		List<Integer> endingNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), activities.get(0).getId());
     		
     		ase.calculateAllParamsOfChain(startingNodes.get(0), endingNodes.get(0));
+    		activities 	= ase.getActivities();
         	ase.calculateEstimatesAndDerivatives(activities);
         	
         	for (int x = 0; x < verticesArray.size(); ++x) {

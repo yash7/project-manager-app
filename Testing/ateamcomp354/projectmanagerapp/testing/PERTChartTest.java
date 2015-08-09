@@ -39,9 +39,13 @@ public class PERTChartTest extends AbstractDatabaseTest{
 		Activity B = makeActivity(0, "B", makeDate(2015, 1, 4), makeDate(2015, 1, 7));
 		Activity C = makeActivity(0, "C", makeDate(2015, 1, 7), makeDate(2015, 1, 10));
 		
-		A.setDuration(3);
-		B.setDuration(3);
-		C.setDuration(3);
+		//A.setDuration(3);
+		//B.setDuration(3);
+		//C.setDuration(3);
+		
+		A.setId(1);
+		B.setId(2);
+		C.setId(3);
 		
 		ase.addActivity(A);
 		ase.addActivity(B);
