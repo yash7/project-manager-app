@@ -66,7 +66,7 @@ public class EarnedValueChartGen extends JPanel {
    
     public XYDataset createDataset(List<Activity> acts, List<Object> startProDate) {
     	
-    	final XYSeries series1 = new XYSeries("Planed Value");
+    	final XYSeries series1 = new XYSeries("Planned Value");
     	final XYSeries series2 = new XYSeries("Earned Value");
     	final XYSeries series3 = new XYSeries("Actual Cost");
     	
