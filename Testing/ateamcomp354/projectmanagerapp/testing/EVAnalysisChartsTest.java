@@ -324,6 +324,4 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
             fail("Chart for testExample did not display properly.");
         }
     }
-	// When running App only ugly activity's planned value is shown
-	// Change planed value to planned value
 }
