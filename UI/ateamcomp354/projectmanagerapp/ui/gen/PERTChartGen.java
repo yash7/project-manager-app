@@ -38,40 +38,89 @@ public class PERTChartGen extends JPanel {
 		Map<String, Object> edge = new HashMap<String, Object>();
 	    edge.put(mxConstants.STYLE_ROUNDED, true);
 	    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-	    edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
+	    //edge.put(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ELBOW);
 	    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
 	    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
 	    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-	    edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+	    edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_TOP);
 	    edge.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // default is #6482B9
 	    edge.put(mxConstants.STYLE_FONTCOLOR, "#446299");
-
+	    edge.put(mxConstants.STYLE_FONTSTYLE, mxConstants.FONT_BOLD);
+	    
 	    mxStylesheet edgeStyle = new mxStylesheet();
 	    edgeStyle.setDefaultEdgeStyle(edge);
 	    graph.setStylesheet(edgeStyle);
-		
+	    graph.setKeepEdgesInBackground(true);
+	    
         processIndependentActivities(independentActivities);
         generateChart();
         
         graph.getModel().beginUpdate();
-        
+       
         try {
+        	
+        	List<Integer> startingNodes = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), activities.get(0).getId());
+    		List<Integer> endingNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), activities.get(0).getId());
+    		
+    		ase.calculateAllParamsOfChain(startingNodes.get(0), endingNodes.get(0));
+        	ase.calculateEstimatesAndDerivatives(activities);
+        	
         	for (int x = 0; x < verticesArray.size(); ++x) {
         		for (int y = 0; y < verticesArray.get(x).size(); ++y) {
         			Object v = null;
         			
-        			v = graph.insertVertex(parent, (String) verticesArray.get(x).get(y).get("id"), (String) verticesArray.get(x).get(y).get("id"), x*280+25, y*280+25, 218, 60, "strokeColor=black;fillColor=yellow");
+        			float maximumExpectedDate 		= 0;
+    				float maximumStandardDeviation 	= 0;
+        			
+        			if (x == 0 && y == 0) {
+        				maximumExpectedDate 		= 0;
+        				maximumStandardDeviation 	= 0;
+        			} else {
+        				
+        				ArrayList<Properties> incomingActivities = getDependentActivitiesOfEvent((String) verticesArray.get(x).get(y).get("id"));
+        				
+        				for (Properties incomingEdge: incomingActivities) {
+        					Properties vertex = getVertexFromName((String) incomingEdge.get("from"));
+        					
+        					if ((float)vertex.get("expectedDate") + activities.get((Integer)incomingEdge.get("id") - 1).getExpectedTime() > maximumExpectedDate) {
+        						maximumExpectedDate = (float)vertex.get("expectedDate") + activities.get((Integer)incomingEdge.get("id") - 1).getExpectedTime();
+        					}
+        					
+        					float previousVertexSD = (float)vertex.get("standardDeviation");
+        					float incomingActivitySD = activities.get((Integer)incomingEdge.get("id") - 1).getStandardDeviation();
+        					
+        					if (Math.sqrt((previousVertexSD * previousVertexSD) + (incomingActivitySD * incomingActivitySD)) > maximumStandardDeviation) {
+        						maximumStandardDeviation = (float) Math.sqrt((previousVertexSD * previousVertexSD) + (incomingActivitySD * incomingActivitySD));
+        					}
+        					
+        				}
+        			}
+        			
+        			verticesArray.get(x).get(y).put("expectedDate", maximumExpectedDate);
+        			verticesArray.get(x).get(y).put("standardDeviation", maximumStandardDeviation);
+        			
+        			String eventNumber = "Event Number: " + (String) verticesArray.get(x).get(y).get("id") + "\n";
+        			String targetDate = "Target Date: " + "\n";
+        			String expectedDate = "Expected Date: " + String.format("%.02f", maximumExpectedDate) + "\n";
+        			String standardDeviation = "Standard Deviation: " + String.format("%.02f", maximumStandardDeviation);
+        			String vertexValue = eventNumber + targetDate + expectedDate + standardDeviation;
+        			
+        			v = graph.insertVertex(parent, (String) verticesArray.get(x).get(y).get("id"), vertexValue, x*280+50, y*280+50, 120, 120, "strokeColor=black;fillColor=yellow");
         			verticesArray.get(x).get(y).put("cell", v);
         		}
         	}
         	
         	for (Properties edg : edges) {
+        		Properties from = getVertexFromName((String) edg.get("from"));
+        		Properties to 	= getVertexFromName((String) edg.get("to"));	
         		
+        		Activity activity = activities.get((Integer) edg.get("id") - 1);
         		
-        		mxCell from = (mxCell) getVertexFromName((String) edg.get("from")).get("cell");
-        		mxCell to = (mxCell) getVertexFromName((String) edg.get("to")).get("cell");	
+        		String label				= activity.getLabel() + "\n";
+        		String expectedTime 		= "ET: " + String.format("%.02f", activity.getExpectedTime()) + "\n";
+        		String standardDeviation 	= "SD: " + String.format("%.02f", activity.getStandardDeviation());
         		
-        		graph.insertEdge(parent, null, "", from , to);
+        		graph.insertEdge(parent, null, label + expectedTime + standardDeviation, (mxCell) from.get("cell") , (mxCell) to.get("cell"));
         	}
 
         } catch (Exception e) {}
@@ -83,7 +132,7 @@ public class PERTChartGen extends JPanel {
 		graphComponent.setEnabled(false);
 		this.add(graphComponent);
     }
- 
+    
     private void generateChart() {
     	for (Activity activity : activities) { // checks who depends on each activity and build vertices and edges
     		List<Integer> dependents = ase.getDependents(activity.getId());
@@ -186,6 +235,18 @@ public class PERTChartGen extends JPanel {
         return null;
     }
 
+    private ArrayList<Properties> getDependentActivitiesOfEvent(String vertexName) {
+    	ArrayList<Properties> activities = new ArrayList<Properties>();
+    	
+    	for (Properties edge: edges) {
+    		if (edge.get("to").equals(vertexName)) {
+    			activities.add(edge);
+    		}
+    	}
+    	
+    	return activities;
+    }
+    
     private void fillEdgesWithNoTo() {
     	Integer closestFromDistance = -1;
     	

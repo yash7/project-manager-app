@@ -55,7 +55,6 @@ public class Charts {
     	if (acts.size() > 0) {
     		List<Integer> x = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), acts.get(0).getId());
     		if(x.size() == 1) {
-            	ase.calculateEstimatesAndDerivatives();
             	
             	List<Activity> independentActivities = new ArrayList<Activity>();
             	 
