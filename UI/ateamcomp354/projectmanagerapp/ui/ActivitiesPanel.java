@@ -91,6 +91,7 @@ public class ActivitiesPanel {
 
 		// REMOVE THINGS FROM SPLITPANE THAT ARE NOT NEEDED IN ACTIVITY VIEW
 		splitPane1Gen.getBtnCriticalPath().setVisible(false);
+		splitPane1Gen.getBtnPERT().setVisible(false);
 		splitPane1Gen.getBtnView().setVisible(false);
 		splitPane1Gen.getTopLabel().setVisible(false);
 
