@@ -312,7 +312,7 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 	}
 	
 	@Test
-	public void testAddDependency(){
+	public void testAddDependency_ThreeActivities(){
 		Activity a = new Activity();
 		Activity b = new Activity();
 		Activity c = new Activity();
@@ -335,8 +335,26 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		assertEquals(1,ase.getDependencies(1).size());
 	}
 	
-	@Test(expected=ServiceFunctionalityException.class)
-	public void testAddDependency_noCircular(){
+	@Test
+	public void testAddDependency_TwoActivities(){
+		Activity a = new Activity();
+		Activity b = new Activity();
+		
+		a.setId(0);
+		a.setProjectId(0);
+		b.setId(1);
+		b.setProjectId(0);
+		
+		ase.addActivity(a);
+		ase.addActivity(b);
+		
+		ase.addDependency(0, 1);		
+		
+		assertEquals(1,ase.getDependencies(1).size());
+	}
+	
+	@Test (expected=ServiceFunctionalityException.class)
+	public void testAddDependency_CircularThreeActivities(){
 		Activity a = new Activity();
 		Activity b = new Activity();
 		Activity c = new Activity();
@@ -357,8 +375,87 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		
 		assertEquals(1,ase.getDependents(1).size());
 		assertEquals(1,ase.getDependencies(2).size());
-		
+
 		ase.addDependency(2, 0); //circular dependency
+	}
+	
+	@Test (expected=ServiceFunctionalityException.class)
+	public void testAddDependency_noCircularTwoActivities(){
+		Activity a = new Activity();
+		Activity b = new Activity();
+
+		a.setId(0);
+		a.setProjectId(0);
+		b.setId(1);
+		b.setProjectId(0);
+		
+		ase.addActivity(a);
+		ase.addActivity(b);
+		
+		ase.addDependency(0, 1);
+		
+		ase.addDependency(1, 0);		
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testAddDependency_projectComplete() {	
+		Activity a = new Activity();
+		Activity b = new Activity();
+		Activity c = new Activity();
+		
+		a.setId(0);
+		a.setProjectId(0);
+		b.setId(1);
+		b.setProjectId(0);
+		c.setId(2);
+		c.setProjectId(0);
+		
+		ase.addActivity(a);
+		ase.addActivity(b);
+		ase.addActivity(c);
+		
+		Project p = ase.getProject();
+		p.setCompleted(true);
+		pjs.updateProject(p);
+
+		ase.addDependency(0, 1);
+		ase.addDependency(0, 2);	
+	}
+	
+	@Test (expected = ServiceFunctionalityException.class)
+	public void testAddDependency_nonExistentActivity(){
+		Activity a = new Activity();
+
+		a.setId(0);
+		a.setProjectId(0);
+		
+		ase.addActivity(a);
+		
+		ase.addDependency(0, 1);	
+	}
+	
+	@Test
+	public void testAddDependency_ThreeActivitiesChain(){
+		Activity a = new Activity();
+		Activity b = new Activity();
+		Activity c = new Activity();
+		
+		a.setId(0);
+		a.setProjectId(0);
+		b.setId(1);
+		b.setProjectId(0);
+		c.setId(2);
+		c.setProjectId(0);
+		
+		ase.addActivity(a);
+		ase.addActivity(b);
+		ase.addActivity(c);
+		
+		ase.addDependency(0, 1);
+		ase.addDependency(1, 2);		
+		
+		assertEquals(1,ase.getDependents(0).size());
+		assertEquals(1,ase.getDependencies(1).size());
 	}
 	
 	/**
@@ -516,6 +613,15 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		
 		assertEquals(linkCount, dependencies.size());
 	}
+	
+	@Test (expected=ServiceFunctionalityException.class)
+	public void testGetDependencies_DatabaseError() {
+		int activityToID			= 1;
+		
+		db.closeConnection();
+		
+		List<Integer> dependencies = this.ase.getDependencies(activityToID);
+	}
 
 	@Test
 	public void testGetDependents_properDependents() {
@@ -593,6 +699,14 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		dependents = this.ase.getDependents(activityFromID);
 		
 		assertEquals(linkCount, dependents.size());
+	}
+	
+	@Test (expected = ServiceFunctionalityException.class)
+	public void testGetDependents_DatabaseError() {
+		int activityFromID 			= 0;
+		
+		db.closeConnection();
+		List<Integer> dependents = this.ase.getDependents(activityFromID);
 	}
 	
 	@Test
