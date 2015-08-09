@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -22,16 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.jooq.ateamcomp354.projectmanagerapp.tables.pojos.Activity;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
-
 import ateamcomp354.projectmanagerapp.services.ActivityService;
  
 public class PERTChartGen extends JPanel {
@@ -76,12 +72,13 @@ public class PERTChartGen extends JPanel {
         graph.getModel().beginUpdate();
        
         try {
-        	
-        	List<Integer> startingNodes = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), activities.get(0).getId());
-    		List<Integer> endingNodes = ase.calculateNumberOfEndingNodes(new ArrayList<Integer>(), activities.get(0).getId());
+    		//ase.calculateAllParamsOfChain(startingNodes.get(0), endingNodes.get(0));
+    		//activities 	= ase.getActivities();
     		
-    		ase.calculateAllParamsOfChain(startingNodes.get(0), endingNodes.get(0));
-    		activities 	= ase.getActivities();
+    		for (Activity a : activities) {
+        		this.ase.setActivityDuration(a);
+        	}
+    		
         	ase.calculateEstimatesAndDerivatives(activities);
         	
         	for (int x = 0; x < verticesArray.size(); ++x) {

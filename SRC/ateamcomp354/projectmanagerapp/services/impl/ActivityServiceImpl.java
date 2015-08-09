@@ -433,7 +433,12 @@ public class ActivityServiceImpl implements ActivityService {
 	@Override
 	public List<Integer> calculateAllParamsOfChain(int startActivityId, int endActivityId) {
 		Activity startActivity = this.getActivity(startActivityId);
-		List<Integer> activities = calculateNextForward(startActivity);
+		List<Integer> activities = null;
+		try {
+			activities = calculateNextForward(startActivity);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		
 		Activity lastActivity = this.getActivity(endActivityId);
 		lastActivity.setLatestFinish(lastActivity.getEarliestFinish());
@@ -506,29 +511,37 @@ public class ActivityServiceImpl implements ActivityService {
 			calculatePrevBackward(this.getActivity(i));
 		}	
 	}
-
-	private List<Integer> calculateNextForward(Activity a) {
+	
+	public void setActivityDuration(Activity a) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		List<Integer> activities = new ArrayList<Integer>();
-		activities.add(a.getId());
 		
+		Date startDate;
 		try {
-			Date startDate = formatter.parse(a.getEarliestStart().toString());
+			startDate = formatter.parse(a.getEarliestStart().toString());
 			Date endDate = formatter.parse(a.getEarliestFinish().toString());
 			int duration = (int) (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 			a.setDuration(duration);
 			this.updateActivity(a);
-			
-			for(int i : this.getDependents(a.getId())) {
-				List<Integer> newActs = calculateNextForward(this.getActivity(i));
-				for(Integer na : newActs) {
-					if(!activities.contains(na)) {
-						activities.add(na);
-					}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private List<Integer> calculateNextForward(Activity a) throws ParseException {
+		
+		List<Integer> activities = new ArrayList<Integer>();
+		activities.add(a.getId());
+		
+		setActivityDuration(a);
+		
+		for(int i : this.getDependents(a.getId())) {
+			List<Integer> newActs = calculateNextForward(this.getActivity(i));
+			for(Integer na : newActs) {
+				if(!activities.contains(na)) {
+					activities.add(na);
 				}
 			}
-						
-		} catch (ParseException e) {}
+		}
 		
 		return activities;
 	}

@@ -128,4 +128,6 @@ public interface ActivityService {
 	List<Integer> calculateNumberOfEndingNodes(List<Integer> endingNodes,	int activityId);
 	
 	void calculateEstimatesAndDerivatives(List<Activity> activities);
+	
+	void setActivityDuration(Activity a);
 }
