@@ -139,7 +139,7 @@ public class PERTChartGen extends JPanel {
         			mxCell existingEdge = (mxCell) alreadyCreatedEdge[i];
         			activityInfo = (String) existingEdge.getValue();
         			activityInfo += "\n";
-        			graph.removeCells(alreadyCreatedEdge);
+        			graph.cellsToggled(alreadyCreatedEdge, false);
         		}
         			
     			String label				= activity.getLabel() + "\n";

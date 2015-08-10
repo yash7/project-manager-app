@@ -53,28 +53,23 @@ public class Charts {
     	List<Activity> acts = ase.getActivities();
     	
     	if (acts.size() > 0) {
-    		List<Integer> x = ase.calculateNumberOfStartingNodes(new ArrayList<Integer>(), acts.get(0).getId());
-    		if(x.size() == 1) {
-            	
-            	List<Activity> independentActivities = new ArrayList<Activity>();
-            	 
-            	for (Activity activity : acts) {
-            		if (ase.getDependencies(activity.getId()).size() == 0) {
-            			independentActivities.add(activity);
-            		}
-            	}
-           
-            	 openPERTChart(ase, independentActivities);
-            }
-    		else {
-    			JOptionPane.showMessageDialog(null, "There are multiple starting activities, there must be only a single start activity to create a working Critical Path Analysis");
-            }
+        	List<Activity> independentActivities = new ArrayList<Activity>();
+        	 
+        	for (Activity activity : acts) {
+        		if (ase.getDependencies(activity.getId()).size() == 0) {
+        			independentActivities.add(activity);
+        		}
+        	}
+        	openPERTChart(ase, independentActivities);
     	}
+    	else {
+            JOptionPane.showMessageDialog (null, "There are no activities for this project", "No Report", JOptionPane.PLAIN_MESSAGE);
+        }
     }
     
     private static void openPERTChart(ActivityService ase, List<Activity> independentActivities) {
     	PERTChartGen PERTChart = new PERTChartGen(ase, independentActivities);
-    	JOptionPane.showMessageDialog(null, PERTChart, "Project", JOptionPane.PLAIN_MESSAGE);
+    	JOptionPane.showMessageDialog(null, PERTChart, "PERT Chart", JOptionPane.PLAIN_MESSAGE);
     }
 
     private static void openCriticalPathsChart(ActivityService ase, Project project, int act) {
