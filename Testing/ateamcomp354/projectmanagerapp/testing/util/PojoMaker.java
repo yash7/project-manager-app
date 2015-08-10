@@ -42,4 +42,8 @@ public class PojoMaker {
         a.setPlannedValue(0);
         return a;
     }
+    
+    public static void resetSeq() {
+    	activityIdSeq = 0;
+    }
 }

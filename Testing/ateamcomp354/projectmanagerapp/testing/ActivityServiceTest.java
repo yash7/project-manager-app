@@ -8,7 +8,6 @@ package ateamcomp354.projectmanagerapp.testing;
 
 import static org.junit.Assert.*;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import ateamcomp354.projectmanagerapp.services.ActivityService;
 import ateamcomp354.projectmanagerapp.services.ApplicationContext;
 import ateamcomp354.projectmanagerapp.services.ProjectService;
 import ateamcomp354.projectmanagerapp.services.ServiceFunctionalityException;
-
 import static ateamcomp354.projectmanagerapp.testing.util.PojoMaker.*;
 
 public class ActivityServiceTest extends AbstractDatabaseTest {
@@ -834,9 +832,60 @@ public class ActivityServiceTest extends AbstractDatabaseTest {
 		assertEquals(Double.valueOf(20150224), Double.valueOf(ase.getActivities().get(7).getLatestFinish()));
 	}
 	
+	@Test
+	public void testCalculateEstimatesAndDerivates_zeroDuration()	{
+		testCalculateEstimatesAndDerivates_setup();
+		Activity A = ase.getActivities().get(0);
+		
+		int aExpectedMostLikely = A.getDuration();
+		float aExpectedOptimistic = ((float)2/3) * aExpectedMostLikely;
+		float aExpectedPessimistic = ((float)3/2) * aExpectedOptimistic;
+		float aExpectedExpected = (aExpectedOptimistic + 4*aExpectedMostLikely + aExpectedPessimistic)/6;
+		float aExpectedStd = (aExpectedPessimistic - aExpectedOptimistic)/6;
+		
+		assertEquals(Double.valueOf(aExpectedMostLikely), Double.valueOf(A.getMostLikelyTime()));
+		assertEquals(Double.valueOf(aExpectedOptimistic), Double.valueOf(A.getOptimisticTime()));
+		assertEquals(Double.valueOf(aExpectedPessimistic), Double.valueOf(A.getPessimisticTime()));
+		assertEquals(Double.valueOf(aExpectedExpected), Double.valueOf(A.getExpectedTime()));
+		assertEquals(Double.valueOf(aExpectedStd), Double.valueOf(A.getStandardDeviation()));
+	}
+	
+	@Test
+	public void testCalculateEstimatesAndDerivates_positiveDuration()	{
+		testCalculateEstimatesAndDerivates_setup();
+		Activity B = ase.getActivities().get(1);
+		
+		int bExpectedMostLikely = B.getDuration();
+		float bExpectedOptimistic = (2f/3f) * bExpectedMostLikely;
+		float bExpectedPessimistic = (3f/2f) * bExpectedOptimistic;
+		float bExpectedExpected = (bExpectedOptimistic + 4*bExpectedMostLikely + bExpectedPessimistic)/6;
+		float bExpectedStd = (bExpectedPessimistic -bExpectedOptimistic)/6;
+		
+		assertEquals(Double.valueOf(bExpectedMostLikely), Double.valueOf(B.getMostLikelyTime()));
+		assertEquals(Double.valueOf(bExpectedOptimistic), Double.valueOf(B.getOptimisticTime()));
+		assertEquals(Double.valueOf(bExpectedPessimistic), Double.valueOf(B.getPessimisticTime()));
+		assertEquals(Double.valueOf(bExpectedExpected), Double.valueOf(B.getExpectedTime()));
+		assertEquals(Double.valueOf(bExpectedStd), Double.valueOf(B.getStandardDeviation()));
+	}
+
+	public void testCalculateEstimatesAndDerivates_setup() {
+		//pre setup allows to test for looping
+		Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 1));
+		A.setDuration(0);
+		A.setId(0);
+		ase.addActivity(A);
+		
+		Activity B = makeActivity(0, "B", makeDate(2015, 1, 1), makeDate(2015, 1, 4));
+		B.setDuration(3);
+		B.setId(1);
+		ase.addActivity(B);
+
+		ase.calculateEstimatesAndDerivatives(ase.getActivities());	
+	}
+	
 	@Before
 	public void initial(){
-
+		resetSeq();
 		appCtx = App.getApplicationContext( db.getConnection() );
 		
 		pjs = appCtx.getProjectService();
