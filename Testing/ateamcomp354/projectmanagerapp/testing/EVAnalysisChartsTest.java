@@ -46,7 +46,7 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
 		
 		Charts.viewEVAnalysisChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testEmptyProject", "Project with no activities");
+		assertDisplayedProperly("testEmptyProject", "Message dialog informing there are no activities in the project.");
 	}
 	
 	@Test
@@ -98,7 +98,7 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
 		
 		Charts.viewEVAnalysisChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testProjectWithMixedA", "Project with all mixed status activities (resolved prior)");
+		assertDisplayedProperly("testProjectWithMixedA", "Project with all mixed status activities (resolved prior).");
 	}
 	
 	@Test
@@ -150,7 +150,7 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
 		
 		Charts.viewEVAnalysisChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testProjectWithMixedB", "Project with all mixed status activities (resolved post)");
+		assertDisplayedProperly("testProjectWithMixedB", "Project with all mixed status activities (resolved post).");
 	}
 	
 	@Test
@@ -197,7 +197,7 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
 		
 		Charts.viewEVAnalysisChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testProjectWithAllNew", "Project with all activities new");
+		assertDisplayedProperly("testProjectWithAllNew", "Project with all activities new.");
 	}
 	
 	@Test
@@ -249,7 +249,7 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
 		
 		Charts.viewEVAnalysisChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testProjectWithAllInProgress", "Project with all activities in progress");
+		assertDisplayedProperly("testProjectWithAllInProgress", "Project with all activities in progress.");
 	}
 	
 	@Test
@@ -306,7 +306,7 @@ public class EVAnalysisChartsTest extends AbstractDatabaseTest{
 		
 		Charts.viewEVAnalysisChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testProjectWithAllResolved", "Project with all activities resolved");
+		assertDisplayedProperly("testProjectWithAllResolved", "Project with all activities resolved.");
 	}
 	
 	private void assertDisplayedProperly(String testName, String expectedDisplay) {
