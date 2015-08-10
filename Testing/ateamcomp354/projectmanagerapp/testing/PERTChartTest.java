@@ -55,10 +55,9 @@ public class PERTChartTest extends AbstractDatabaseTest{
 		
 		Charts.viewPERTChart(appCtx, pjs.getProject(0));
 		
-		assertDisplayedProperly("testSimpleProject", "Single Path Project");
+		assertDisplayedProperly("testSimpleProject", "Project with a single chain and path.");
+		assertDisplayedProperly("testSimpleProject", "Accuracy of event and activity values.");
 	}
-	
-	// test empty project
 	
 	// Test example project from lecture
 	@Test
@@ -81,45 +80,58 @@ public class PERTChartTest extends AbstractDatabaseTest{
 		Activity A = makeActivity(0, "A", makeDate(2015, 1, 1), makeDate(2015, 1, 7));
 		Activity B = makeActivity(0, "B", makeDate(2015, 1, 1), makeDate(2015, 1, 5));
 		Activity C = makeActivity(0, "C", makeDate(2015, 1, 7), makeDate(2015, 1, 10));
-//		Activity D = makeActivity(0, "D", makeDate(2015, 1, 5), makeDate(2015, 1, 9));
-//		Activity E = makeActivity(0, "E", makeDate(2015, 1, 5), makeDate(2015, 1, 8));
-//		Activity F = makeActivity(0, "F", makeDate(2015, 1, 1), makeDate(2015, 1, 11));
-//		Activity G = makeActivity(0, "G", makeDate(2015, 1, 11), makeDate(2015, 1, 14));
-//		Activity H = makeActivity(0, "H", makeDate(2015, 1, 10), makeDate(2015, 1, 12));
+		Activity D = makeActivity(0, "D", makeDate(2015, 1, 5), makeDate(2015, 1, 9));
+		Activity E = makeActivity(0, "E", makeDate(2015, 1, 5), makeDate(2015, 1, 8));
+		Activity F = makeActivity(0, "F", makeDate(2015, 1, 1), makeDate(2015, 1, 11));
+		Activity G = makeActivity(0, "G", makeDate(2015, 1, 11), makeDate(2015, 1, 14));
+		Activity H = makeActivity(0, "H", makeDate(2015, 1, 10), makeDate(2015, 1, 12));
 		
 		A.setId(1);
 		B.setId(2);
 		C.setId(3);
-//		D.setId(4);
-//		E.setId(5);
-//		F.setId(6);
-//		G.setId(7);
-//		H.setId(8);
+		D.setId(4);
+		E.setId(5);
+		F.setId(6);
+		G.setId(7);
+		H.setId(8);
 		
-//		Stream.of(A, B, C, D, E, F, G, H).forEach(ase::addActivity);
-		Stream.of(A, B, C).forEach(ase::addActivity);
+		Stream.of(A, B, C, D, E, F, G, H).forEach(ase::addActivity);
 
-		System.out.println(ase.getActivities().size());
-		
 		ase.addDependency(A.getId(), C.getId());
-		ase.addDependency(B.getId(), C.getId());
-//		ase.addDependency(D.getId(), B.getId());
-//		ase.addDependency(E.getId(), B.getId());
-//		ase.addDependency(G.getId(), F.getId());
-//		ase.addDependency(H.getId(), C.getId());
-//		ase.addDependency(H.getId(), D.getId());
-//		ase.addDependency(B.getId(), D.getId());
-//		ase.addDependency(B.getId(), E.getId());
-//		ase.addDependency(E.getId(), G.getId());
-//		ase.addDependency(F.getId(), G.getId());
-//		ase.addDependency(C.getId(), H.getId());
-//		ase.addDependency(D.getId(), H.getId());
+		ase.addDependency(B.getId(), D.getId());
+		ase.addDependency(B.getId(), E.getId());
+		ase.addDependency(E.getId(), G.getId());
+		ase.addDependency(F.getId(), G.getId());
+		ase.addDependency(C.getId(), H.getId());
+		ase.addDependency(D.getId(), H.getId());
 		
 		Charts.viewPERTChart(appCtx, pjs.getProject(0));
 		
-//		assertDisplayedProperly
+		assertDisplayedProperly("testLectureProject", "Project from lecture notes with multiple starting and ending activities.");
+		assertDisplayedProperly("testLectureProject", "Accuracy of event and activity values.");
 	}
 	
+	@Test
+	public void testEmptyProject()	{
+		ApplicationContext appCtx = App.getApplicationContext(db.getConnection());
+		
+		ProjectService pjs = appCtx.getProjectService();
+		
+		Project p = new Project();
+		p.setId(0);
+		p.setProjectName("Test Project");
+		p.setDescription("Test Project");
+		
+		pjs.addProject(p);
+		
+		ActivityService ase = appCtx.getActivityService(0);
+		
+		ase.getActivities().clear();
+		
+		Charts.viewPERTChart(appCtx, pjs.getProject(0));
+		
+		assertDisplayedProperly("testEmptyProject", "Message dialog informing there are no activities in the Project.");
+	}
 	
     private void assertDisplayedProperly(String testName, String expectedDisplay) {
 
@@ -136,5 +148,4 @@ public class PERTChartTest extends AbstractDatabaseTest{
             fail("Chart for testExample did not display properly.");
         }
     }
-
 }
