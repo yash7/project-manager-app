@@ -101,8 +101,13 @@ public class PERTChartTest extends AbstractDatabaseTest{
 
 		System.out.println(ase.getActivities().size());
 		
-		ase.addDependency(C.getId(), A.getId());
-		//ase.addDependency(B.getId(), C.getId());
+		ase.addDependency(A.getId(), C.getId());
+		ase.addDependency(B.getId(), C.getId());
+//		ase.addDependency(D.getId(), B.getId());
+//		ase.addDependency(E.getId(), B.getId());
+//		ase.addDependency(G.getId(), F.getId());
+//		ase.addDependency(H.getId(), C.getId());
+//		ase.addDependency(H.getId(), D.getId());
 //		ase.addDependency(B.getId(), D.getId());
 //		ase.addDependency(B.getId(), E.getId());
 //		ase.addDependency(E.getId(), G.getId());

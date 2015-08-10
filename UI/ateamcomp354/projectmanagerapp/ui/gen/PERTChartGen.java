@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,7 +109,6 @@ public class PERTChartGen extends JPanel {
         					if (Math.sqrt((previousVertexSD * previousVertexSD) + (incomingActivitySD * incomingActivitySD)) > maximumStandardDeviation) {
         						maximumStandardDeviation = (float) Math.sqrt((previousVertexSD * previousVertexSD) + (incomingActivitySD * incomingActivitySD));
         					}
-        					
         				}
         			}
         			
@@ -131,12 +131,23 @@ public class PERTChartGen extends JPanel {
         		Properties to 	= getVertexFromName((String) edg.get("to"));	
         		
         		Activity activity = activities.get((Integer) edg.get("id") - 1);
+        		String activityInfo = "";
         		
-        		String label				= activity.getLabel() + "\n";
+        		Object[] alreadyCreatedEdge = graph.getEdgesBetween((mxCell) from.get("cell"), (mxCell) to.get("cell"));
+        		
+        		for (int i = 0; i < Array.getLength(alreadyCreatedEdge); ++i) {
+        			mxCell existingEdge = (mxCell) alreadyCreatedEdge[i];
+        			activityInfo = (String) existingEdge.getValue();
+        			activityInfo += "\n";
+        			graph.removeCells(alreadyCreatedEdge);
+        		}
+        			
+    			String label				= activity.getLabel() + "\n";
         		String expectedTime 		= "ET: " + String.format("%.02f", activity.getExpectedTime()) + "\n";
         		String standardDeviation 	= "SD: " + String.format("%.02f", activity.getStandardDeviation());
-        		
-        		graph.insertEdge(parent, null, label + expectedTime + standardDeviation, (mxCell) from.get("cell") , (mxCell) to.get("cell"));
+        		activityInfo += label + expectedTime + standardDeviation;
+            		
+        		graph.insertEdge(parent, null, activityInfo, (mxCell) from.get("cell") , (mxCell) to.get("cell"));
         	}
 
         } catch (Exception e) {}
@@ -256,6 +267,7 @@ public class PERTChartGen extends JPanel {
     	edge.put("id", id);
         edge.put("from", "E" + currentEvent);
         edge.put("to", "");
+        //edge.put("activityInfo", "");
         edges.add(edge);
     }
     
